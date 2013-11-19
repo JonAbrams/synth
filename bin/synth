@@ -1,2 +1,34 @@
 #!/usr/bin/env node
 
+/* Third-party Modules */
+var mkdirp = require('mkdirp'),
+    pkg = require('../package.json'),
+    version = pkg.version,
+    os = require('os'),
+    fs = require('fs'),
+    _ = require('lodash');
+
+/* Global vars */
+var validCommands = {
+  "new": "n",
+  "install": "i",
+  "dev": "d",
+  "prod": "p"
+};
+
+// List of arguments passed in
+var args = process.argv.slice(2);
+
+// Determine which command is being executed
+var command = (function () {
+  // Substitute shortcut commands for the full version
+  var supposedCommand = _.invert(validCommands)[ args[0] ] || args[0];
+
+  // Replace unknown commands with 'help'
+  if ( !_(validCommands).has(supposedCommand) ) {
+    return "help";
+  }
+  return supposedCommand;
+})();
+
+console.log("Command: ", command);
