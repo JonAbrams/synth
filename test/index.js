@@ -1,50 +1,5 @@
-var should = require('should');
 var request = require('supertest');
-
-describe('resourceParser module', function () {
-  var resourceParser = require('../lib/resourceParser.js');
-  var rootDir = __dirname + '/resources';
-  it('returns the expected structure', function () {
-    resourceParser.parse(rootDir).should.eql({
-      handlers: [],
-      orders: {
-        handlers: []
-      },
-      products: {
-        handlers: [
-          {
-            file: __dirname + '/resources/products/get.js',
-            method: 'GET',
-            path: '/api/products',
-            funcName: 'getIndex'
-          },
-          {
-            file: __dirname + '/resources/products/get.js',
-            method: 'GET',
-            path: '/api/products/:id',
-            funcName: 'get'
-          },
-          {
-            file: __dirname + '/resources/products/get.js',
-            method: 'GET',
-            path: '/api/products/specials',
-            funcName: 'getSpecials'
-          }
-        ],
-        variations: {
-          handlers: [
-            {
-              file: __dirname + '/resources/products/variations/get.js',
-              method: 'GET',
-              path: '/api/products/:id/variations',
-              funcName: 'getIndex'
-            }
-          ]
-        }
-      }
-    });
-  });
-});
+require('should');
 
 describe.skip('synth module', function () {
   // var synth = require('../synth.js');
