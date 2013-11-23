@@ -1,6 +1,6 @@
 // Returns a list of products in the system
 
-exports.getList = function (req, res) {
+exports.getIndex = function (req, res) {
   res.write(
     JSON.stringify([
       {
@@ -27,4 +27,10 @@ exports.get = function (req, res) {
     })
   );
   res.end();
+};
+
+// Returns 'special' products
+
+exports.getSpecials = function (req, res) {
+
 };
