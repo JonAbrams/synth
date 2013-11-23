@@ -7,7 +7,14 @@ describe('resourceParser module', function () {
     resourceParser.parse(rootDir).should.eql({
       handlers: [],
       orders: {
-        handlers: []
+        handlers: [
+          {
+            file: __dirname + '/resources/orders/create.js',
+            method: 'POST',
+            path: '/api/orders',
+            funcName: 'post'
+          }
+        ]
       },
       products: {
         handlers: [
