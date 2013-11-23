@@ -2,7 +2,7 @@
 
 The easiest web framework for synthesizing API-first web apps that also have web front-ends.
 
-**Current status**: Just this README file. Code to come next.
+**Current status**: Mostly just this README file. Slowly churning out code.
 
 Using Node.js to make an API-first web app is awesome but it has become rather complicated requiring knowledge of various technologies built on Node.js like _npm_, _grunt_, _bower_, and _express_, plus experience in how to organize and layout the app's folder structure. This has resulted in a needlessly steep learning curve for newbies, and a huge variation in app structure for pros.
 
@@ -17,7 +17,7 @@ _Synth_ simplifies the process of generating and organizing API endpoints for yo
 Synth depends on [Node](http://nodejs.org/) and [NPM](http://npmjs.org/). Install it globally using npm:
 
     npm install -g synthjs
-    
+
 **Note**: You may need to do `sudo npm install -g synthjs` if you get any errors when attempting to install.
 
 ### Create a new app
@@ -150,7 +150,7 @@ You can then declare a request handler for a specific HTTP method in any file th
 For example, to create _GET_ request handler for the memoes resource that lists all the created memoes, create a file called `getList.js` with the following contents:
 
 ```javascript
-exports.get = function (req, res) {
+exports.getIndex = function (req, res) {
   req.db.find('memoes').then(function (data) {
     res.json(data);
   });
