@@ -2,7 +2,7 @@
 
 The easiest web framework for synthesizing API-first web apps that also have web front-ends.
 
-**Current status**: Mostly just this README file. Slowly churning out code.
+**Current status**: Mostly just this README file. Slowly churning out code. [![Build Status](https://travis-ci.org/JonAbrams/synth.png?branch=master)](https://travis-ci.org/JonAbrams/synth)
 
 Using Node.js to make an API-first web app is awesome but it has become rather complicated requiring knowledge of various technologies built on Node.js like _npm_, _grunt_, _bower_, and _express_, plus experience in how to organize and layout the app's folder structure. This has resulted in a needlessly steep learning curve for newbies, and a huge variation in app structure for pros.
 
