@@ -3,16 +3,21 @@ require('should');
 describe('resourceParser module', function () {
   var resourceParser = require('../lib/resourceParser.js');
   var rootDir = __dirname + '/resources';
+  var resourceTree = resourceParser.parse(rootDir);
+
   it('returns the expected structure', function () {
-    resourceParser.parse(rootDir).should.eql({
+    resourceTree.should.eql({
       handlers: [],
       orders: {
         handlers: [
           {
             file: __dirname + '/resources/orders/create.js',
-            method: 'POST',
+            method: 'post',
             path: '/api/orders',
-            funcName: 'post'
+            funcName: 'post',
+            resources: [
+              'orders'
+            ]
           }
         ]
       },
@@ -20,40 +25,60 @@ describe('resourceParser module', function () {
         handlers: [
           {
             file: __dirname + '/resources/products/get.js',
-            method: 'GET',
+            method: 'get',
             path: '/api/products',
-            funcName: 'getIndex'
+            funcName: 'getIndex',
+            resources: [
+              'products'
+            ]
           },
           {
             file: __dirname + '/resources/products/get.js',
-            method: 'GET',
+            method: 'get',
             path: '/api/products/:id',
-            funcName: 'get'
+            funcName: 'get',
+            resources: [
+              'products'
+            ]
           },
           {
             file: __dirname + '/resources/products/get.js',
-            method: 'GET',
+            method: 'get',
             path: '/api/products/specials',
-            funcName: 'getSpecials'
+            funcName: 'getSpecials',
+            resources: [
+              'products'
+            ]
           },
           {
             file: __dirname + '/resources/products/new.js',
-            method: 'POST',
+            method: 'post',
             path: '/api/products',
-            funcName: 'post'
+            funcName: 'post',
+            resources: [
+              'products'
+            ]
           }
         ],
         variations: {
           handlers: [
             {
               file: __dirname + '/resources/products/variations/get.js',
-              method: 'GET',
+              method: 'get',
               path: '/api/products/:id/variations',
-              funcName: 'getIndex'
+              funcName: 'getIndex',
+              resources: [
+                'products',
+                'variations'
+              ]
             }
           ]
         }
       }
     });
+  });
+
+  it('returns functions', function () {
+    resourceTree.products.handlers[0].func().should.be.type('function');
   });
 });
