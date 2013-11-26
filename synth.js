@@ -1,27 +1,41 @@
-var resourceParser = require('./lib/resourceParser.js');
+var express = require('express');
+var connect = require('connect');
+var handlersParser = require('./lib/handlersParser.js');
+var app = express();
+var handlers;
 
-module.exports = function (options) {
+/* Add default middleware */
+app.use( express.bodyParser() );
+
+/* the main synth init function */
+exports = module.exports = function (options) {
   options = options || {};
   var resourceDir = options.resourceDir || 'resources';
 
   // On startup, parse all the resource handling modules
-  var resources = resourceParser.parse(__dirname + '/' + resourceDir);
+  handlers = handlersParser.parse(resourceDir);
 
-  return function (req, res, next) {
-    if (req.url == '/') {
-      res.setHeader('Content-Type', 'text/html');
-      res.write('TODO: Render template here');
-      return res.end();
-    }
-    res.setHeader('Content-Type', 'application/json');
-    reqHandler = resFinder(res.method, req.url);
-    if (reqHandler) {
-      return reqHandler(req, res);
-    }
+  /* Tell express to listen for each request handler */
+  handlers.forEach(function (handler) {
+    app[handler.method]( handler.path, handler.func() );
+  });
 
-    res.write(404, JSON.stringify({
-      error: 'Resource not found'
-    }));
-    res.end();
-  };
+  app.all('/api/*', function (req, res) {
+    res.statusCode = 404;
+    res.json({ error: 'Resource not found'});
+  });
+
+  return app;
 };
+
+exports.apiHandlers = function () { return handlers; };
+
+/* Expose connect middleware */
+/* Code borrowed from Express */
+for (var key in connect.middleware) {
+  Object.defineProperty(
+    exports,
+    key,
+    Object.getOwnPropertyDescriptor(connect.middleware, key)
+  );
+}

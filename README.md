@@ -2,11 +2,15 @@
 
 The easiest web framework for synthesizing API-first web apps that also have web front-ends.
 
-**Current status**: Mostly just this README file. Slowly churning out code. [![Build Status](https://travis-ci.org/JonAbrams/synth.png?branch=master)](https://travis-ci.org/JonAbrams/synth)
+**Current status**:
+
+- Parsing of the resource directory is functional. You can now use synth as you would express, but synth will parse the 'resources' directory, as described below. [2013-11-26]
+
+[![Build Status](https://travis-ci.org/JonAbrams/synth.png?branch=master)](https://travis-ci.org/JonAbrams/synth)
 
 Using Node.js to make an API-first web app is awesome but it has become rather complicated requiring knowledge of various technologies built on Node.js like _npm_, _grunt_, _bower_, and _express_, plus experience in how to organize and layout the app's folder structure. This has resulted in a needlessly steep learning curve for newbies, and a huge variation in app structure for pros.
 
-_Synth_ simplifies making Node.js web apps by providing a single command-line tool to create, manage, and serve up such web apps. _Synth_ makes building API-first web apps easier by incorporating best-practices by default and by building on top of the fantastic previously mentioned tools.
+_Synth_ simplifies making Node.js web apps by providing a single command-line tool to create, manage, and serve up such web apps. It makes building API-first web apps easier by letting you design your API with an easy to follow directory structure. It is a web API and app framework leveraging the best existing Node.js tools available.
 
 _Synth_ provides a full assets pipeline out of the box, allowing you to use CoffeeScript, LESS, Stylus, and Jade right away. _Synth_ will also precompile, minify and concatenate your assets when set to run in production mode.
 
@@ -145,9 +149,9 @@ For example, to create a _memoes_ resource, create a folder of that same name:
         | resources
           | memoes
 
-You can then declare a request handler for a specific HTTP method in any file that is in the resources directory by assigning a function to `exports.<method>`.
+You can then declare a request handler for a specific HTTP method in any file that is in the resources directory by assigning a function to `exports.<method><optional: ActionName>`.
 
-For example, to create _GET_ request handler for the memoes resource that lists all the created memoes, create a file called `getList.js` with the following contents:
+For example, to create _GET_ request handler for the memoes resource that lists all the created memoes, create a file called `fetch.js` with the following contents:
 
 ```javascript
 exports.getIndex = function (req, res) {

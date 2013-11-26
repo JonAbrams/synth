@@ -1,36 +1,28 @@
 // Returns a list of products in the system
 
 exports.getIndex = function (req, res) {
-  res.write(
-    JSON.stringify([
-      {
-        name: "Fancy Shoes",
-        price: 99.99
-      }
-    ])
-  );
-  res.end();
+  res.json([
+    {
+      name: "Fancy Shoes",
+      price: 99.99
+    }
+  ]);
 };
 
 // Returns detailed info about a particular product
 
 exports.get = function (req, res) {
-  res.write(
-    JSON.stringify({
-      name: "Fancy Shoes",
-      price: 99.99,
-      colors: [
-        "red",
-        "green",
-        "aubergine"
-      ]
-    })
-  );
-  res.end();
+  res.json({
+    name: "Fancy Shoes",
+    price: 99.99,
+    colors: [
+      "red",
+      "green",
+      "aubergine"
+    ]
+  });
 };
 
 // Returns 'special' products
 
-exports.getSpecials = function (req, res) {
-
-};
+exports.getSpecials = function (req, res) { };
