@@ -3,7 +3,7 @@ var variations = [];
 exports.post = function (req, res) {
   variations.push({
     name: req.body.name,
-    productId: req.params.productId
+    productsId: req.params.productsId
   });
   res.end();
 };

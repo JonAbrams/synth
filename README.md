@@ -167,7 +167,6 @@ All of the web apps settings and meta-info are stored in _synth.json_. This incl
 
 For now it just has two keys: `name` and `version`, both string. For `version`, it is recommended that you use a [semver](http://semver.org/) format.
 
-
 ## For the future
 
 1. Write tests.

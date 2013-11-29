@@ -6,7 +6,11 @@ var mkdirp = require('mkdirp'),
     version = pkg.version,
     os = require('os'),
     fs = require('fs'),
+    path = require('path'),
     _ = require('lodash');
+
+/* Local modules */
+var commands = require('./commands.js');
 
 /* Global vars */
 var validCommands = {
@@ -31,4 +35,12 @@ var command = (function () {
   return supposedCommand;
 })();
 
-console.log("Command: ", command);
+switch (command) {
+  case 'new':
+    if (args[1]) {
+      commands.createNewApp(args[1]);
+      return;
+    }
+  case 'help':
+    commands.showHelp(args[1]);
+}

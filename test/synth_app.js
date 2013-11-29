@@ -30,17 +30,17 @@ describe('synth module', function () {
     request(app).post('/api/products/52/variations')
     .send({ name: 'red' })
     .expect(200)
-    .end(done);
-
-    // request(app).get('/api/products/52/variations')
-    // .expect(200)
-    // .expect('Content-Type', 'application/json; charset=utf-8')
-    // .expect([
-    //   {
-    //     name: 'red',
-    //     productsId: '52'
-    //   }
-    // ])
-    // .end(done);
+    .end(function () {
+      request(app).get('/api/products/52/variations')
+      .expect(200)
+      .expect('Content-Type', 'application/json; charset=utf-8')
+      .expect([
+        {
+          name: 'red',
+          productsId: '52'
+        }
+      ])
+      .end(done);
+    });
   });
 });
