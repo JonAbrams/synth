@@ -69,7 +69,7 @@ describe("synth command-line", function () {
       });
     });
 
-    it.skip('shows the right messages in the console', function (done) {
+    it('shows the right messages in the console', function (done) {
       exec(newAppCmd, function (err, stdout) {
         stdout.should.eql('Successfully created a new synth app in ' + appName + '\n');
         exec(newAppCmd, function (err, stdout) {
@@ -86,10 +86,8 @@ describe("synth command-line", function () {
           'back',
           'synth.json',
           'back/back-app.js',
-          'back/node_modules',
           'back/package.json',
           'back/resources',
-          'back/node_modules/explanation.txt',
           'back/resources/blurbs',
           'back/resources/blurbs/comments',
           'back/resources/blurbs/createBlurb.js',
