@@ -81,18 +81,18 @@ describe("synth command-line", function () {
 
     it('populates the project with key files', function (done) {
       exec(newAppCmd, function (err, stdout) {
-        wrench.readdirSyncRecursive(appName).should.eql([
+        wrench.readdirSyncRecursive(appName).sort().should.eql([
           '.gitignore',
           'back',
-          'synth.json',
           'back/back-app.js',
           'back/package.json',
           'back/resources',
           'back/resources/blurbs',
           'back/resources/blurbs/comments',
+          'back/resources/blurbs/comments/comment.js',
           'back/resources/blurbs/createBlurb.js',
           'back/resources/blurbs/getBlurbList.js',
-          'back/resources/blurbs/comments/comment.js'
+          'synth.json'
         ]);
         done();
       });
