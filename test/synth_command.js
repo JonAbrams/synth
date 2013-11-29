@@ -5,7 +5,8 @@ var mkdirp = require('mkdirp'),
   os = require('os'),
   fs = require('fs'),
   _ = require('lodash'),
-  temp = require('temp');
+  temp = require('temp'),
+  wrench = require('wrench');
 
 /* Make a place on the filesystem for our tests */
 temp.track();
@@ -29,7 +30,7 @@ describe("synth command-line", function () {
             '',
             'Commands:',
             ' new      Create a new synth app in the specified directory',
-            ' help     Shows you this text, or if you pass in a command, it tells you',
+            ' help     Shows you this text, or if you pass in another command, it tells you',
             '          more about it. e.g. `synth help new`',
             ''
           ].join('\n'));
@@ -68,13 +69,34 @@ describe("synth command-line", function () {
       });
     });
 
-    it("shows the right messages in the console", function (done) {
+    it.skip('shows the right messages in the console', function (done) {
       exec(newAppCmd, function (err, stdout) {
         stdout.should.eql('Successfully created a new synth app in ' + appName + '\n');
         exec(newAppCmd, function (err, stdout) {
           stdout.should.eql('Oops, that folder already exists. Try specifying a different name.\n');
           done();
         });
+      });
+    });
+
+    it('populates the project with key files', function (done) {
+      exec(newAppCmd, function (err, stdout) {
+        wrench.readdirSyncRecursive(appName).should.eql([
+          '.gitignore',
+          'back',
+          'synth.json',
+          'back/back-app.js',
+          'back/node_modules',
+          'back/package.json',
+          'back/resources',
+          'back/node_modules/explanation.txt',
+          'back/resources/blurbs',
+          'back/resources/blurbs/comments',
+          'back/resources/blurbs/createBlurb.js',
+          'back/resources/blurbs/getBlurbList.js',
+          'back/resources/blurbs/comments/comment.js'
+        ]);
+        done();
       });
     });
   });

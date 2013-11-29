@@ -1,8 +1,14 @@
-var fs = require('fs');
+var fs = require('fs'),
+    path = require('path'),
+    wrench = require('wrench');
 
 exports.createNewApp = function (dirName) {
   try {
+    /* Test that the specified is empty and can be written to */
     fs.mkdirSync(dirName);
+    fs.rmdirSync(dirName);
+
+    applyTemplate('main', dirName);
     console.log('Successfully created a new synth app in ' + dirName);
   } catch (err) {
     if (err.code == 'EEXIST')
@@ -35,10 +41,16 @@ exports.showHelp = function (command) {
         '',
         'Commands:',
         ' new      Create a new synth app in the specified directory',
-        ' help     Shows you this text, or if you pass in a command, it tells you',
+        ' help     Shows you this text, or if you pass in another command, it tells you',
         '          more about it. e.g. `synth help new`'
       ];
   }
 
   console.log( textArr.join('\n') );
 };
+
+function applyTemplate ( template, destPath ) {
+  var templatePath = path.join(__dirname, '../templates', template);
+
+  wrench.copyDirSyncRecursive(templatePath, destPath);
+}
