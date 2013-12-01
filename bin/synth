@@ -17,7 +17,8 @@ var validCommands = {
   "new": "n",
   "install": "i",
   "dev": "d",
-  "prod": "p"
+  "prod": "p",
+  "help": "h"
 };
 
 // List of arguments passed in
@@ -30,17 +31,15 @@ var command = (function () {
 
   // Replace unknown commands with 'help'
   if ( !_(validCommands).has(supposedCommand) ) {
+    if (supposedCommand) console.log('Unrecognized command: ' + supposedCommand + '\n');
     return "help";
   }
   return supposedCommand;
 })();
 
-switch (command) {
-  case 'new':
-    if (args[1]) {
-      commands.createNewApp(args[1]);
-      return;
-    }
-  case 'help':
-    commands.showHelp(args[1]);
+if (command == 'new' && args[1] && args[1][0] != '-') {
+  commands.createNewApp(args[1]);
+  return;
 }
+
+commands.showHelp(args[1]);

@@ -1,5 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
+    pkg = require('../package.json'),
     wrench = require('wrench');
 
 exports.createNewApp = function (dirName) {
@@ -19,11 +20,11 @@ exports.createNewApp = function (dirName) {
 };
 
 exports.showHelp = function (command) {
-  var textArr;
+  var textArr = ['synth version ' + pkg.version, ''];
 
   switch (command) {
     case 'new':
-      textArr = [
+      textArr.push(
         'Usage: synth new APP_NAME',
         '',
         'Description:',
@@ -33,24 +34,53 @@ exports.showHelp = function (command) {
         '',
         '  In the future, this command will take options allowing you to specify a project as',
         '  CoffeeScript, or to specify a particular front-end framework, like Angularjs or Ember'
-      ];
+      );
+      break;
+    case 'dev':
+      textArr.push(
+        'Usage: synth dev [options]',
+        '',
+        'Description:',
+        '  The `synth dev` command launches a local web server on the specified port.',
+        "  The web server will run in 'dev mode', which causes:",
+        '    - Assets to be compiled on demand.',
+        '    - Assets to be served as separate and unminified files.',
+        '    - The server will automatically restart if any source files are changed.',
+        '',
+        'Options:',
+        '  -p, --port    Specify the port that the server should listen on. By default the port is 3000.'
+      );
       break;
     default:
-      textArr = [
+      textArr.push(
         'Usage: synth COMMAND [args]',
         '',
         'Commands:',
-        ' new      Create a new synth app in the specified directory',
+        ' new      Create a new synth app in the specified directory. e.g. `synth new my_app`',
+        ' dev      Start a local development server. Must be executed from the root folder',
+        '          of a synth app',
         ' help     Shows you this text, or if you pass in another command, it tells you',
         '          more about it. e.g. `synth help new`'
-      ];
+      );
   }
 
   console.log( textArr.join('\n') );
 };
 
 function applyTemplate ( template, destPath ) {
+  var appName = destPath.replace(/.*\//g, '');
   var templatePath = path.join(__dirname, '../templates', template);
 
   wrench.copyDirSyncRecursive(templatePath, destPath);
+
+  /* Replace all instances of '{{ appName }}' with the given app's name */
+  wrench.readdirSyncRecursive(destPath).forEach(function (file) {
+    var filePath = path.join(destPath, file);
+    try { // Reads will fail on a directory, try/catch will catch it
+      var contents = fs.readFileSync(filePath, { encoding: 'utf8' });
+      fs.writeFileSync( filePath, contents.replace(/\{\{\s*appName\s*\}\}/g, appName) );
+    } catch (err) {
+      if (err.code != 'EISDIR') throw err;
+    }
+  });
 }
