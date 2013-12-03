@@ -1,6 +1,7 @@
 var fs = require('fs'),
     path = require('path'),
     pkg = require('../package.json'),
+    _ = require('lodash'),
     wrench = require('wrench');
 
 exports.createNewApp = function (dirName) {
@@ -16,6 +17,17 @@ exports.createNewApp = function (dirName) {
       console.log('Oops, that folder already exists. Try specifying a different name.');
     else
       console.log(err.message);
+  }
+};
+
+exports.startServer = function (mode) {
+  var port = process.env['PORT'] || 3000;
+  var app = require( path.join(process.cwd(), 'back/back-app.js') );
+  if (app && typeof app.listen == 'function') {
+    console.log('Starting synth server on port ' + port);
+    app.listen(port);
+  } else {
+    console.log('No synth app detected.');
   }
 };
 
@@ -78,7 +90,11 @@ function applyTemplate ( template, destPath ) {
     var filePath = path.join(destPath, file);
     try { // Reads will fail on a directory, try/catch will catch it
       var contents = fs.readFileSync(filePath, { encoding: 'utf8' });
-      fs.writeFileSync( filePath, contents.replace(/\{\{\s*appName\s*\}\}/g, appName) );
+      var tokens = {
+        appName: appName,
+        synthVersion: pkg.version
+      };
+      fs.writeFileSync( filePath, _.template(contents, tokens) );
     } catch (err) {
       if (err.code != 'EISDIR') throw err;
     }

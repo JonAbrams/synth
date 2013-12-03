@@ -1,6 +1,9 @@
-var express = require('express');
-var connect = require('connect');
+var express = require('express'),
+    connect = require('connect'),
+    path = require('path');
+
 var handlersParser = require('./lib/handlersParser.js');
+
 var app = express();
 var handlers;
 
@@ -10,7 +13,7 @@ app.use( express.bodyParser() );
 /* the main synth init function */
 exports = module.exports = function (options) {
   options = options || {};
-  var resourceDir = options.resourceDir || 'resources';
+  var resourceDir = options.resourceDir || path.join(process.cwd(), 'back/resources');
 
   // On startup, parse all the resource handling modules
   handlers = handlersParser.parse(resourceDir);

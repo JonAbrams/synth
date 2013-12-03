@@ -1,1 +1,5 @@
-// TODO: Make a template back-end app
+var synth = require('synth');
+
+var app = synth();
+
+module.exports = app;

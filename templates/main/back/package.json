@@ -1,7 +1,8 @@
 {
-  "name": "app_name",
+  "name": "${ appName }",
   "version": "0.0.1",
   "dependencies": {
+    "synth": "~${ synthVersion }"
   },
   "devDependencies": {
   }

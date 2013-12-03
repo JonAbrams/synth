@@ -7,6 +7,7 @@ var mkdirp = require('mkdirp'),
     os = require('os'),
     fs = require('fs'),
     path = require('path'),
+    exec = require('child_process').exec,
     _ = require('lodash');
 
 /* Local modules */
@@ -40,6 +41,19 @@ var command = (function () {
 if (command == 'new' && args[1] && args[1][0] != '-') {
   commands.createNewApp(args[1]);
   return;
+}
+
+if ( _(['dev', 'prod']).contains(command) ) {
+  commands.startServer(command);
+  return;
+}
+
+if (command == 'install') {
+  process.chdir('back');
+  exec('npm install', function (err, stdout) {
+    console.log(stdout);
+    if (err) throw err;
+  });
 }
 
 commands.showHelp(args[1]);

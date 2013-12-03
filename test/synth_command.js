@@ -2,10 +2,12 @@ require('should');
 var mkdirp = require('mkdirp'),
   path = require('path'),
   exec = require('child_process').exec,
+  spawn = require('child_process').spawn,
   os = require('os'),
   fs = require('fs'),
   _ = require('lodash'),
   pkg = require('../package.json'),
+  request = require('supertest'),
   temp = require('temp'),     // Creates temporary directories
   wrench = require('wrench'); // Recursive file operations
 
@@ -98,7 +100,7 @@ describe("synth command-line", function () {
   });
 
   describe('project generation', function () {
-    var appName = 'test_app';
+    var appName = 'test_app-' + _.random(10000);
     var newAppCmd = synthCmd('new ' + appName);
 
     it('creates a directory', function (done) {
@@ -141,6 +143,58 @@ describe("synth command-line", function () {
       exec(newAppCmd, function (err, stdout) {
         fs.readFileSync( path.join(appName, 'synth.json'), { encoding: 'utf8' } ).should.contain('"name": "' + appName + '"');
         done();
+      });
+    });
+  });
+
+  describe('Launching dev server', function () {
+    var spawnDevServer = function () {
+      return spawn('synth', ['dev'], {
+          cwd: process.cwd(),
+          env: {
+            'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH']
+          }
+        });
+    };
+
+    beforeEach(function (done) {
+      var appName = 'test_app-' + _.random(10000);
+      var nodeModulesPath = path.join(__dirname, '../node_modules');
+      var synthPath = path.join(__dirname, '..');
+      exec(synthCmd('new ' + appName), function (err, stdout) {
+        process.chdir(appName);
+        // To start the server, it needs some modules, just use this package's
+        fs.symlinkSync(nodeModulesPath, 'node_modules', 'dir');
+        try {
+          // Add a symlink to this particular module if necessary
+          fs.symlinkSync(synthPath, path.join('node_modules/synth'), 'dir');
+        } catch (error) {
+          if (error.code != 'EEXIST') throw error;
+        }
+        done();
+      });
+    });
+
+    it('says the it launched the server', function (done) {
+      var dev = spawnDevServer();
+      dev.stdout.on('data', function (data) {
+        data.toString().should.eql('Starting synth server on port 3000\n');
+        dev.kill();
+        done();
+      });
+    });
+
+    it.only('listens on port 3000', function (done) {
+      var dev = spawnDevServer();
+      dev.stdout.on('data', function (data) {
+        request('http://localhost:3000').get('/api/some_endpoint')
+        .expect(404)
+        .expect({ error: 'Resource not found'})
+        .end(function (err) {
+          dev.kill();
+          if (err) throw err;
+          done();
+        });
       });
     });
   });
