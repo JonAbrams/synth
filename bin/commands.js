@@ -9,23 +9,25 @@ exports.createNewApp = function (dirName) {
     /* Test that the specified is empty and can be written to */
     fs.mkdirSync(dirName);
     fs.rmdirSync(dirName);
-
-    applyTemplate('main', dirName);
-    console.log('Successfully created a new synth app in ' + dirName);
   } catch (err) {
     if (err.code == 'EEXIST')
       console.log('Oops, that folder already exists. Try specifying a different name.');
     else
       console.log(err.message);
+    return;
   }
+
+  applyTemplate('root', 'main', dirName);
+  applyTemplate('back', 'main', dirName);
+  console.log('Successfully created a new synth app in ' + dirName);
 };
 
 exports.startServer = function (mode) {
   var port = process.env['PORT'] || 3000;
   var app = require( path.join(process.cwd(), 'back/back-app.js') );
   if (app && typeof app.listen == 'function') {
-    console.log('Starting synth server on port ' + port);
     app.listen(port);
+    console.log('synth is now listening on port ' + port);
   } else {
     console.log('No synth app detected.');
   }
@@ -79,13 +81,16 @@ exports.showHelp = function (command) {
   console.log( textArr.join('\n') );
 };
 
-function applyTemplate ( template, destPath ) {
-  var appName = destPath.replace(/.*\//g, '');
-  var templatePath = path.join(__dirname, '../templates', template);
+function applyTemplate ( direction, template, dest ) {
+  var destDirection =  (direction == 'root') ? '' : direction;
+  var appName = dest.replace(/.*\//g, '');
+  var templatePath = path.join(__dirname, '../templates', direction, template);
+  var destPath = path.join(dest, destDirection);
 
-  wrench.copyDirSyncRecursive(templatePath, destPath);
+  /* Copy over all the files from the specified directory */
+  wrench.copyDirSyncRecursive( templatePath, destPath );
 
-  /* Replace all instances of '{{ appName }}' with the given app's name */
+  /* Run each file through the template renderer */
   wrench.readdirSyncRecursive(destPath).forEach(function (file) {
     var filePath = path.join(destPath, file);
     try { // Reads will fail on a directory, try/catch will catch it

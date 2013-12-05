@@ -178,13 +178,13 @@ describe("synth command-line", function () {
     it('says the it launched the server', function (done) {
       var dev = spawnDevServer();
       dev.stdout.on('data', function (data) {
-        data.toString().should.eql('Starting synth server on port 3000\n');
+        data.toString().should.eql('synth is now listening on port 3000\n');
         dev.kill();
         done();
       });
     });
 
-    it.only('listens on port 3000', function (done) {
+    it('listens on port 3000', function (done) {
       var dev = spawnDevServer();
       dev.stdout.on('data', function (data) {
         request('http://localhost:3000').get('/api/some_endpoint')
