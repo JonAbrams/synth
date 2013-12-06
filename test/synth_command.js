@@ -11,6 +11,10 @@ var mkdirp = require('mkdirp'),
   temp = require('temp'),     // Creates temporary directories
   wrench = require('wrench'); // Recursive file operations
 
+function throwif(err) {
+  if (err) throw err;
+}
+
 /* Make a place on the filesystem for our tests */
 temp.track();
 
@@ -105,6 +109,7 @@ describe("synth command-line", function () {
 
     it('creates a directory', function (done) {
       exec(newAppCmd, function (err, stdout) {
+        if (err) throw err;
         fs.readdirSync('.').should.contain(appName);
         done();
       });
@@ -112,8 +117,10 @@ describe("synth command-line", function () {
 
     it('shows the right messages in the console', function (done) {
       exec(newAppCmd, function (err, stdout) {
+        throwif(err);
         stdout.should.eql('Successfully created a new synth app in ' + appName + '\n');
         exec(newAppCmd, function (err, stdout) {
+          if (err) throw err;
           stdout.should.eql('Oops, that folder already exists. Try specifying a different name.\n');
           done();
         });
@@ -122,6 +129,7 @@ describe("synth command-line", function () {
 
     it('populates the project with key files', function (done) {
       exec(newAppCmd, function (err, stdout) {
+        throwif(err);
         wrench.readdirSyncRecursive(appName).sort().should.eql([
           '.gitignore',
           'back',
@@ -141,6 +149,7 @@ describe("synth command-line", function () {
 
     it('renders templates', function (done) {
       exec(newAppCmd, function (err, stdout) {
+        throwif(err);
         fs.readFileSync( path.join(appName, 'synth.json'), { encoding: 'utf8' } ).should.contain('"name": "' + appName + '"');
         done();
       });
