@@ -3,6 +3,7 @@ var express = require('express'),
     path = require('path');
 
 var handlersParser = require('./lib/handlersParser.js');
+var frontend = require('./lib/frontendRenderer.js');
 
 var app = express();
 var handlers;
@@ -14,8 +15,9 @@ app.use( express.bodyParser() );
 exports = module.exports = function (options) {
   options = options || {};
   var resourceDir = options.resourceDir || path.join(process.cwd(), 'back/resources');
+  var viewDir = options.viewDir || path.join(process.cwd(), 'front');
 
-  // On startup, parse all the resource handling modules
+  /* On startup, parse all the resource handling modules */
   handlers = handlersParser.parse(resourceDir);
 
   /* Tell express to listen for each request handler */
@@ -23,10 +25,25 @@ exports = module.exports = function (options) {
     app[handler.method]( handler.path, handler.func() );
   });
 
+  /* Handle API requests */
   app.all('/api/*', function (req, res) {
     res.statusCode = 404;
     res.json({ error: 'Resource not found'});
   });
+
+  /* Handle front-end requests for assets */
+  app.use(express.static(path.join(process.cwd(), 'front/misc')));
+
+  /* Serve up assets statically for now, later on an asset pipeline will be added */
+  app.use( '/images', express.static( path.join(process.cwd(), 'front/images') ) );
+  app.use( '/js', express.static( path.join(process.cwd(), 'front/js') ) );
+  app.use( '/css', express.static( path.join(process.cwd(), 'front/css') ) );
+  app.use( '/html', express.static( path.join(process.cwd(), 'front/html') ) );
+
+  /* Render the main index */
+  app.set( "views", viewDir );
+  app.set('view engine', 'jade');
+  app.get('/', frontend.index);
 
   return app;
 };

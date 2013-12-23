@@ -19,6 +19,7 @@ exports.createNewApp = function (dirName) {
 
   applyTemplate('root', 'main', dirName);
   applyTemplate('back', 'main', dirName);
+  applyTemplate('front', 'main', dirName);
   console.log('Successfully created a new synth app in ' + dirName);
 };
 

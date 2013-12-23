@@ -141,6 +141,10 @@ describe("synth command-line", function () {
           'back/resources/blurbs/comments/comment.js',
           'back/resources/blurbs/createBlurb.js',
           'back/resources/blurbs/getBlurbList.js',
+          'front',
+          'front/index.jade',
+          'front/misc',
+          'front/misc/robots.txt',
           'synth.json'
         ]);
         done();
