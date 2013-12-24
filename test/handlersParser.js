@@ -1,17 +1,19 @@
-var _ = require('lodash');
+var _ = require('lodash'),
+    path = require('path');
+
 require('should');
 
 describe('handlersParser module', function () {
   var resourceParser = require('../lib/handlersParser.js');
 
   describe('good resources dir', function () {
-    var rootDir = __dirname + '/resources';
+    var rootDir = path.join(__dirname, 'sample_project/back/resources');
     var handlers = resourceParser.parse(rootDir);
 
     it('returns the expected structure', function () {
       handlers.should.eql([
         {
-          file: __dirname + '/resources/orders/create.js',
+          file: path.join(rootDir, 'orders/create.js'),
           method: 'post',
           path: '/api/orders',
           funcName: 'post',
@@ -20,7 +22,7 @@ describe('handlersParser module', function () {
           ]
         },
         {
-          file: __dirname + '/resources/products/get.js',
+          file: path.join(rootDir, 'products/get.js'),
           method: 'get',
           path: '/api/products',
           funcName: 'getIndex',
@@ -29,7 +31,7 @@ describe('handlersParser module', function () {
           ]
         },
         {
-          file: __dirname + '/resources/products/get.js',
+          file: path.join(rootDir, 'products/get.js'),
           method: 'get',
           path: '/api/products/:id',
           funcName: 'get',
@@ -38,7 +40,7 @@ describe('handlersParser module', function () {
           ]
         },
         {
-          file: __dirname + '/resources/products/get.js',
+          file: path.join(rootDir, 'products/get.js'),
           method: 'get',
           path: '/api/products/specials',
           funcName: 'getSpecials',
@@ -47,7 +49,7 @@ describe('handlersParser module', function () {
           ]
         },
         {
-          file: __dirname + '/resources/products/new.js',
+          file: path.join(rootDir, 'products/new.js'),
           method: 'post',
           path: '/api/products',
           funcName: 'post',
@@ -56,7 +58,7 @@ describe('handlersParser module', function () {
           ]
         },
         {
-          file: __dirname + '/resources/products/variations/variations.js',
+          file: path.join(rootDir, 'products/variations/variations.js'),
           method: 'post',
           path: '/api/products/:productsId/variations',
           funcName: 'post',
@@ -66,7 +68,7 @@ describe('handlersParser module', function () {
           ]
         },
         {
-          file: __dirname + '/resources/products/variations/variations.js',
+          file: path.join(rootDir, 'products/variations/variations.js'),
           method: 'get',
           path: '/api/products/:productsId/variations',
           funcName: 'getIndex',
@@ -84,12 +86,12 @@ describe('handlersParser module', function () {
   });
 
   describe('bad resources dir', function () {
-    var rootDir = __dirname + '/badResources';
+    var rootDir = path.join(__dirname, '/sample_project/back/badResources');
 
     it('throws an error', function () {
       (function () {
         resourceParser.parse(rootDir);
-      }).should.throw('Unrecognized method: not from '+ __dirname + '/badResources/broken.js');
+      }).should.throw( 'Unrecognized method: not from '+ path.join(rootDir, 'broken.js') );
     });
   });
 });

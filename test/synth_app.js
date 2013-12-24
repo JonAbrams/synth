@@ -2,10 +2,17 @@ var request = require('supertest');
 require('should');
 
 describe('synth module', function () {
-  var synth = require('../synth.js');
-  var app = synth({
-    resourceDir: __dirname + '/resources',
-    viewDir: __dirname + '/front'
+  var synth, app;
+  beforeEach(function () {
+    synth = require('../synth.js');
+    app = synth();
+    // app = synth({
+    //   resourceDir: __dirname + '/resources'
+    // });
+  });
+
+  before(function () {
+    process.chdir('test/sample_project');
   });
 
   describe("the api", function () {
@@ -50,12 +57,28 @@ describe('synth module', function () {
   });
 
   describe('front end', function () {
-    it.only('servers up the index.html', function (done) {
+    it('servers up the index.html', function (done) {
       request(app).get('/')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>.*<\/html>/)
       .end(done);
+    });
+
+    it('serves up js', function (done) {
+      request(app).get('/js/main.js')
+      .expect(200)
+      .expect('Content-Type', 'application/javascript')
+      .expect(/function main \(\) \{/)
+      .end(done);
+    });
+
+    it('serves up css', function (done) {
+      request(app).get('/css/main.css')
+      .expect(200)
+      .expect('Content-Type', 'text/css; charset=UTF-8')
+      .expect(/\.main \{\n  display: block;\n\}/)
+      .end(done)
     });
   });
 });
