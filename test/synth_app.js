@@ -57,11 +57,32 @@ describe('synth module', function () {
   });
 
   describe('front end', function () {
+    it('serves up a png image', function (done) {
+      request(app).get('/images/synth.png')
+      .expect(200)
+      .expect('Content-Type', 'image/png')
+      .end(done);
+    });
+
+    it('reports 404 for missing asset', function (done) {
+      request(app).get('/images/not_synth.png')
+      .expect(404)
+      .end(done);
+    });
+
     it('servers up the index.html', function (done) {
       request(app).get('/')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>.*<\/html>/)
+      .end(done);
+    });
+
+    it('serves up jade', function (done) {
+      request(app).get('/html/more.html')
+      .expect(200)
+      .expect('Content-Type', 'text/html; charset=UTF-8')
+      .expect('<h1>Welcome to Synth!</h1>')
       .end(done);
     });
 
@@ -73,12 +94,28 @@ describe('synth module', function () {
       .end(done);
     });
 
+    it('serves up coffee-script', function (done) {
+      request(app).get('/js/more.js')
+      .expect(200)
+      .expect('Content-Type', 'application/javascript')
+      .expect('var aFunc;\n\naFunc = function() {};\n')
+      .end(done);
+    });
+
     it('serves up css', function (done) {
       request(app).get('/css/main.css')
       .expect(200)
       .expect('Content-Type', 'text/css; charset=UTF-8')
-      .expect(/\.main \{\n  display: block;\n\}/)
-      .end(done)
+      .expect('.main {\n  display: block;\n}\n')
+      .end(done);
+    });
+
+    it('serves up scss', function (done) {
+      request(app).get('/css/more.css')
+      .expect(200)
+      .expect('Content-Type', 'text/css; charset=UTF-8')
+      .expect('.outer .inner {display:none;}')
+      .end(done);
     });
   });
 });

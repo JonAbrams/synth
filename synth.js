@@ -1,6 +1,7 @@
 var express = require('express'),
     connect = require('connect'),
-    path = require('path');
+    path = require('path'),
+    harp = require('harp');
 
 var handlersParser = require('./lib/handlersParser.js');
 var frontend = require('./lib/frontendRenderer.js');
@@ -36,9 +37,9 @@ exports = module.exports = function (options) {
 
   /* Serve up assets statically for now, later on an asset pipeline will be added */
   app.use( '/images', express.static( path.join(process.cwd(), 'front/images') ) );
-  app.use( '/js', express.static( path.join(process.cwd(), 'front/js') ) );
-  app.use( '/css', express.static( path.join(process.cwd(), 'front/css') ) );
-  app.use( '/html', express.static( path.join(process.cwd(), 'front/html') ) );
+  app.use( '/js', harp.mount( path.join(process.cwd(), 'front/js') ) );
+  app.use( '/css', harp.mount( path.join(process.cwd(), 'front/css') ) );
+  app.use( '/html', harp.mount( path.join(process.cwd(), 'front/html') ) );
 
   /* Render the main index */
   app.set( "views", viewDir );
