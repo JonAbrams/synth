@@ -40,6 +40,7 @@ exports = module.exports = function (options) {
   app.use( '/js', harp.mount( path.join(process.cwd(), 'front/js') ) );
   app.use( '/css', harp.mount( path.join(process.cwd(), 'front/css') ) );
   app.use( '/html', harp.mount( path.join(process.cwd(), 'front/html') ) );
+  app.use( '/bower-packages', harp.mount( path.join(process.cwd(), 'front/bower-packages') ) );
 
   /* Render the main index */
   app.set( "views", viewDir );

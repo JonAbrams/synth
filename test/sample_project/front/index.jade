@@ -2,5 +2,11 @@ doctype html
 html
   head
     title Test page
+
+    for cssFile in cssFiles
+      link(rel="sylesheet", href=cssFile)
+
+    for jsFile in jsFiles
+      script(src=jsFile)
   body
     h1 Test Page

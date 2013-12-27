@@ -57,6 +57,15 @@ describe('synth module', function () {
   });
 
   describe('front end', function () {
+    it('servers up the index.html', function (done) {
+      request(app).get('/')
+      .expect(200)
+      .expect('Content-Type', 'text/html; charset=utf-8')
+      .expect(/<html>.*<\/html>/)
+      .expect(/<script src="js\/main\.js"><\/script>/)
+      .end(done);
+    });
+
     it('serves up a png image', function (done) {
       request(app).get('/images/synth.png')
       .expect(200)
@@ -67,14 +76,6 @@ describe('synth module', function () {
     it('reports 404 for missing asset', function (done) {
       request(app).get('/images/not_synth.png')
       .expect(404)
-      .end(done);
-    });
-
-    it('servers up the index.html', function (done) {
-      request(app).get('/')
-      .expect(200)
-      .expect('Content-Type', 'text/html; charset=utf-8')
-      .expect(/<html>.*<\/html>/)
       .end(done);
     });
 
