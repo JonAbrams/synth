@@ -10,7 +10,8 @@ var app = express();
 var handlers;
 
 /* Add default middleware */
-app.use( express.bodyParser() );
+app.use( express.json() );
+app.use( express.urlencoded() );
 
 /* the main synth init function */
 exports = module.exports = function (options) {
