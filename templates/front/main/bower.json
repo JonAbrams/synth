@@ -1,0 +1,6 @@
+{
+  "name": "${ appName }",
+  "private": true,
+  "dependencies": {
+  }
+}

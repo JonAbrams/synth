@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+process.title = 'synth';
 
 /* Third-party Modules */
 var mkdirp = require('mkdirp'),
@@ -8,18 +9,23 @@ var mkdirp = require('mkdirp'),
     fs = require('fs'),
     path = require('path'),
     exec = require('child_process').exec,
-    _ = require('lodash');
+    _ = require('lodash'),
+    npm = require('npm'),
+    bower = require('bower');
 
 /* Local modules */
-var commands = require('./commands.js');
+var commands = require('../lib/commands.js');
 
 /* Global vars */
 var validCommands = {
-  "new": "n",
-  "install": "i",
-  "dev": "d",
-  "prod": "p",
-  "help": "h"
+  'new': 'n',
+  'install': 'i',
+  'list': 'l',
+  'search': 's',
+  'uninstall': 'u',
+  'dev': 'd',
+  'prod': 'p',
+  'help': 'h'
 };
 
 // List of arguments passed in
@@ -48,12 +54,9 @@ if ( _(['dev', 'prod']).contains(command) ) {
   return;
 }
 
-if (command == 'install') {
-  process.chdir('back');
-  exec('npm install', function (err, stdout) {
-    console.log(stdout);
-    if (err) throw err;
-  });
+if ( _(['install', 'search', 'list']).contains(command) ) {
+  commands.install(command, args.slice(1) );
+  return;
 }
 
 commands.showHelp(args[1]);

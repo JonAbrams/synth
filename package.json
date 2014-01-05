@@ -9,10 +9,12 @@
     "lodash": "~2.4.0",
     "express": "~3.4.4",
     "methods": "~0.1.0",
-    "connect": "~2.11.1",
     "wrench": "~1.5.4",
     "jade": "~1.0.0",
-    "harp": "~0.11.0"
+    "harp": "~0.11.0",
+    "bower": "~1.2.8",
+    "connect": "~2.12.0",
+    "npm": "~1.3.23"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
@@ -27,5 +29,6 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "main": "synth.js"
+  "main": "synth.js",
+  "bin": "bin/synth"
 }

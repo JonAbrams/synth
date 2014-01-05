@@ -51,6 +51,10 @@ exports = module.exports = function (options) {
   return app;
 };
 
+exports.app = app;
+
+exports.commands = require('./lib/commands.js');
+
 exports.apiHandlers = function () { return handlers; };
 
 /* Expose connect middleware */

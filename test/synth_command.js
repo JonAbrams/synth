@@ -15,7 +15,7 @@ function throwif(err) {
   if (err) throw err;
 }
 
-/* Make a place on the filesystem for our tests */
+/* Set the temp directories to self-delete on exit */
 temp.track();
 
 describe("synth command-line", function () {
@@ -28,6 +28,9 @@ describe("synth command-line", function () {
     args = args || '';
     return path.join(__dirname, '../bin/synth ') + args;
   }
+
+  var appName = 'test_app-' + _.random(10000);
+  var newAppCmd = synthCmd('new ' + appName);
 
   describe('help text', function () {
     describe('unrecognized command', function () {
@@ -104,9 +107,6 @@ describe("synth command-line", function () {
   });
 
   describe('project generation', function () {
-    var appName = 'test_app-' + _.random(10000);
-    var newAppCmd = synthCmd('new ' + appName);
-
     it('creates a directory', function (done) {
       exec(newAppCmd, function (err, stdout) {
         if (err) throw err;
@@ -116,11 +116,12 @@ describe("synth command-line", function () {
     });
 
     it('shows the right messages in the console', function (done) {
+      this.timeout(3000);
       exec(newAppCmd, function (err, stdout) {
         throwif(err);
         stdout.should.eql('Successfully created a new synth app in ' + appName + '\n');
         exec(newAppCmd, function (err, stdout) {
-          if (err) throw err;
+          throwif(err);
           stdout.should.eql('Oops, that folder already exists. Try specifying a different name.\n');
           done();
         });
@@ -142,6 +143,8 @@ describe("synth command-line", function () {
           'back/resources/blurbs/createBlurb.js',
           'back/resources/blurbs/getBlurbList.js',
           'front',
+          'front/.bowerrc',
+          'front/bower.json',
           'front/css',
           'front/css/cssFiles.json',
           'front/index.jade',
@@ -164,7 +167,7 @@ describe("synth command-line", function () {
     });
   });
 
-  describe('Launching dev server', function () {
+  describe('launching dev server', function () {
     var spawnDevServer = function () {
       return spawn('synth', ['dev'], {
           cwd: process.cwd(),
@@ -186,13 +189,14 @@ describe("synth command-line", function () {
           // Add a symlink to this particular module if necessary
           fs.symlinkSync(synthPath, path.join('node_modules/synth'), 'dir');
         } catch (error) {
+          // EEXIST can be expected if this test has been run before
           if (error.code != 'EEXIST') throw error;
         }
         done();
       });
     });
 
-    it('says the it launched the server', function (done) {
+    it('says that it launched the server', function (done) {
       var dev = spawnDevServer();
       dev.stdout.on('data', function (data) {
         data.toString().should.eql('synth is now listening on port 3000\n');
@@ -213,6 +217,74 @@ describe("synth command-line", function () {
           done();
         });
       });
+    });
+  });
+
+  describe('installing bower and npm packages', function () {
+    /* Since we can't stub out bower easily when invoking from the cli, call the function directly */
+    var commands = require('../lib/commands.js');
+
+    /* Stub out bower.commands */
+    var stub = require('./stubber.js').stub;
+    var bower = require('bower');
+    var npm = require('npm');
+    bower.commands = {
+      install: stub(function () {
+        return {
+          on: function () {}
+        };
+      })
+    };
+
+    npm.load = stub(function (config, callback) {
+      callback();
+    });
+
+    npm.commands = {
+      install: stub()
+    };
+
+    beforeEach(function (done) {
+      exec(newAppCmd, function () {
+        process.chdir(appName);
+        done();
+      });
+    });
+
+    afterEach(function () {
+      bower.commands.install.called = [];
+      npm.commands.install.called = [];
+      npm.load.called = [];
+    });
+
+    it('calls bower install with a component', function () {
+      commands.install('install', ['-f', 'angular']);
+      bower.commands.install.called.should.eql([
+        [ ['angular'], { save: true } ]
+      ]);
+    });
+
+    it('calls bower install', function () {
+      commands.install('install', ['-f']);
+      bower.commands.install.called.should.eql([
+        [ [''], { save: true }]
+      ]);
+    });
+
+    it('calls npm install module', function () {
+      commands.install('install', ['-b', 'lodash']);
+      npm.load.called.should.be.length(1);
+      npm.load.called[0][0].should.eql({ save: true });
+      npm.commands.install.called.should.eql([
+        [ ['lodash'] ]
+      ]);
+    });
+
+    it('calls npm install', function () {
+      commands.install('install', ['-b']);
+      npm.commands.install.called.should.eql([
+        [ [''] ]
+      ]);
     });
   });
 });
