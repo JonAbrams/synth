@@ -165,3 +165,6 @@ All of the web apps settings and meta-info are stored in _synth.json_. This incl
 
 For `version`, it is recommended that you use the [semver](http://semver.org/) format.
 
+## Licence
+
+[MIT](https://github.com/JonAbrams/synth/blob/master/LICENSE)
