@@ -196,6 +196,7 @@ describe("synth command-line", function () {
     });
 
     it('says that it launched the server', function (done) {
+      this.timeout(3000);
       var dev = spawnDevServer();
       dev.stdout.on('data', function (data) {
         data.toString().should.eql('synth is now listening on port 3000\n');
@@ -205,6 +206,7 @@ describe("synth command-line", function () {
     });
 
     it('listens on port 3000', function (done) {
+      this.timeout(3000);
       var dev = spawnDevServer();
       dev.stdout.on('data', function (data) {
         request('http://localhost:3000').get('/api/some_endpoint')
