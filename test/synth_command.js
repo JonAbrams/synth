@@ -82,19 +82,18 @@ describe("synth command-line", function () {
         });
       });
 
-      it('show dev mode help text', function (done) {
-        exec(synthCmd('help dev'), function (err, stdout) {
+      it('show server mode help text', function (done) {
+        exec(synthCmd('help server'), function (err, stdout) {
           stdout.should.eql([
             'synth version ' + pkg.version,
             '',
-            'Usage: synth dev [options]',
+            'Usage: synth server [options]',
             '',
             'Description:',
-            '  The `synth dev` command launches a local web server on the specified port.',
-            "  The web server will run in 'dev mode', which causes:",
+            '  The `synth server` command launches a local web server on the specified port.',
+            "  The web server will run in 'server mode', which means:",
             '    - Assets to be compiled on demand.',
             '    - Assets to be served as separate and unminified files.',
-            '    - The server will automatically restart if any source files are changed.',
             '',
             'Options:',
             '  -p, --port    Specify the port that the server should listen on. By default the port is 3000.',
@@ -169,7 +168,7 @@ describe("synth command-line", function () {
 
   describe('launching dev server', function () {
     var spawnDevServer = function () {
-      return spawn('synth', ['dev'], {
+      return spawn('synth', ['server'], {
           cwd: process.cwd(),
           env: {
             'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH']

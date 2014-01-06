@@ -23,7 +23,7 @@ var validCommands = {
   'list': 'l',
   'search': 's',
   'uninstall': 'u',
-  'dev': 'd',
+  'server': 's',
   'prod': 'p',
   'help': 'h'
 };
@@ -49,7 +49,7 @@ if (command == 'new' && args[1] && args[1][0] != '-') {
   return;
 }
 
-if ( _(['dev', 'prod']).contains(command) ) {
+if ( _(['server', 'prod']).contains(command) ) {
   commands.startServer(command);
   return;
 }

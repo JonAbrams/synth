@@ -4,7 +4,7 @@ The easiest web framework for synthesizing API-first web apps that also have web
 
 **Current status**:
 
-- Parsing of the resource directory is functional. You can now use synth as you would express, but synth will parse the 'resources' directory, as described below. [2013-11-26]
+- Nearly everything outlined below is available. All that's missing is production server support. In other words, it only launches the server in dev mode currently. [2014-01-05]
 
 [![Build Status](https://travis-ci.org/JonAbrams/synth.png?branch=master)](https://travis-ci.org/JonAbrams/synth)
 
@@ -22,7 +22,7 @@ Synth depends on [Node](http://nodejs.org/) and [NPM](http://npmjs.org/). Instal
 
     npm install -g synthjs
 
-**Note**: You may need to do `sudo npm install -g synthjs` if you get any errors when attempting to install.
+**Note**: You may need to do `sudo npm install -g synth` if you get any errors when attempting to install.
 
 ### Create a new app
 
@@ -79,32 +79,32 @@ Synth provides a single unified interface to both, invoked from the root of your
 
 To install either a back-end or a front-end package, just use _synth_'s install command:
 
-    synth install jquery
-
-_synth_ will  automatically figure out if the package belongs to the front-end or back-end. In cases where the named package is available for both the back-end and front-end, synth will ask you which one you want.
+    synth install -f jquery
 
 You can specify that a package is meant for  the front or back-ends using the -b or -f flags:
 
     synth install -f lodash  # Installs lodash for the front end
     synth install -b lodash  # Installs lodash for the back end
 
-#### The front-end 'Manifest' file
+#### Front-end _Manifest_ files
 
-The `Manifest` file located in the `front` folder contains the list of assets that will be loaded by the web app's front-end. Each file is loaded in the order that they're listed. Therefore, for example, make sure that the jquery library is listed before any JavaScript files that depend on it.
+Your project should contain two JSON formatted manifest files for your front-end assets, one for CSS and the other JavaScript. You can find the CSS manifest in `front/css/cssFiles.json`, and the JavaScript one in `front/js/jsFiles.json`. Each contain the list of css/js files that should be loaded by the client.
+
+Each asset file is loaded in the order that they're listed in the given manifest. This is important if any asset depends on another. For example, make sure that the jquery library is listed before any jQuery plugins that depend on it.
 
 Most front-end packages contain many extra files that shouldn't be served up to web browsers. _synth_ reads the _bower.json_ that comes with most packages to look for the package's _main_ file. It will then place a reference to that file at the end of the Manifest.
 
-If there are extra files that need to be loaded from a package, just add a reference to the front-end _Manifest_ file.
+If there are extra files that need to be loaded from a package, or a bower package didn't list its main file, just add a reference to the front-end _Manifest_ file. For example, a reference to jquery's main file would look like `"../bower_components/jquery/jquery.js"`
 
-When you serve up your app in dev mode, each front end assets is loaded serparately, to help with debugging.
+When you serve up your app in dev mode, each front end assets is loaded serparately, and unminified, to help with debugging.
 
 When you serve up your app in production mode, all the assets are minified and concattenated into two files (one for css, one for javascript). This helps reduce server load and improve client-side performance.
 
 #### More about third-party packages
 
-Back-end packages are installed in `my_app/back/node_modules` and front-end packages are installed in `my_app/front/bower_packages`.
+Back-end packages are installed in `my_app/back/node_modules` and front-end packages are installed in `my_app/front/bower_components`.
 
-Synth records which packages are installed in two files: `my_app/back/packages.json` (for back-end packages) and `my_app/front/bower.json` (for front-end packages). To make sure that you have installed all the packages specified in a _synth_ app, just run `synth install` from the app's root folder.
+Synth records which packages are installed in two files: `my_app/back/packages.json` (for back-end packages) and `my_app/front/bower.json` (for front-end packages). To make sure that you have installed all the packages specified in a _synth_ app, just run `synth install -b` and `synth install -f` from the app's root folder.
 
 ## back-app.js
 
@@ -122,20 +122,18 @@ var port = process.env.PORT || 3000;
 var mongoUrl = process.env["MONGO_URL"] || "my_app";
 
 // Init libraries
-var app = synth();
 var db = mongojs(mongoUrl);
 
 // Declare middleware (i.e. functions run for each incoming request)
+var app = synth.app;
 app.use(function (req, res, next) {
   // Make the db object available to request handlers by attaching it to the request object
   req.db = db;
   next();
 });
 
-// Listen for incoming HTTP requests
-app.listen(port, function () {
-  console.log("Synth server listening on port " + port);
-});
+// Start the server and return it
+module.exports = synth();
 ```
 
 ## Creating API resources + endpoints
@@ -163,21 +161,7 @@ exports.getIndex = function (req, res) {
 
 ## synth.json
 
-All of the web apps settings and meta-info are stored in _synth.json_. This includes common info like the web app's name, version, and homepage.
+All of the web apps settings and meta-info are stored in _synth.json_. This includes the web app's name, version, and homepage.
 
-For now it just has two keys: `name` and `version`, both string. For `version`, it is recommended that you use a [semver](http://semver.org/) format.
+For `version`, it is recommended that you use the [semver](http://semver.org/) format.
 
-## For the future
-
-1. Write tests.
-2. Write code.
-3. Collect feedback.
-4. Fix bugs.
-5. Create more features that increase ease-of-use and simplicity.
-
-### Some ideas
-
-- Allow request handlers to return a promise that then returns an object to be rendered as JSON. This means that many request handlers can be written in a single line.
-- Automatically preload view requests with data. Saving the initial extra roundtrip that the front-end needs to take to get data.
-- Automatically preload view requests with the requested view partial/template. Saving another initial roundtrip.
-- More db integration. Maybe an ORM?
