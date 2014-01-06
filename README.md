@@ -18,9 +18,9 @@ _Synth_ simplifies the process of generating and organizing API endpoints for yo
 
 ### Install
 
-Synth depends on [Node](http://nodejs.org/) and [NPM](http://npmjs.org/). Install it globally using npm:
+Synth depends on [Node](http://nodejs.org/) and [NPM](http://npmjs.org/). Install it globally using npm to access it from the command-line:
 
-    npm install -g synthjs
+    npm install -g synth
 
 **Note**: You may need to do `sudo npm install -g synth` if you get any errors when attempting to install.
 
@@ -118,7 +118,6 @@ var synth = require("synth");
 var mongojs = require("mongojs");
 
 // Configure some values
-var port = process.env.PORT || 3000;
 var mongoUrl = process.env["MONGO_URL"] || "my_app";
 
 // Init libraries
