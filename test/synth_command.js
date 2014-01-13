@@ -142,7 +142,6 @@ describe("synth command-line", function () {
           'back/resources/blurbs/createBlurb.js',
           'back/resources/blurbs/getBlurbList.js',
           'front',
-          'front/.bowerrc',
           'front/bower.json',
           'front/css',
           'front/css/cssFiles.json',
@@ -268,7 +267,7 @@ describe("synth command-line", function () {
     it('calls bower install', function () {
       commands.install('install', ['-f']);
       bower.commands.install.called.should.eql([
-        [ [''], { save: true }]
+        [ [], { save: true }]
       ]);
     });
 
@@ -284,7 +283,7 @@ describe("synth command-line", function () {
     it('calls npm install', function () {
       commands.install('install', ['-b']);
       npm.commands.install.called.should.eql([
-        [ [''] ]
+        [ [] ]
       ]);
     });
   });

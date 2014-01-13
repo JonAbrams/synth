@@ -12,7 +12,7 @@ describe('synth module', function () {
   });
 
   before(function () {
-    process.chdir('test/sample_project');
+    process.chdir(__dirname + '/sample_project');
   });
 
   describe("the api", function () {
