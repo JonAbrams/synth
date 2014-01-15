@@ -19,6 +19,7 @@ function throwif(err) {
 temp.track();
 
 describe("synth command-line", function () {
+  this.timeout(3000);
   beforeEach(function () {
     var rootDir = temp.mkdirSync('synth-tests');
     process.chdir(rootDir);
@@ -52,8 +53,8 @@ describe("synth command-line", function () {
             '',
             'Commands:',
             ' new      Create a new synth app in the specified directory. e.g. `synth new my_app`',
-            ' dev      Start a local development server. Must be executed from the root folder',
-            '          of a synth app',
+            ' server   Start a local server. Must be executed from the app\'s root folder.',
+            ' install  Install third-party packages (back-end or front-end) for use by your web app',
             ' help     Shows you this text, or if you pass in another command, it tells you',
             '          more about it. e.g. `synth help new`',
             ''
@@ -82,7 +83,7 @@ describe("synth command-line", function () {
         });
       });
 
-      it('show server mode help text', function (done) {
+      it('show server command help text', function (done) {
         exec(synthCmd('help server'), function (err, stdout) {
           stdout.should.eql([
             'synth version ' + pkg.version,
@@ -91,12 +92,45 @@ describe("synth command-line", function () {
             '',
             'Description:',
             '  The `synth server` command launches a local web server on the specified port.',
-            "  The web server will run in 'server mode', which means:",
+            '  By default the web server will run in \'development mode\', which means:',
             '    - Assets to be compiled on demand.',
             '    - Assets to be served as separate and unminified files.',
             '',
             'Options:',
-            '  -p, --port    Specify the port that the server should listen on. By default the port is 3000.',
+            '  -p     Specify the port that the server should listen on. By default the port is 3000.',
+            '  --prod Run the server in production mode.',
+            '',
+            'Alias: synth i [options]',
+            ''
+          ].join('\n'));
+          done();
+        });
+      });
+
+      it('shows install help text', function (done) {
+        exec(synthCmd('help install'), function (err, stdout) {
+          stdout.should.eql([
+            'synth version ' + pkg.version,
+            '',
+            'Usage: synth install <target> [packages]',
+            '',
+            'Description:',
+            '  The `synth install` command installs third-party packages for use by either the',
+            '  back-end or the front-end. Back-end packages are provided by NPM,',
+            '  front-end packages are provided by Bower.',
+            '',
+            '  To use this command, you must specify a target (-f or -b) followed by',
+            '  a space separated list of packages you would like to install.',
+            '',
+            'Targets:',
+            '  -f    Install packages using Bower for use by the front-end.',
+            '  -b    Install packages using NPM for use by the back-end.',
+            '',
+            'Example (Install jquery and angular for use by the front-end):',
+            '  synth install -f jquery angular',
+            '',
+            'Example (Install lodash for use by the back-end):',
+            '  synth install -b lodash',
             ''
           ].join('\n'));
           done();
@@ -115,7 +149,6 @@ describe("synth command-line", function () {
     });
 
     it('shows the right messages in the console', function (done) {
-      this.timeout(3000);
       exec(newAppCmd, function (err, stdout) {
         throwif(err);
         stdout.should.eql('Successfully created a new synth app in ' + appName + '\n');
@@ -195,7 +228,6 @@ describe("synth command-line", function () {
     });
 
     it('says that it launched the server', function (done) {
-      this.timeout(3000);
       var dev = spawnDevServer();
       dev.stdout.on('data', function (data) {
         data.toString().should.eql('synth is now listening on port 3000\n');
@@ -205,7 +237,6 @@ describe("synth command-line", function () {
     });
 
     it('listens on port 3000', function (done) {
-      this.timeout(3000);
       var dev = spawnDevServer();
       dev.stdout.on('data', function (data) {
         request('http://localhost:3000').get('/api/some_endpoint')
