@@ -6,9 +6,6 @@ describe('synth module', function () {
   beforeEach(function () {
     synth = require('../synth.js');
     app = synth();
-    // app = synth({
-    //   resourceDir: __dirname + '/resources'
-    // });
   });
 
   before(function () {
@@ -116,6 +113,23 @@ describe('synth module', function () {
       .expect(200)
       .expect('Content-Type', 'text/css; charset=UTF-8')
       .expect('.outer .inner {display:none;}')
+      .end(done);
+    });
+
+    it('exposes jsFiles', function () {
+      synth.jsFiles.should.eql(['js/main.js', 'js/more.js']);
+    });
+
+    it('exposes jsFiles', function () {
+      synth.cssFiles.should.eql(['css/main.css', 'css/more.css']);
+    });
+
+    it('can add references to other assets on demand', function (done) {
+      synth.jsFiles.push('js/special.js');
+      synth.cssFiles.push('css/special.css');
+      request(app).get('/')
+      .expect(/<script src="js\/special\.js"><\/script>/)
+      .expect(/<link rel="stylesheet" href="css\/special\.css"/)
       .end(done);
     });
   });

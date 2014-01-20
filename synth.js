@@ -57,6 +57,10 @@ exports.commands = require('./lib/commands.js');
 
 exports.apiHandlers = function () { return handlers; };
 
+exports.jsFiles = frontend.jsFiles;
+
+exports.cssFiles = frontend.cssFiles;
+
 /* Expose connect middleware */
 /* Code borrowed from Express */
 for (var key in connect.middleware) {

@@ -227,6 +227,10 @@ describe("synth command-line", function () {
       });
     });
 
+    afterEach(function () {
+      fs.unlinkSync( path.join(__dirname, '../node_modules/synth') );
+    });
+
     it('says that it launched the server', function (done) {
       var dev = spawnDevServer();
       dev.stdout.on('data', function (data) {
@@ -256,7 +260,7 @@ describe("synth command-line", function () {
     var commands = require('../lib/commands.js');
 
     /* Stub out bower.commands */
-    var stub = require('./stubber.js').stub;
+    var stub = require('./lib/stubber.js').stub;
     var bower = require('bower');
     var npm = require('npm');
     bower.commands = {

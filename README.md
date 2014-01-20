@@ -30,6 +30,14 @@ Synth depends on [Node](http://nodejs.org/) and [NPM](http://npmjs.org/). Instal
 
 This will create a new folder called `my_app`, you can of course change `my_app` to anything you like.
 
+    cd my_app
+    synth install -b
+    synth install -f
+
+Go into your new project and install any third-party back-end and front-end packages.
+
+Even though you have already installed _synth_ globally, in order to use it on the command-line, each project needs its own copy of it. Running `synth install -b` will install it for you.
+
 ### Default app directory structure
 
 ```
