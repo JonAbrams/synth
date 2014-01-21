@@ -50,7 +50,9 @@ if (command == 'new' && args[1] && args[1][0] != '-') {
 }
 
 if ( _(['server', 'prod']).contains(command) ) {
-  commands.startServer(command);
+  var mode = (process.env['NODE_ENV'] == 'production' || command == 'prod') ?
+            'production' : 'development';
+  commands.startServer(mode);
   return;
 }
 

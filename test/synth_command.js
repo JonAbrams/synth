@@ -9,6 +9,7 @@ var mkdirp = require('mkdirp'),
   pkg = require('../package.json'),
   request = require('supertest'),
   temp = require('temp'),     // Creates temporary directories
+  touch = require('touch'),
   wrench = require('wrench'); // Recursive file operations
 
 function throwif(err) {
@@ -198,6 +199,48 @@ describe("synth command-line", function () {
     });
   });
 
+  var createNewProject = function (done) {
+    var appName = 'test_app-' + _.random(10000);
+    var nodeModulesPath = path.join(__dirname, '../node_modules');
+    var synthPath = path.join(__dirname, '..');
+    exec(synthCmd('new ' + appName), function (err, stdout) {
+      process.chdir(appName);
+      // To start the server, it needs some modules, just use this package's
+      fs.symlinkSync(nodeModulesPath, 'node_modules', 'dir');
+      try {
+        // Add a symlink to this particular module if necessary
+        fs.symlinkSync(synthPath, path.join('node_modules/synth'), 'dir');
+      } catch (error) {
+        // EEXIST can be expected if this test has been run before
+        if (error.code != 'EEXIST') throw error;
+      }
+      done();
+    });
+  };
+
+  describe('launching prod server', function () {
+    var spawnProdServer = function () {
+      return spawn('synth', ['server'], {
+          cwd: process.cwd(),
+          env: {
+            'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH'],
+            'NODE_ENV': 'production'
+          }
+        });
+    };
+
+    beforeEach(createNewProject);
+
+    it('says that it launched the prod server', function (done) {
+      var dev = spawnProdServer();
+      dev.stdout.on('data', function (data) {
+        data.toString().should.eql('synth (in production mode) is now listening on port 3000\n');
+        dev.kill();
+        done();
+      });
+    });
+  });
+
   describe('launching dev server', function () {
     var spawnDevServer = function () {
       return spawn('synth', ['server'], {
@@ -208,35 +251,27 @@ describe("synth command-line", function () {
         });
     };
 
-    beforeEach(function (done) {
-      var appName = 'test_app-' + _.random(10000);
-      var nodeModulesPath = path.join(__dirname, '../node_modules');
-      var synthPath = path.join(__dirname, '..');
-      exec(synthCmd('new ' + appName), function (err, stdout) {
-        process.chdir(appName);
-        // To start the server, it needs some modules, just use this package's
-        fs.symlinkSync(nodeModulesPath, 'node_modules', 'dir');
-        try {
-          // Add a symlink to this particular module if necessary
-          fs.symlinkSync(synthPath, path.join('node_modules/synth'), 'dir');
-        } catch (error) {
-          // EEXIST can be expected if this test has been run before
-          if (error.code != 'EEXIST') throw error;
-        }
-        done();
-      });
-    });
+    beforeEach(createNewProject);
 
     afterEach(function () {
       fs.unlinkSync( path.join(__dirname, '../node_modules/synth') );
     });
 
-    it('says that it launched the server', function (done) {
+    it('displays the right message', function (done) {
       var dev = spawnDevServer();
+      var count = 0;
       dev.stdout.on('data', function (data) {
-        data.toString().should.eql('synth is now listening on port 3000\n');
-        dev.kill();
-        done();
+        if (count == 0) {
+          data.toString().should.eql('synth (in development mode) is now listening on port 3000\n');
+          touch('back/back-app.js');
+        } else if (count == 1){
+          data.toString().should.eql('A file was changed, restarting server\n');
+        } else {
+          data.toString().should.eql('synth (in development mode) is listening again on port 3000\n');
+          dev.kill();
+          done();
+        }
+        count++;
       });
     });
 
