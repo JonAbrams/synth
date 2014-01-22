@@ -267,7 +267,7 @@ describe("synth command-line", function () {
         } else if (count == 1){
           data.toString().should.eql('A file was changed, restarting server\n');
         } else {
-          data.toString().should.eql('synth (in development mode) is listening again on port 3000\n');
+          data.toString().should.eql('synth (in development mode) is now listening on port 3000\n');
           dev.kill();
           done();
         }
