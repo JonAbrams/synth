@@ -2,17 +2,21 @@
 
 The easiest web framework for synthesizing API-first web apps that also have web front-ends.
 
-**Current status**:
+## Current status
 
-- Nearly everything outlined below is available. All that's missing is production server support. In other words, it only launches the server in dev mode currently. [2014-01-05]
+**Version 0.2.0 (latest)**:
+
+- Everything outlined in the readme below should be working… with the following caveat.
+- Despite being functional, **_synth_ is not yet ready for production**. It hasn't been tested in production and since it's in active development, implementation and interface details are likely to change rapidly.
+
 
 [![Build Status](https://travis-ci.org/JonAbrams/synth.png?branch=master)](https://travis-ci.org/JonAbrams/synth)
 
-Using Node.js to make an API-first web app is awesome but it has become rather complicated requiring knowledge of various technologies built on Node.js like _npm_, _grunt_, _bower_, and _express_, plus experience in how to organize and layout the app's folder structure. This has resulted in a needlessly steep learning curve for newbies, and a huge variation in app structure for pros.
+Using Node.js to make an API-first web app is awesome but it has become rather complicated requiring knowledge of various technologies built on Node.js like _npm_, _grunt_, _bower_, and _express_, plus experience in how to organize and layout the app's folder structure. This has resulted in a needlessly steep learning curve for newbies, and huge variability in app structure for pros.
 
 _Synth_ simplifies making Node.js web apps by providing a single command-line tool to create, manage, and serve up such web apps. It makes building API-first web apps easier by letting you design your API with an easy to follow directory structure. It is a web API and app framework leveraging the best existing Node.js tools available.
 
-_Synth_ provides a full assets pipeline out of the box, allowing you to use CoffeeScript, LESS, Stylus, and Jade right away. _Synth_ will also precompile, minify and concatenate your assets when set to run in production mode.
+_Synth_ provides a full assets pipeline out of the box, allowing you to use CoffeeScript, SASS, Stylus, and Jade right away. _Synth_ will also precompile, minify and concatenate your JS and CSS assets when set to run in production mode.
 
 _Synth_ simplifies the process of generating and organizing API endpoints for your app. More on that later.
 
@@ -22,7 +26,7 @@ Synth depends on [Node](http://nodejs.org/) and [NPM](http://npmjs.org/). Instal
 
     npm install -g synth
 
-**Note**: You may need to do `sudo npm install -g synth` if you get any errors when attempting to install.
+**Note**: You may need to do `sudo npm install -g synth` if you get any permission errors when attempting to install.
 
 ### Create a new app
 
@@ -178,4 +182,5 @@ For `version`, it is recommended that you use the [semver](http://semver.org/) f
 
 ## Credit
 
-- Thanks to Stephen Ausman ([stackd](https://github.com/stackd)) for handing over control of the 'synth' package on NPM.
+- This project was created by Jon Abrams [Twitter](https://twitter.com/JonathanAbrams) [GitHub](https://github.com/JonAbrams).
+- Special thanks to Stephen Ausman (aka [stackd](https://github.com/stackd)) for handing over control of the 'synth' package on NPM.

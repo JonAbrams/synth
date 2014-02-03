@@ -233,10 +233,19 @@ describe("synth command-line", function () {
 
     it('says that it launched the prod server', function (done) {
       var dev = spawnProdServer();
+      var count = 0;
       dev.stdout.on('data', function (data) {
-        data.toString().should.eql('synth (in production mode) is now listening on port 3000\n');
-        dev.kill();
-        done();
+        // process.stdout.write(data);
+        if (count === 0) {
+          data.toString().should.eql('Precompiling JS and CSS files... ');
+        } else if (count == 1) {
+          data.toString().should.eql('Done\n');
+        } else if (count == 2) {
+          data.toString().should.eql('synth (in production mode) is now listening on port 3000\n');
+          dev.kill();
+          done();
+        }
+        count++;
       });
     });
   });
@@ -261,7 +270,7 @@ describe("synth command-line", function () {
       var dev = spawnDevServer();
       var count = 0;
       dev.stdout.on('data', function (data) {
-        if (count == 0) {
+        if (count === 0) {
           data.toString().should.eql('synth (in development mode) is now listening on port 3000\n');
           touch('back/back-app.js');
         } else if (count == 1){

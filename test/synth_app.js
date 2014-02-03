@@ -1,3 +1,6 @@
+var cssHash = '973388f18ee6903be4c67fde2d916e92';
+var jsHash = 'ad65a088b5dc9472d8ede5d1f1029369';
+
 var request = require('supertest');
 require('should');
 
@@ -96,7 +99,7 @@ describe('synth module', function () {
       request(app).get('/js/more.js')
       .expect(200)
       .expect('Content-Type', 'application/javascript')
-      .expect('var aFunc;\n\naFunc = function() {};\n')
+      .expect('var hello;\n\nhello = function() {\n  return "hello";\n};\n')
       .end(done);
     });
 
@@ -112,7 +115,7 @@ describe('synth module', function () {
       request(app).get('/css/more.css')
       .expect(200)
       .expect('Content-Type', 'text/css; charset=UTF-8')
-      .expect('.outer .inner {display:none;}')
+      .expect('div img {background-color:red;}.outer .inner {display:none;}')
       .end(done);
     });
 
@@ -120,8 +123,8 @@ describe('synth module', function () {
       synth.jsFiles.should.eql(['js/main.js', 'js/more.js']);
     });
 
-    it('exposes jsFiles', function () {
-      synth.cssFiles.should.eql(['css/main.css', 'css/more.css']);
+    it('exposes cssFiles', function () {
+      synth.cssFiles.should.eql(['css/main.css', 'css/more.css', 'css/another.css']);
     });
 
     it('can add references to other assets on demand', function (done) {
@@ -132,5 +135,50 @@ describe('synth module', function () {
       .expect(/<link rel="stylesheet" href="css\/special\.css"/)
       .end(done);
     });
+  });
+});
+
+describe('production mode', function () {
+  var stdoutWrite = process.stdout.write;
+  var synth, app;
+  before(function () {
+    // Suppress stdout output
+    process.stdout.write = function () {};
+    process.chdir(__dirname + '/sample_project');
+  });
+  beforeEach(function () {
+    synth = require('../synth.js');
+    app = synth({ production: true });
+  });
+
+  after(function () {
+    // Restore stdout
+    process.stdout.write = stdoutWrite;
+  });
+
+  it('pre-compiles CSS and JS and adds a reference to it', function (done) {
+    request(app).get('/')
+    .expect(new RegExp('<script src="/js/main-' + jsHash + '.js"></script>'))
+    .expect(new RegExp('<link rel="stylesheet" href="/css/main-' + cssHash + '.css">'))
+    .end(done);
+  });
+
+  it('serves up expected JS', function (done) {
+    request(app).get('/js/main-' + jsHash + '.js')
+    .expect('Content-Type', 'application/javascript')
+    .expect('Cache-Control', 'public, max-age=999999999')
+    .expect('function main(){return!0}(function(){var n;n=function(){return"hello"}}).call(this);')
+    .end(done);
+  });
+
+  it('serves up expected CSS', function (done) {
+    request(app).get('/css/main-' + cssHash + '.css')
+    .expect('Content-Type', 'text/css; charset=UTF-8')
+    .expect('Cache-Control', 'public, max-age=999999999')
+    .expect(
+      '.main{display:block}div img{background-color:red}' +
+      '.outer .inner{display:none}div{background-color:#00f;color:red}'
+    )
+    .end(done);
   });
 });

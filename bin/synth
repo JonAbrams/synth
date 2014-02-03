@@ -24,7 +24,6 @@ var validCommands = {
   'search': 's',
   'uninstall': 'u',
   'server': 's',
-  'prod': 'p',
   'help': 'h'
 };
 
@@ -50,7 +49,7 @@ if (command == 'new' && args[1] && args[1][0] != '-') {
 }
 
 if ( _(['server', 'prod']).contains(command) ) {
-  var mode = (process.env['NODE_ENV'] == 'production' || command == 'prod') ?
+  var mode = (process.env['NODE_ENV'] == 'production') ?
             'production' : 'development';
   commands.startServer(mode);
   return;

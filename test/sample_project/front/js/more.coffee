@@ -1,1 +1,1 @@
-aFunc = ->
+hello = -> "hello"
