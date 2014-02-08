@@ -1,12 +1,14 @@
 // Returns a list of products in the system
 
 exports.getIndex = function (req, res) {
-  res.json([
-    {
-      name: "Fancy Shoes",
-      price: 99.99
-    }
-  ]);
+  return {
+    products: [
+      {
+        name: "Fancy Shoes",
+        price: 99.99
+      }
+    ]
+  };
 };
 
 // Returns detailed info about a particular product

@@ -28,12 +28,14 @@ describe('synth module', function () {
       request(app).get('/api/products')
       .expect(200)
       .expect('Content-Type', 'application/json; charset=utf-8')
-      .expect([
-        {
-          name: "Fancy Shoes",
-          price: 99.99
-        }
-      ])
+      .expect({
+        products: [
+          {
+            name: "Fancy Shoes",
+            price: 99.99
+          }
+        ]
+      })
       .end(done);
     });
 
