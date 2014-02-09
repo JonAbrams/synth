@@ -9,6 +9,9 @@ html
     for cssFile in cssFiles
       link(rel="stylesheet", href=cssFile)
 
+    // Preloaded Data
+    script.
+      var preloadedData = !{JSON.stringify(data)};
     for jsFile in jsFiles
       script(src=jsFile)
   body

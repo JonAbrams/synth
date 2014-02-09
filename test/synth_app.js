@@ -68,6 +68,17 @@ describe('synth module', function () {
       .end(done);
     });
 
+    it('preloads data with request', function (done) {
+      request(app).get('/products')
+      .expect(200)
+      .expect('Content-Type', 'text/html; charset=utf-8')
+      .expect(/<html>.*<\/html>/)
+      .expect(/<script>/)
+      .expect(/var preloadedData = {"products":\[{"name":"Fancy Shoes","price":99\.99}]};/)
+      .expect(/<\/script>/)
+      .end(done);
+    });
+
     it('serves up a png image', function (done) {
       request(app).get('/images/synth.png')
       .expect(200)

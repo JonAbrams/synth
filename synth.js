@@ -1,4 +1,5 @@
 var express = require('express'),
+    _ = require('lodash'),
     connect = require('connect'),
     path = require('path'),
     harp = require('harp'),
@@ -79,6 +80,11 @@ exports = module.exports = function (options) {
   app.set( "views", viewDir );
   app.set('view engine', 'jade');
   app.get('/', frontend.index);
+  /* Provide routes to render the index with preloaded data */
+  _(handlers).where({ method: 'get' }).pluck('path').forEach(function (path) {
+    path = path.replace(/^\/api/, '');
+    app.get(path, frontend.index);
+  });
 
   return app;
 };
@@ -90,7 +96,7 @@ exports.app = app;
 exports.commands = require('./lib/commands.js');
 
 // Return the raw express-style handlers
-exports.apiHandlers = function () { return handlers; };
+exports.apiHandlers = handlersParser.apiHandlers;
 
 exports.jsFiles = frontend.jsFiles;
 
