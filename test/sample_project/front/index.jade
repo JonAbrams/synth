@@ -13,3 +13,7 @@ html
       script(src=jsFile)
   body
     h1 Test Page
+
+    if preloadHTML
+      script(type="text/ng-template" id="#{preloadHTMLPath}")
+        != preloadHTML

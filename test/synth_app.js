@@ -79,6 +79,30 @@ describe('synth module', function () {
       .end(done);
     });
 
+    it('preloads html with request', function (done) {
+      request(app).get('/products')
+      .expect(200)
+      .expect('Content-Type', 'text/html; charset=utf-8')
+      .expect(/<html>.*<\/html>/)
+      .expect(/<script type="text\/ng-template" id="\/html\/products\/getIndex\.html">/)
+      .expect(/<ul><li ng-repeat="product in products">\{\{ product.name }} - \{\{ product\.price \| currency }}<\/li><\/ul>/)
+      .end(done);
+    });
+
+    it('works without preloading html with request', function (done) {
+      request(app).get('/products/5')
+      .expect(200)
+      .expect('Content-Type', 'text/html; charset=utf-8')
+      .expect(/<html>.*<\/html>/)
+      .expect(function (res) {
+        if ( /<script type="text\/ng-template"/.test(res.text) ) {
+          throw "Found preloaded HTML where there should not have been any";
+        }
+      })
+      .end(done);
+    });
+
+
     it('serves up a png image', function (done) {
       request(app).get('/images/synth.png')
       .expect(200)

@@ -80,10 +80,14 @@ exports = module.exports = function (options) {
   app.set( "views", viewDir );
   app.set('view engine', 'jade');
   app.get('/', frontend.index);
+
   /* Provide routes to render the index with preloaded data */
-  _(handlers).where({ method: 'get' }).pluck('path').forEach(function (path) {
-    path = path.replace(/^\/api/, '');
-    app.get(path, frontend.index);
+  _(handlers).where({ method: 'get' }).forEach(function (handler) {
+    var path = handler.path.replace(/^\/api/, '');
+    app.get(path, function (req, res, next) {
+      req.handler = handler;
+      frontend.index(req, res, next);
+    });
   });
 
   return app;

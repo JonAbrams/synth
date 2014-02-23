@@ -14,7 +14,7 @@ exports.getIndex = function (req, res) {
 // Returns detailed info about a particular product
 
 exports.get = function (req, res) {
-  res.json({
+  return {
     name: "Fancy Shoes",
     price: 99.99,
     colors: [
@@ -22,7 +22,7 @@ exports.get = function (req, res) {
       "green",
       "aubergine"
     ]
-  });
+  };
 };
 
 // Returns 'special' products
