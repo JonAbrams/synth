@@ -23,7 +23,8 @@
     "clean-css": "~2.0.7",
     "stylus": "~0.42.2",
     "gulp": "~3.5.1",
-    "bluebird": "~1.0.3"
+    "bluebird": "~1.0.3",
+    "nopt": "~2.2.0"
   },
   "devDependencies": {
     "mocha": "~1.14.0",

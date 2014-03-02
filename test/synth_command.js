@@ -161,6 +161,13 @@ describe("synth command-line", function () {
       });
     });
 
+    it('displays error when back template specified', function (done) {
+      exec(newAppCmd + ' -r non_template', function (err, stdout, stderr) {
+        stderr.should.eql('The template "non_template" could not be found.\n');
+        done();
+      });
+    });
+
     it('populates the project with key files', function (done) {
       exec(newAppCmd, function (err, stdout) {
         throwif(err);
@@ -336,7 +343,7 @@ describe("synth command-line", function () {
       npm.load.called = [];
     });
 
-    it('calls bower install with a component', function () {
+    it.only('calls bower install with a component', function () {
       commands.install('install', ['-f', 'angular']);
       bower.commands.install.called.should.eql([
         [ ['angular'], { save: true } ]
