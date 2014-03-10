@@ -186,6 +186,7 @@ describe("synth command-line", function () {
           'front/bower.json',
           'front/css',
           'front/css/cssFiles.json',
+          'front/html',
           'front/index.jade',
           'front/js',
           'front/js/jsFiles.json',
@@ -343,7 +344,7 @@ describe("synth command-line", function () {
       npm.load.called = [];
     });
 
-    it.only('calls bower install with a component', function () {
+    it('calls bower install with a component', function () {
       commands.install('install', ['-f', 'angular']);
       bower.commands.install.called.should.eql([
         [ ['angular'], { save: true } ]

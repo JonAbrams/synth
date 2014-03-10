@@ -58,16 +58,18 @@ describe('bowerSupport', function () {
       var rootDir = temp.mkdirSync('synth-bower-support-tests');
       process.chdir(rootDir);
       fs.mkdirSync('front');
-      fs.mkdirSync('front/js');
-      fs.writeFileSync('front/js/jsFiles.json', '[]');
-      fs.mkdirSync('front/css');
-      fs.writeFileSync('front/css/cssFiles.json',
+      process.chdir('front');
+      fs.mkdirSync('js');
+      fs.writeFileSync('js/jsFiles.json', '[]');
+      fs.mkdirSync('css');
+      fs.writeFileSync('css/cssFiles.json',
         JSON.stringify([
           'existing.css',
           '../bower_components/bootstrap/dist/css/bootstrap.css'
         ])
       );
       bowerSupport.addToManifestFiles(installed);
+      process.chdir(rootDir);
     });
 
     it('creates the manifest files', function () {

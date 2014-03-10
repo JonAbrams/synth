@@ -59,12 +59,12 @@ describe('synth module', function () {
   });
 
   describe('front end', function () {
-    it('servers up the index.html', function (done) {
+    it('serves up the index.html', function (done) {
       request(app).get('/')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>.*<\/html>/)
-      .expect(/<script src="js\/main\.js"><\/script>/)
+      .expect(/<script src="\/js\/main\.js"><\/script>/)
       .end(done);
     });
 
@@ -157,11 +157,11 @@ describe('synth module', function () {
     });
 
     it('exposes jsFiles', function () {
-      synth.jsFiles.should.eql(['js/main.js', 'js/more.js']);
+      synth.jsFiles.should.eql(['/js/main.js', '/js/more.js']);
     });
 
     it('exposes cssFiles', function () {
-      synth.cssFiles.should.eql(['css/main.css', 'css/more.css', 'css/another.css']);
+      synth.cssFiles.should.eql(['/css/main.css', '/css/more.css', '/css/another.css']);
     });
 
     it('can add references to other assets on demand', function (done) {
