@@ -20,7 +20,7 @@ function throwif(err) {
 temp.track();
 
 describe("synth command-line", function () {
-  this.timeout(4000);
+  this.timeout(8000);
   beforeEach(function () {
     var rootDir = temp.mkdirSync('synth-tests');
     process.chdir(rootDir);
