@@ -10,7 +10,7 @@ The easiest web framework for synthesizing API-first web apps that also have web
 
 [![Build Status](https://travis-ci.org/JonAbrams/synth.png?branch=master)](https://travis-ci.org/JonAbrams/synth)
 
-Using Node.js to make an API-first web app framework that provides the following features:
+_Synth_ is an API-first web app framework (built on NodeJS) that provides the following features:
 
 - Easily created new RESTful API resources by just creating folders and naming functions a certain way.
 - Preload angular model data on page load (saving an extra roundtrip).
