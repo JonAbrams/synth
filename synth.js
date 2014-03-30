@@ -25,7 +25,7 @@ exports = module.exports = function (options) {
   options = options || {};
   var resourceDir = options.resourceDir || path.join(process.cwd(), 'back/resources');
   var viewDir = options.viewDir || path.join(process.cwd(), 'front');
-  var production = !!options.production || process.env['NODE_ENV'] == 'production';
+  var production = !!options.production || process.env.NODE_ENV === 'production';
 
   /* On startup, parse all the resource handling modules */
   handlers = handlersParser.parse(resourceDir);
@@ -109,9 +109,11 @@ exports.cssFiles = frontend.cssFiles;
 /* Expose connect middleware */
 /* Code borrowed from Express */
 for (var key in connect.middleware) {
-  Object.defineProperty(
-    exports,
-    key,
-    Object.getOwnPropertyDescriptor(connect.middleware, key)
-  );
+  if ( connect.middleware.hasOwnProperty(key) ) {
+    Object.defineProperty(
+      exports,
+      key,
+      Object.getOwnPropertyDescriptor(connect.middleware, key)
+    );
+  }
 }
