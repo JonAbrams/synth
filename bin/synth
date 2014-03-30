@@ -24,6 +24,7 @@ var validCommands = {
   'search': 's',
   'uninstall': 'u',
   'server': 's',
+  'prod': 'p',
   'help': 'h'
 };
 
@@ -49,8 +50,15 @@ if (command == 'new' && args[1] && args[1][0] != '-') {
 }
 
 if ( _(['server', 'prod']).contains(command) ) {
-  var mode = (process.env['NODE_ENV'] == 'production') ?
-            'production' : 'development';
+  var mode = 'development';
+  if (
+      process.env.NODE_ENV == 'production' ||
+      _(args).contains('--prod') ||
+      command == 'prod'
+     ) {
+    process.env.NODE_ENV = mode = 'production';
+  }
+
   commands.startServer(mode);
   return;
 }

@@ -236,7 +236,7 @@ describe("synth command-line", function () {
   };
 
   describe('launching prod server', function () {
-    var spawnProdServer = function () {
+    var spawnProdServerEnv = function () {
       return spawn('synth', ['server'], {
           cwd: process.cwd(),
           env: {
@@ -246,12 +246,20 @@ describe("synth command-line", function () {
         });
     };
 
+    var spawnProdServerParam = function () {
+      return spawn('synth', ['server', '--prod'], {
+          cwd: process.cwd(),
+          env: {
+            'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH']
+          }
+        });
+    };
+
     beforeEach(createNewProject);
 
-    it('says that it launched the prod server', function (done) {
-      var dev = spawnProdServer();
+    var testProdMode = function (prod, done) {
       var count = 0;
-      dev.stdout.on('data', function (data) {
+      prod.stdout.on('data', function (data) {
         // process.stdout.write(data);
         if (count === 0) {
           data.toString().should.eql('Precompiling JS and CSS files... ');
@@ -259,11 +267,21 @@ describe("synth command-line", function () {
           data.toString().should.eql('Done\n');
         } else if (count == 2) {
           data.toString().should.eql('synth (in production mode) is now listening on port 3000\n');
-          dev.kill();
+          prod.kill();
           done();
         }
         count++;
       });
+    };
+
+    it('says that it launched the prod server', function (done) {
+      var prod = spawnProdServerEnv();
+      testProdMode(prod, done);
+    });
+
+    it('launches prod server with --prod flag', function (done) {
+      var prod = spawnProdServerParam();
+      testProdMode(prod, done);
     });
   });
 
