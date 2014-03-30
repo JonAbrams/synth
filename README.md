@@ -4,11 +4,12 @@ The easiest web framework for synthesizing API-first web apps that also have web
 
 ## Current status
 
-**Version 0.4.0 (latest)**:
+**Version 0.4.5 (latest)**:
 
 **Note:** Despite being fully functional, **_synth_ is not yet ready for production**. It hasn't been tested in production and since it's in active development, implementation and interface details are likely to change rapidly.
 
 [![Build Status](https://travis-ci.org/JonAbrams/synth.png?branch=master)](https://travis-ci.org/JonAbrams/synth)
+[![Code Climate](https://codeclimate.com/github/JonAbrams/synth.png)](https://codeclimate.com/github/JonAbrams/synth)
 
 _Synth_ is an API-first web app framework (built on NodeJS) that provides the following features:
 
