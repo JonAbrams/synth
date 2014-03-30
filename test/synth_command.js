@@ -54,7 +54,8 @@ describe("synth command-line", function () {
             '',
             'Commands:',
             ' new      Create a new synth app in the specified directory. e.g. `synth new my_app`',
-            ' server   Start a local server. Must be executed from the app\'s root folder.',
+            ' server   Start a local dev server. Must be executed from the app\'s root folder.',
+            ' prod     Start a local production server. Will precomiple front-end assets before serving.',
             ' install  Install third-party packages (back-end or front-end) for use by your web app',
             ' help     Shows you this text, or if you pass in another command, it tells you',
             '          more about it. e.g. `synth help new`',
@@ -98,8 +99,7 @@ describe("synth command-line", function () {
             '    - Assets to be served as separate and unminified files.',
             '',
             'Options:',
-            '  -p     Specify the port that the server should listen on. By default the port is 3000.',
-            '  --prod Run the server in production mode.',
+            '  -p, --port  Specify the port that the server should listen on. By default the port is 3000.',
             '',
             'Alias: synth i [options]',
             ''
@@ -235,6 +235,40 @@ describe("synth command-line", function () {
     });
   };
 
+  var spawnDevServer = function (args) {
+    args = args || [];
+    return spawn('synth', ['server'].concat(args), {
+        cwd: process.cwd(),
+        env: {
+          'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH']
+        }
+      });
+  };
+
+  describe('choosing port #', function () {
+    beforeEach(createNewProject);
+
+    it('can be set with -p', function (done) {
+      var dev = spawnDevServer(['-p', '3001']);
+      var count = 0;
+      dev.stdout.on('data', function (data) {
+        data.toString().should.eql('synth (in development mode) is now listening on port 3001\n');
+        dev.kill();
+        done();
+      });
+    });
+
+    it('can be set with --port', function (done) {
+      var dev = spawnDevServer(['--port', '3002']);
+      var count = 0;
+      dev.stdout.on('data', function (data) {
+        data.toString().should.eql('synth (in development mode) is now listening on port 3002\n');
+        dev.kill();
+        done();
+      });
+    });
+  });
+
   describe('launching prod server', function () {
     var spawnProdServerEnv = function () {
       return spawn('synth', ['server'], {
@@ -246,8 +280,8 @@ describe("synth command-line", function () {
         });
     };
 
-    var spawnProdServerParam = function () {
-      return spawn('synth', ['server', '--prod'], {
+    var spawnProdServerTarget = function () {
+      return spawn('synth', ['prod'], {
           cwd: process.cwd(),
           env: {
             'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH']
@@ -279,22 +313,13 @@ describe("synth command-line", function () {
       testProdMode(prod, done);
     });
 
-    it('launches prod server with --prod flag', function (done) {
-      var prod = spawnProdServerParam();
+    it('launches prod server prod target', function (done) {
+      var prod = spawnProdServerTarget();
       testProdMode(prod, done);
     });
   });
 
   describe('launching dev server', function () {
-    var spawnDevServer = function () {
-      return spawn('synth', ['server'], {
-          cwd: process.cwd(),
-          env: {
-            'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH']
-          }
-        });
-    };
-
     beforeEach(createNewProject);
 
     afterEach(function () {
