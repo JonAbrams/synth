@@ -8,7 +8,6 @@ var mkdirp = require('mkdirp'),
     os = require('os'),
     fs = require('fs'),
     path = require('path'),
-    exec = require('child_process').exec,
     _ = require('lodash'),
     npm = require('npm'),
     bower = require('bower');

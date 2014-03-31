@@ -47,7 +47,7 @@ exports = module.exports = function (options) {
   app.use( '/images', express.static( path.join(process.cwd(), 'front/images') ) );
   if (production) {
     process.stdout.write('Precompiling JS and CSS files... ');
-    var precompiledJsHash = md5sum(frontend.jsPrecompiled() );
+    var precompiledJsHash = md5sum( frontend.jsPrecompiled() );
     var precompiledJsPath = '/js/main-' + precompiledJsHash + '.js';
     app.get(precompiledJsPath, function (req, res) {
       res.setHeader('Content-Type', 'application/javascript');
@@ -79,6 +79,7 @@ exports = module.exports = function (options) {
   /* Render the main index */
   app.set( "views", viewDir );
   app.set('view engine', 'jade');
+  if (!production) app.locals.pretty = true;
   app.get('/', frontend.index);
 
   /* Provide routes to render the index with preloaded data */

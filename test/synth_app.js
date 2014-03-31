@@ -63,7 +63,7 @@ describe('synth module', function () {
       request(app).get('/')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
-      .expect(/<html>.*<\/html>/)
+      .expect(/<html>[^]*<\/html>/)
       .expect(/<script src="\/js\/main\.js"><\/script>/)
       .end(done);
     });
@@ -72,7 +72,7 @@ describe('synth module', function () {
       request(app).get('/products')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
-      .expect(/<html>.*<\/html>/)
+      .expect(/<html>[^]*<\/html>/)
       .expect(/<script>/)
       .expect(/var preloadedData = {"products":\[{"name":"Fancy Shoes","price":99\.99}]};/)
       .expect(/<\/script>/)
@@ -83,9 +83,9 @@ describe('synth module', function () {
       request(app).get('/products')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
-      .expect(/<html>.*<\/html>/)
+      .expect(/<html>[^]*<\/html>/)
       .expect(/<script type="text\/ng-template" id="\/html\/products\/getIndex\.html">/)
-      .expect(/<ul><li ng-repeat="product in products">\{\{ product.name }} - \{\{ product\.price \| currency }}<\/li><\/ul>/)
+      .expect(/<ul><li ng-repeat="product in products">\{\{ product.name }} - \{\{ product\.price \| currency }}\S*<\/li><\/ul>/)
       .end(done);
     });
 
@@ -93,7 +93,7 @@ describe('synth module', function () {
       request(app).get('/products/5')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
-      .expect(/<html>.*<\/html>/)
+      .expect(/<html>[^]*<\/html>/)
       .expect(function (res) {
         if ( /<script type="text\/ng-template"/.test(res.text) ) {
           throw "Found preloaded HTML where there should not have been any";
