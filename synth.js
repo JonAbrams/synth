@@ -1,6 +1,5 @@
 var express = require('express'),
     _ = require('lodash'),
-    connect = require('connect'),
     path = require('path'),
     harp = require('harp'),
     crypto = require('crypto');
@@ -106,15 +105,3 @@ exports.apiHandlers = handlersParser.apiHandlers;
 exports.jsFiles = frontend.jsFiles;
 
 exports.cssFiles = frontend.cssFiles;
-
-/* Expose connect middleware */
-/* Code borrowed from Express */
-for (var key in connect.middleware) {
-  if ( connect.middleware.hasOwnProperty(key) ) {
-    Object.defineProperty(
-      exports,
-      key,
-      Object.getOwnPropertyDescriptor(connect.middleware, key)
-    );
-  }
-}
