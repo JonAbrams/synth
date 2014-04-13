@@ -10,6 +10,7 @@ var md5sum = function (str) {
 
 var handlersParser = require('./lib/handlersParser.js');
 var frontend = require('./lib/frontendRenderer.js');
+var assets = require('./lib/assets.js');
 
 var app = express();
 var handlers;
@@ -41,28 +42,29 @@ exports = module.exports = function (options) {
   });
 
   /* Handle front-end requests for assets */
-  app.use(express.static(path.join(process.cwd(), 'front/misc')));
+  assets.init();
+  app.use( express.static( path.join( process.cwd(), 'front/misc' ) ) );
 
   app.use( '/images', express.static( path.join(process.cwd(), 'front/images') ) );
   if (production) {
     process.stdout.write('Precompiling JS and CSS files... ');
-    var precompiledJsHash = md5sum( frontend.jsPrecompiled() );
+    var precompiledJsHash = md5sum( assets.jsPrecompiled() );
     var precompiledJsPath = '/js/main-' + precompiledJsHash + '.js';
     app.get(precompiledJsPath, function (req, res) {
       res.setHeader('Content-Type', 'application/javascript');
       res.setHeader('Cache-Control', 'public, max-age=999999999');
-      res.send( frontend.jsPrecompiled() );
+      res.send( assets.jsPrecompiled() );
       res.end();
     });
     exports.jsFiles.length = 0;
     exports.jsFiles.push(precompiledJsPath);
 
-    var precompiledCssHash = md5sum( frontend.cssPrecompiled() );
+    var precompiledCssHash = md5sum( assets.cssPrecompiled() );
     var precompiledCssPath = '/css/main-' + precompiledCssHash + '.css';
     app.get(precompiledCssPath, function (req, res) {
       res.setHeader('Content-Type', 'text/css; charset=UTF-8');
       res.setHeader('Cache-Control', 'public, max-age=999999999');
-      res.send( frontend.cssPrecompiled() );
+      res.send( assets.cssPrecompiled() );
       res.end();
     });
     exports.cssFiles.length = 0;
@@ -102,6 +104,6 @@ exports.commands = require('./lib/commands.js');
 // Return the raw express-style handlers
 exports.apiHandlers = handlersParser.apiHandlers;
 
-exports.jsFiles = frontend.jsFiles;
+exports.jsFiles = assets.jsFiles;
 
-exports.cssFiles = frontend.cssFiles;
+exports.cssFiles = assets.cssFiles;

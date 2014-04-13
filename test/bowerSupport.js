@@ -60,38 +60,43 @@ describe('bowerSupport', function () {
       fs.mkdirSync('front');
       process.chdir('front');
       fs.mkdirSync('js');
-      fs.writeFileSync('js/jsFiles.json', '[]');
+      fs.writeFileSync('js/jsFiles', '');
       fs.mkdirSync('css');
-      fs.writeFileSync('css/cssFiles.json',
-        JSON.stringify([
+      fs.writeFileSync('css/cssFiles',
+        [
           'existing.css',
           '../bower_components/bootstrap/dist/css/bootstrap.css'
-        ])
+        ].join('\n')
       );
       bowerSupport.addToManifestFiles(installed);
       process.chdir(rootDir);
     });
 
     it('creates the manifest files', function () {
-      fs.existsSync('front/js/jsFiles.json').should.eql(true);
-      fs.existsSync('front/css/cssFiles.json').should.eql(true);
+      fs.existsSync('front/js/jsFiles').should.eql(true);
+      fs.existsSync('front/css/cssFiles').should.eql(true);
     });
 
-    it('creates the right contents for jsFiles.json', function () {
-      JSON.parse( fs.readFileSync('front/js/jsFiles.json', { encoding: 'utf8' }) )
-      .should.eql([
-        '../bower_components/jquery/jquery.js',
-        '../bower_components/bootstrap/dist/js/bootstrap.js',
-        '../bower_components/jquery-ui/jquery-ui.js'
-      ]);
+    it('creates the right contents for jsFiles', function () {
+      fs.readFileSync('front/js/jsFiles', { encoding: 'utf8' })
+      .should.eql(
+        [
+          '../bower_components/jquery/jquery.js',
+          '../bower_components/bootstrap/dist/js/bootstrap.js',
+          '../bower_components/jquery-ui/jquery-ui.js',
+          ''
+        ].join('\n')
+      );
     });
 
-    it('creates the right contents for cssFiles.json', function () {
-      JSON.parse( fs.readFileSync('front/css/cssFiles.json', { encoding: 'utf8' }) )
-      .should.eql([
-        '../bower_components/bootstrap/dist/css/bootstrap.css',
-        'existing.css'
-      ]);
+    it('creates the right contents for cssFiles', function () {
+      fs.readFileSync('front/css/cssFiles', { encoding: 'utf8' })
+      .should.eql(
+        [
+          '../bower_components/bootstrap/dist/css/bootstrap.css',
+          'existing.css'
+        ].join('\n')
+      );
     });
   });
 });
