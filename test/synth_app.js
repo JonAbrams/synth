@@ -19,7 +19,7 @@ describe('synth module', function () {
     it('returns 404 when no match is found', function (done) {
       request(app).get('/api/thing-that-doesnt-exist')
       .expect(404)
-      .expect('Content-Type', 'application/json; charset=utf-8')
+      .expect('Content-Type', 'application/json')
       .expect({ error: 'Resource not found'})
       .end(done);
     });
@@ -27,7 +27,7 @@ describe('synth module', function () {
     it('fetches the list of products', function (done) {
       request(app).get('/api/products')
       .expect(200)
-      .expect('Content-Type', 'application/json; charset=utf-8')
+      .expect('Content-Type', 'application/json')
       .expect({
         products: [
           {
@@ -46,7 +46,7 @@ describe('synth module', function () {
       .end(function () {
         request(app).get('/api/products/52/variations')
         .expect(200)
-        .expect('Content-Type', 'application/json; charset=utf-8')
+        .expect('Content-Type', 'application/json')
         .expect([
           {
             name: 'red',
@@ -187,6 +187,9 @@ describe('production mode', function () {
     synth = require('../synth.js');
     app = synth({ production: true });
   });
+  afterEach(function () {
+    delete require.cache[require.resolve('../synth.js')];
+  });
 
   after(function () {
     // Restore stdout
@@ -203,15 +206,15 @@ describe('production mode', function () {
   it('serves up expected JS', function (done) {
     request(app).get('/js/main-' + jsHash + '.js')
     .expect('Content-Type', 'application/javascript')
-    .expect('Cache-Control', 'public, max-age=999999999')
+    .expect('Cache-Control', 'public, max-age=600')
     .expect('function main(){return!0}(function(){var n;n=function(){return"hello"}}).call(this);')
     .end(done);
   });
 
   it('serves up expected CSS', function (done) {
     request(app).get('/css/main-' + cssHash + '.css')
-    .expect('Content-Type', 'text/css; charset=UTF-8')
-    .expect('Cache-Control', 'public, max-age=999999999')
+    .expect('Content-Type', 'text/css')
+    .expect('Cache-Control', 'public, max-age=600')
     .expect(
       '.main{display:block}div img{background-color:red}' +
       '.outer .inner{display:none}div{background-color:#00f;color:red}'

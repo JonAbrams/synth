@@ -1,8 +1,13 @@
 var express = require('express'),
     _ = require('lodash'),
     path = require('path'),
+    os = require('os'),
+    fs = require('fs'),
     harp = require('harp'),
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    mkdirp = require('mkdirp'),
+    connect = require('connect'),
+    st = require('st');
 
 var md5sum = function (str) {
   return crypto.createHash('md5').update(str).digest('hex');
@@ -16,9 +21,9 @@ var app = express();
 var handlers;
 
 /* Add default middleware */
-app.use( express.compress() );
-app.use( express.json() );
-app.use( express.urlencoded() );
+app.use( connect.compress() );
+app.use( connect.json() );
+app.use( connect.urlencoded() );
 
 /* the main synth init function */
 exports = module.exports = function (options) {
@@ -43,32 +48,52 @@ exports = module.exports = function (options) {
 
   /* Handle front-end requests for assets */
   assets.init();
-  app.use( express.static( path.join( process.cwd(), 'front/misc' ) ) );
+  app.use(
+    st({
+      path: path.join(process.cwd(), 'front/misc'),
+      passthrough: true
+    })
+  );
 
-  app.use( '/images', express.static( path.join(process.cwd(), 'front/images') ) );
+  app.use(
+    st({
+      url: '/images',
+      path: path.join(process.cwd(), 'front/images'),
+      passthrough: true
+    })
+  );
   if (production) {
+    var assetsDir = path.join(os.tmpdir(), 'synth-assets');
+    mkdirp.sync(assetsDir);
     process.stdout.write('Precompiling JS and CSS files... ');
-    var precompiledJsHash = md5sum( assets.jsPrecompiled() );
-    var precompiledJsPath = '/js/main-' + precompiledJsHash + '.js';
-    app.get(precompiledJsPath, function (req, res) {
-      res.setHeader('Content-Type', 'application/javascript');
-      res.setHeader('Cache-Control', 'public, max-age=999999999');
-      res.send( assets.jsPrecompiled() );
-      res.end();
-    });
-    exports.jsFiles.length = 0;
-    exports.jsFiles.push(precompiledJsPath);
 
-    var precompiledCssHash = md5sum( assets.cssPrecompiled() );
-    var precompiledCssPath = '/css/main-' + precompiledCssHash + '.css';
-    app.get(precompiledCssPath, function (req, res) {
-      res.setHeader('Content-Type', 'text/css; charset=UTF-8');
-      res.setHeader('Cache-Control', 'public, max-age=999999999');
-      res.send( assets.cssPrecompiled() );
-      res.end();
-    });
+    /* Generate JS file */
+    var jsHash = md5sum( assets.jsPrecompiled() );
+    var jsFilename = 'main-' + jsHash + '.js';
+    var localJsPath = path.join(assetsDir, jsFilename);
+    fs.writeFileSync(
+      localJsPath,
+      assets.jsPrecompiled()
+    );
+    var jsPath = '/js/' + jsFilename;
+    exports.jsFiles.length = 0;
+    exports.jsFiles.push(jsPath);
+
+    /* Generate CSS file */
+    var cssHash = md5sum( assets.cssPrecompiled() );
+    var cssFilename = 'main-' + cssHash + '.css';
+    var localCssPath = path.join(assetsDir, cssFilename);
+    fs.writeFileSync(
+      localCssPath,
+      assets.cssPrecompiled()
+    );
+    var cssPath = '/css/' + cssFilename;
     exports.cssFiles.length = 0;
-    exports.cssFiles.push(precompiledCssPath);
+    exports.cssFiles.push(cssPath);
+
+    /* Make the files available */
+    app.use(st({ path: assetsDir, url: '/js' }));
+    app.use(st({ path: assetsDir, url: '/css' }));
     console.log('Done');
   } else {
     app.use( '/js', harp.mount( path.join(process.cwd(), 'front/js') ) );
