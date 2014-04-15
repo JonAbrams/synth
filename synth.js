@@ -50,6 +50,7 @@ exports = module.exports = function (options) {
   assets.init();
   app.use(
     st({
+      url: '/',
       path: path.join(process.cwd(), 'front/misc'),
       passthrough: true
     })
@@ -59,7 +60,8 @@ exports = module.exports = function (options) {
     st({
       url: '/images',
       path: path.join(process.cwd(), 'front/images'),
-      passthrough: true
+      passthrough: true,
+      index: false
     })
   );
   if (production) {
@@ -92,8 +94,8 @@ exports = module.exports = function (options) {
     exports.cssFiles.push(cssPath);
 
     /* Make the files available */
-    app.use(st({ path: assetsDir, url: '/js' }));
-    app.use(st({ path: assetsDir, url: '/css' }));
+    app.use(st({ path: assetsDir, url: '/js', index: false }));
+    app.use(st({ path: assetsDir, url: '/css', index: false }));
     console.log('Done');
   } else {
     app.use( '/js', harp.mount( path.join(process.cwd(), 'front/js') ) );
