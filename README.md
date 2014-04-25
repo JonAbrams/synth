@@ -4,7 +4,7 @@ The easiest web framework for synthesizing API-first web apps that also have web
 
 ## Current status
 
-**Version 0.4.7 (latest)**:
+**Version 0.4.8 (latest)**:
 
 **Note:** Despite being fully functional, **_synth_ is not yet ready for production**. It hasn't been tested in production and since it's in active development, implementation and interface details are likely to change rapidly.
 
@@ -75,13 +75,13 @@ _Synth_ supports JavaScript/CoffeeScript, CSS/SASS/Stylus, and HTML/Jade. _Synth
 
 #### Front-end _Manifest_ files
 
-Your project should contain two JSON formatted manifest files for your front-end assets, one for CSS and the other JavaScript. You can find the CSS manifest in `front/css/cssFiles.json`, and the JavaScript one in `front/js/jsFiles.json`. Each contains the list (formatted as a JSON array) of css/js files that should be loaded by the client.
+Your project should contain manifest files for your front-end assets, one for CSS and the other JavaScript. You can find the CSS manifest in `front/css/cssFiles`, and the JavaScript one in `front/js/jsFiles`. Each contains the list of css/js files (separated by new-lines) that should be loaded by the client.
 
 Each asset file is loaded in the order that they're listed in the given manifest. This is important if any asset depends on another. For example, make sure that the jquery library is listed before any jQuery plugins that depend on it.
 
 Most front-end packages contain many extra files that shouldn't be served up to web browsers. _Synth_ reads the _bower.json_ that comes with most packages to look for the package's _main_ file. It will then place a reference to that file in the Manifest.
 
-If there are extra files that need to be loaded from a package, or a bower package didn't list its main file, just add a reference to the front-end _Manifest_ file. For example, a reference to jquery's main file would look like `"../bower_components/jquery/jquery.js"`
+If there are extra files that need to be loaded from a package, or a bower package didn't list its main file, just add a reference to the front-end _Manifest_ file. For example, a reference to jquery's main file would look like `../bower_components/jquery/jquery.js`
 
 When you serve up your app in dev mode, each front-end asset is loaded serparately, and unminified, to help with debugging. This also means that as you change the asset file, you don't need to recompile or restart the server.
 
