@@ -1,11 +1,13 @@
 var synth = require('synth');
 
-var app = synth.app;
+/* Connect to Mongo DB */
+var db = require('promised-mongo')(process.env.MONGODB || 'tweets-db');
 
-/* Define your middleware here */
-app.use(function (req, res, next) {
-  req.appName = "${ appName }";
+/* Provide DB connection to request handlers */
+synth.app.use(function (req, res, next) {
+  req.db = db;
   next();
 });
 
+/* Init and return synth app */
 module.exports = synth();

@@ -1,1 +1,2 @@
-/js/main.js
+front-app.js
+controllers/tweets.js

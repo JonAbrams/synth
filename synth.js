@@ -52,7 +52,8 @@ exports = module.exports = function (options) {
     st({
       url: '/',
       path: path.join(process.cwd(), 'front/misc'),
-      passthrough: true
+      passthrough: true,
+      index: false
     })
   );
 

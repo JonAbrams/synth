@@ -1,1 +1,31 @@
 // The main css file
+body {
+  font-family: helvetica, arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+.tweet-timeline {
+  width: 400px;
+  margin: auto;
+
+  li.tweet {
+    position: relative;
+    height: 150px;
+    list-style: none;
+
+    margin-bottom: 10px;
+    padding: 10px;
+
+    border-radius: 3px;
+    background-color: #ccc;
+
+    .date {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.8em;
+    }
+  }
+}
