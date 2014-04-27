@@ -26,19 +26,25 @@ _Synth_ is an API-first web app framework (built on NodeJS) that provides the fo
 
 Synth depends on [Node](http://nodejs.org/) and [NPM](http://npmjs.org/). Install it globally using npm to access it from the command-line:
 
-    npm install -g synth
+```bash
+npm install -g synth
+```
 
 **Note**: You may need to do `sudo npm install -g synth` if you get any permission errors when attempting to install.
 
 ### Create a new app
 
-    synth new my_app
+```bash
+synth new my_app
+```
 
 This will create a new folder called `my_app`, you can of course change `my_app` to anything you like.
 
-    cd my_app
-    synth install -b
-    synth install -f
+```bash
+cd my_app
+synth install -b
+synth install -f
+```
 
 Go into your new project and install any third-party back-end and front-end packages.
 
@@ -62,12 +68,16 @@ Synth provides a single unified interface to both, invoked from the root of your
 
 To install either a back-end or a front-end package, just use _synth_'s install command:
 
-    synth install -f jquery
+```bash
+synth install -f jquery
+```
 
 You can specify that a package is meant for  the front or back-ends using the -b or -f flags:
 
-    synth install -f lodash  # Installs lodash for the front end
-    synth install -b lodash  # Installs lodash for the back end
+```bash
+synth install -f lodash  # Installs lodash for the front end (using bower)
+synth install -b lodash  # Installs lodash for the back end (using npm)
+```
 
 #### Supported assets
 
