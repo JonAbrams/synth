@@ -32,5 +32,5 @@ For complete up-to-date documentation, tutorials, and example apps, check out [s
 
 ## Credit
 
-- This project was created by Jon Abrams [Twitter](https://twitter.com/JonathanAbrams) [GitHub](https://github.com/JonAbrams).
+- This project was created by Jon Abrams ([Twitter](https://twitter.com/JonathanAbrams) | [GitHub](https://github.com/JonAbrams)).
 - Special thanks to Stephen Ausman (aka [stackd](https://github.com/stackd)) for handing over control of the 'synth' package on NPM.
