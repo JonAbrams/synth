@@ -29,6 +29,7 @@ describe('synth module', function () {
       .expect(200)
       .expect('Content-Type', 'application/json')
       .expect({
+        injection: "<script>alert('hi')</script>",
         products: [
           {
             name: "Fancy Shoes",
@@ -74,7 +75,7 @@ describe('synth module', function () {
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>[^]*<\/html>/)
       .expect(/<script>/)
-      .expect(/var preloadedData = {"products":\[{"name":"Fancy Shoes","price":99\.99}]};/)
+      .expect(/var preloadedData = {"injection":"<script>alert\('hi'\)<\\\/script>","products":\[{"name":"Fancy Shoes","price":99\.99}]};/)
       .expect(/<\/script>/)
       .end(done);
     });

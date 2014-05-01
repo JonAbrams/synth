@@ -2,6 +2,7 @@
 
 exports.getIndex = function (req, res) {
   return {
+    injection: "<script>alert('hi')</script>",
     products: [
       {
         name: "Fancy Shoes",
