@@ -4,7 +4,7 @@ The easiest web framework for synthesizing API-first web apps that also have web
 
 ## Current status
 
-**Version 0.4.10 (latest)**:
+**Version 0.4.11 (latest)**:
 
 **Note:** Despite being fully functional, **_synth_ is not yet ready for production**. It hasn't been tested in production and since it's in active development, implementation and interface details are likely to change rapidly.
 
