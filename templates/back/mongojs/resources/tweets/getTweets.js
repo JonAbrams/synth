@@ -8,13 +8,3 @@ exports.getIndex = function (req, res) {
       };
     });
 };
-
-exports.get = function (req, res) {
-  return req.db.collection('tweets').findOne({
-    _id: req.db.ObjectId(req.params.id)
-  }).then(function (tweet) {
-    return {
-      tweet: tweet
-    };
-  });
-};

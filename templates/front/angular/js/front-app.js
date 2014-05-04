@@ -28,8 +28,8 @@ angular.module('${appName}', ['ngRoute'])
       preloadedData = null;
       return data;
     } else {
-      return $http.get( '/api' + $location.path() ).then(function (res) {
-        return res.data;
+      return $http.get( '/api' + $location.path() ).success(function (data) {
+        return data;
       });
     }
   };

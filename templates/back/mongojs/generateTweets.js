@@ -20,7 +20,7 @@ var randomContent  = function () {
 };
 
 var promises = [];
-for (var i=0; i < 10000; i++) {
+for (var i=0; i < 30; i++) {
   promises.push(
     db.collection('tweets').insert({
       content: randomContent(),
