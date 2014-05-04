@@ -179,7 +179,6 @@ describe("synth command-line", function () {
           'back/package.json',
           'back/resources',
           'back/resources/tweets',
-          'back/resources/tweets/createTweets.js',
           'back/resources/tweets/getTweets.js',
           'front',
           'front/bower.json',
