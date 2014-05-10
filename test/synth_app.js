@@ -15,7 +15,7 @@ describe('synth module', function () {
     process.chdir(__dirname + '/sample_project');
   });
 
-  describe("the api", function () {
+  describe.only("the api", function () {
     it('returns 404 when no match is found', function (done) {
       request(app).get('/api/thing-that-doesnt-exist')
       .expect(404)
@@ -56,6 +56,15 @@ describe('synth module', function () {
         ])
         .end(done);
       });
+    });
+
+    it('creates a custom action handler', function (done) {
+      request(app).get('/api/products/specials')
+      .expect(200)
+      .expect({
+        specials: []
+      })
+      .end(done);
     });
   });
 

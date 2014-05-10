@@ -28,4 +28,8 @@ exports.get = function (req, res) {
 
 // Returns 'special' products
 
-exports.getSpecials = function (req, res) { };
+exports.getSpecials = function (req, res) {
+  return {
+    specials: []
+  };
+};

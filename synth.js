@@ -30,15 +30,24 @@ exports = module.exports = function (options) {
   options = options || {};
   var resourceDir = options.resourceDir || path.join(process.cwd(), 'back/resources');
   var viewDir = options.viewDir || path.join(process.cwd(), 'front');
+  var viewEngine = options.viewEngine || 'jade';
   var production = !!options.production || process.env.NODE_ENV === 'production';
 
   /* On startup, parse all the resource handling modules */
   handlers = handlersParser.parse(resourceDir);
 
-  /* Tell express to listen for each request handler */
-  handlers.forEach(function (handler) {
+
+  /* Tell the express app to listen for each API request handler */
+  var registerHandler = function (handler) {
     app[handler.method]( handler.path, handler.func() );
-  });
+  };
+  /* Register the custom actions first */
+  handlers.filter(function (handler) {
+    return handler.isCustom;
+  }).forEach(registerHandler);
+  handlers.filter(function (handler) {
+    return !handler.isCustom;
+  }).forEach(registerHandler);
 
   /* Handle API requests */
   app.all('/api/*', function (req, res) {
@@ -48,6 +57,8 @@ exports = module.exports = function (options) {
 
   /* Handle front-end requests for assets */
   assets.init();
+
+  /* Make files in the front/misc folder available from the root path */
   app.use(
     st({
       url: '/',
@@ -57,6 +68,7 @@ exports = module.exports = function (options) {
     })
   );
 
+  /* Make files in the front/images folder available from /images */
   app.use(
     st({
       url: '/images',
@@ -65,7 +77,9 @@ exports = module.exports = function (options) {
       index: false
     })
   );
+
   if (production) {
+    /* Put pre-compiled assets into a folder in the system's /tmp area */
     var assetsDir = path.join(os.tmpdir(), 'synth-assets');
     mkdirp.sync(assetsDir);
     process.stdout.write('Precompiling JS and CSS files... ');
@@ -99,6 +113,7 @@ exports = module.exports = function (options) {
     app.use(st({ path: assetsDir, url: '/css', index: false }));
     console.log('Done');
   } else {
+    /* Dev mode */
     app.use( '/js', harp.mount( path.join(process.cwd(), 'front/js') ) );
     app.use( '/css', harp.mount( path.join(process.cwd(), 'front/css') ) );
   }
@@ -107,7 +122,7 @@ exports = module.exports = function (options) {
 
   /* Render the main index */
   app.set( "views", viewDir );
-  app.set('view engine', 'jade');
+  app.set('view engine', viewEngine);
   if (!production) app.locals.pretty = true;
   app.get('/', frontend.index);
 
