@@ -16,6 +16,7 @@ describe('handlersParser module', function () {
           file: path.join(rootDir, 'orders/create.js'),
           method: 'post',
           path: '/api/orders',
+          isCustom: false,
           funcName: 'post',
           resources: [
             'orders'
@@ -25,6 +26,7 @@ describe('handlersParser module', function () {
           file: path.join(rootDir, 'products/get.js'),
           method: 'get',
           path: '/api/products',
+          isCustom: false,
           funcName: 'getIndex',
           resources: [
             'products'
@@ -34,6 +36,7 @@ describe('handlersParser module', function () {
           file: path.join(rootDir, 'products/get.js'),
           method: 'get',
           path: '/api/products/:id',
+          isCustom: false,
           funcName: 'get',
           resources: [
             'products'
@@ -43,6 +46,7 @@ describe('handlersParser module', function () {
           file: path.join(rootDir, 'products/get.js'),
           method: 'get',
           path: '/api/products/specials',
+          isCustom: true,
           funcName: 'getSpecials',
           resources: [
             'products'
@@ -52,6 +56,7 @@ describe('handlersParser module', function () {
           file: path.join(rootDir, 'products/new.js'),
           method: 'post',
           path: '/api/products',
+          isCustom: false,
           funcName: 'post',
           resources: [
             'products'
@@ -61,6 +66,7 @@ describe('handlersParser module', function () {
           file: path.join(rootDir, 'products/variations/variations.js'),
           method: 'post',
           path: '/api/products/:productsId/variations',
+          isCustom: false,
           funcName: 'post',
           resources: [
             'products',
@@ -71,6 +77,7 @@ describe('handlersParser module', function () {
           file: path.join(rootDir, 'products/variations/variations.js'),
           method: 'get',
           path: '/api/products/:productsId/variations',
+          isCustom: false,
           funcName: 'getIndex',
           resources: [
             'products',

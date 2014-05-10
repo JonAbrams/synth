@@ -15,7 +15,7 @@ describe('synth module', function () {
     process.chdir(__dirname + '/sample_project');
   });
 
-  describe.only("the api", function () {
+  describe("the api", function () {
     it('returns 404 when no match is found', function (done) {
       request(app).get('/api/thing-that-doesnt-exist')
       .expect(404)
