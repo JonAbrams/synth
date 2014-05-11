@@ -31,7 +31,8 @@ exports = module.exports = function (options) {
   var resourceDir = options.resourceDir || path.join(process.cwd(), 'back/resources');
   var viewDir = options.viewDir || path.join(process.cwd(), 'front');
   var viewEngine = options.viewEngine || 'jade';
-  var production = !!options.production || process.env.NODE_ENV === 'production';
+  if (!!options.production) process.env.NODE_ENV = 'production';
+  var production = process.env.NODE_ENV === 'production';
 
   /* On startup, parse all the resource handling modules */
   handlers = handlersParser.parse(resourceDir);
@@ -51,8 +52,7 @@ exports = module.exports = function (options) {
 
   /* Handle API requests */
   app.all('/api/*', function (req, res) {
-    res.statusCode = 404;
-    res.json({ error: 'Resource not found'});
+    res.send(404, { error: 'Resource not found'});
   });
 
   /* Handle front-end requests for assets */

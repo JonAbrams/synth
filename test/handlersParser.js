@@ -53,6 +53,26 @@ describe('handlersParser module', function () {
           ]
         },
         {
+          file: path.join(rootDir, 'products/get.js'),
+          method: 'get',
+          path: '/api/products/oops',
+          isCustom: true,
+          funcName: 'getOops',
+          resources: [
+            'products'
+          ]
+        },
+        {
+          file: path.join(rootDir, 'products/get.js'),
+          method: 'put',
+          path: '/api/products/501Oops',
+          isCustom: true,
+          funcName: 'put501Oops',
+          resources: [
+            'products'
+          ]
+        },
+        {
           file: path.join(rootDir, 'products/new.js'),
           method: 'post',
           path: '/api/products',

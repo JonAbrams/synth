@@ -33,3 +33,11 @@ exports.getSpecials = function (req, res) {
     specials: []
   };
 };
+
+exports.getOops = function (req, res) {
+  throw { error: "Ouch!" };
+};
+
+exports.put501Oops = function (req, res) {
+  throw { statusCode: 501, message: "Ouch!" };
+};

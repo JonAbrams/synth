@@ -15,7 +15,7 @@ describe('synth module', function () {
     process.chdir(__dirname + '/sample_project');
   });
 
-  describe("the api", function () {
+  describe('the api', function () {
     it('returns 404 when no match is found', function (done) {
       request(app).get('/api/thing-that-doesnt-exist')
       .expect(404)
@@ -65,6 +65,52 @@ describe('synth module', function () {
         specials: []
       })
       .end(done);
+    });
+
+    describe('API error handling', function () {
+      var consoleError;
+      var errorLog = '';
+      before(function () {
+        consoleError = console.error;
+        console.error = function (msg) {
+          errorLog = msg;
+        };
+      });
+      after(function () {
+        console.error = consoleError;
+      });
+
+      it('handles a thrown error', function (done) {
+        request(app).get('/api/products/oops')
+        .expect(500)
+        .expect({ error: 'Ouch!' })
+        .end(function () {
+          errorLog.should.eql('Error thrown by GET /api/products/oops : {"error":"Ouch!"}');
+          done();
+        });
+      });
+
+      it('handles a thrown error with custom code', function (done) {
+        request(app).put('/api/products/501oops')
+        .expect(501)
+        .expect('Ouch!')
+        .end(function () {
+          errorLog.should.eql('Error thrown by PUT /api/products/501Oops : Ouch!');
+          done();
+        });
+      });
+
+      it('suppresses error in production', function (done) {
+        process.env.NODE_ENV = 'production';
+        request(app).put('/api/products/501oops')
+        .expect(501)
+        .expect('An error occurred')
+        .end(function () {
+          errorLog.should.eql('Error thrown by PUT /api/products/501Oops : Ouch!');
+          delete process.env.NODE_ENV;
+          done();
+        });
+      });
     });
   });
 
