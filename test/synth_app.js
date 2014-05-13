@@ -2,12 +2,13 @@ var cssHash = '973388f18ee6903be4c67fde2d916e92';
 var jsHash = 'ad65a088b5dc9472d8ede5d1f1029369';
 
 var request = require('supertest');
+var requireUncached = require('../lib/requireUncached.js');
 require('should');
 
 describe('synth module', function () {
   var synth, app;
   beforeEach(function () {
-    synth = require('../synth.js');
+    synth = requireUncached('../synth.js');
     app = synth();
   });
 
@@ -20,7 +21,7 @@ describe('synth module', function () {
       request(app).get('/api/thing-that-doesnt-exist')
       .expect(404)
       .expect('Content-Type', 'application/json')
-      .expect({ error: 'Resource not found'})
+      .expect({ error: 'Resource not found' })
       .end(done);
     });
 

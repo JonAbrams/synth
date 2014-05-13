@@ -20,11 +20,6 @@ var assets = require('./lib/assets.js');
 var app = express();
 var handlers;
 
-/* Add default middleware */
-app.use( connect.compress() );
-app.use( connect.json() );
-app.use( connect.urlencoded() );
-
 /* the main synth init function */
 exports = module.exports = function (options) {
   options = options || {};
@@ -34,9 +29,12 @@ exports = module.exports = function (options) {
   if (!!options.production) process.env.NODE_ENV = 'production';
   var production = process.env.NODE_ENV === 'production';
 
+  exports.beforeInit.forEach(function (callback) {
+    callback();
+  });
+
   /* On startup, parse all the resource handling modules */
   handlers = handlersParser.parse(resourceDir);
-
 
   /* Tell the express app to listen for each API request handler */
   var registerHandler = function (handler) {
@@ -137,6 +135,14 @@ exports = module.exports = function (options) {
 
   return app;
 };
+
+exports.beforeInit = [
+  function defaultSynthMiddleware () {
+    app.use( connect.compress() );
+    app.use( connect.json() );
+    app.use( connect.urlencoded() );
+  }
+];
 
 // Allow early access to the app before it parses the API and sets the routes
 exports.app = app;
