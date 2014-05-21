@@ -13,7 +13,7 @@ The first back-end framework specially designed for single-page web applications
 
 _Synth_ is an API-first web app framework (built on NodeJS) that provides the following features:
 
-- Easily created new RESTful API resources by just creating folders and naming functions a certain way.
+- Easily create new RESTful API resources by just creating folders and naming functions a certain way.
 - Preload angular model data on page load (saving an extra roundtrip).
 - Preload html view on page load (saving another extra roundtrip!)
 - A simplified project structure where front-end code (angular code, html, css, bower packages, etc) is in the 'front' folder and back-end code (node code and node packages) are in the 'back' folder.
