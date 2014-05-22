@@ -34,6 +34,7 @@ exports = module.exports = function (options) {
   });
 
   /* On startup, parse all the resource handling modules */
+  handlersParser.setApiTimeout(options.apiTimeout);
   handlers = handlersParser.parse(resourceDir);
 
   /* Tell the express app to listen for each API request handler */

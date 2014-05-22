@@ -9,7 +9,7 @@ describe('synth module', function () {
   var synth, app;
   beforeEach(function () {
     synth = requireUncached('../synth.js');
-    app = synth();
+    app = synth({ apiTimeout: 100 });
   });
 
   before(function () {
@@ -59,7 +59,7 @@ describe('synth module', function () {
       });
     });
 
-    it('creates a custom action handler', function (done) {
+    it.only('creates a custom action handler', function (done) {
       request(app).get('/api/products/specials')
       .expect(200)
       .expect({
@@ -109,6 +109,15 @@ describe('synth module', function () {
         .end(function () {
           errorLog.should.eql('Error thrown by PUT /api/products/501Oops : Ouch!');
           delete process.env.NODE_ENV;
+          done();
+        });
+      });
+
+      it('times out if not resolved', function (done) {
+        request(app).get('/api/products/forever')
+        .expect(500)
+        .end(function () {
+          errorLog.should.eql('Error thrown by GET /api/products/forever : API Request timed out');
           done();
         });
       });

@@ -103,7 +103,17 @@ describe('handlersParser module', function () {
             'products',
             'variations'
           ]
-        }
+        },
+        {
+          file: path.join(rootDir, 'products/yuck.js'),
+          method: 'get',
+          path: '/api/products/forever',
+          isCustom: true,
+          funcName: 'getForever',
+          resources: [
+            'products'
+          ]
+        },
       ]);
     });
 
