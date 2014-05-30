@@ -20,7 +20,7 @@ describe('synth module', function () {
     it('returns 404 when no match is found', function (done) {
       request(app).get('/api/thing-that-doesnt-exist')
       .expect(404)
-      .expect('Content-Type', 'application/json')
+      .expect('Content-Type', 'application/json; charset=utf-8')
       .expect({ error: 'Resource not found' })
       .end(done);
     });
@@ -28,7 +28,7 @@ describe('synth module', function () {
     it('fetches the list of products', function (done) {
       request(app).get('/api/products')
       .expect(200)
-      .expect('Content-Type', 'application/json')
+      .expect('Content-Type', 'application/json; charset=utf-8')
       .expect({
         injection: "<script>alert('hi')</script>",
         products: [
@@ -48,7 +48,7 @@ describe('synth module', function () {
       .end(function () {
         request(app).get('/api/products/52/variations')
         .expect(200)
-        .expect('Content-Type', 'application/json')
+        .expect('Content-Type', 'application/json; charset=utf-8')
         .expect([
           {
             name: 'red',
