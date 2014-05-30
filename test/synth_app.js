@@ -59,7 +59,7 @@ describe('synth module', function () {
       });
     });
 
-    it.only('creates a custom action handler', function (done) {
+    it('creates a custom action handler', function (done) {
       request(app).get('/api/products/specials')
       .expect(200)
       .expect({
@@ -125,6 +125,18 @@ describe('synth module', function () {
   });
 
   describe('front end', function () {
+    beforeEach(function () {
+      synth = requireUncached('../synth.js');
+
+      synth.app.use(function (req, res, next) {
+        req.renderData = {
+          anAPIKey: "12345abcde"
+        };
+        next();
+      });
+
+      app = synth({ apiTimeout: 100 });
+    });
     it('serves up the index.html', function (done) {
       request(app).get('/')
       .expect(200)
@@ -165,6 +177,13 @@ describe('synth module', function () {
           throw "Found preloaded HTML where there should not have been any";
         }
       })
+      .end(done);
+    });
+
+    it('allows for custom renderData', function (done) {
+      request(app).get('/products')
+      .expect(200)
+      .expect(/var apiKey = "12345abcde";/)
       .end(done);
     });
 
