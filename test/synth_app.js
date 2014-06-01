@@ -129,7 +129,7 @@ describe('synth module', function () {
       synth = requireUncached('../synth.js');
 
       synth.app.use(function (req, res, next) {
-        req.renderData = {
+        res.renderData = {
           anAPIKey: "12345abcde"
         };
         next();
