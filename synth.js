@@ -1,4 +1,5 @@
-var express = require('express'),
+var synthApi = require('synth-api'),
+    express = require('express'),
     _ = require('lodash'),
     path = require('path'),
     os = require('os'),
@@ -13,17 +14,19 @@ var md5sum = function (str) {
   return crypto.createHash('md5').update(str).digest('hex');
 };
 
-var handlersParser = require('./lib/handlersParser.js');
 var frontend = require('./lib/frontendRenderer.js');
 var assets = require('./lib/assets.js');
 
 var app = express();
-var handlers;
+
+var defaultCatchAll = function (req, res) {
+  res.send(404, { error: 'Resource not found'});
+};
 
 /* the main synth init function */
 exports = module.exports = function (options) {
   options = options || {};
-  var resourceDir = options.resourceDir || path.join(process.cwd(), 'back/resources');
+  var defaultResourceDir = path.join(process.cwd(), 'back/resources');
   var viewDir = options.viewDir || path.join(process.cwd(), 'front');
   var viewEngine = options.viewEngine || 'jade';
   if (!!options.production) process.env.NODE_ENV = 'production';
@@ -34,25 +37,12 @@ exports = module.exports = function (options) {
   });
 
   /* On startup, parse all the resource handling modules */
-  handlersParser.setApiTimeout(options.apiTimeout);
-  handlers = handlersParser.parse(resourceDir);
-
-  /* Tell the express app to listen for each API request handler */
-  var registerHandler = function (handler) {
-    app[handler.method]( handler.path, handler.func() );
-  };
-  /* Register the custom actions first */
-  handlers.filter(function (handler) {
-    return handler.isCustom;
-  }).forEach(registerHandler);
-  handlers.filter(function (handler) {
-    return !handler.isCustom;
-  }).forEach(registerHandler);
-
-  /* Handle API requests */
-  app.all('/api/*', function (req, res) {
-    res.send(404, { error: 'Resource not found'});
-  });
+  var handlers = synthApi.generateHandlers({
+    resourceDir: options.resourceDir || defaultResourceDir,
+    app: options.app || app,
+    timeout: options.apiTimeout || 5000,
+    catchAll: options.catchAll || defaultCatchAll
+  }).handlers;
 
   /* Handle front-end requests for assets */
   assets.init();
@@ -150,9 +140,6 @@ exports.app = app;
 
 // Expose the command-line commands programmatically
 exports.commands = require('./lib/commands.js');
-
-// Return the raw express-style handlers
-exports.apiHandlers = handlersParser.apiHandlers;
 
 exports.jsFiles = assets.jsFiles;
 
