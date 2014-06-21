@@ -1,6 +1,6 @@
 {
   "name": "synth",
-  "version": "0.4.17",
+  "version": "0.5.0",
   "author": "Jon Abrams <jon@jonabrams.com>",
   "description": "The easiest web framework for synthesizing API-first web apps that also have web front-ends.",
   "dependencies": {
@@ -24,7 +24,7 @@
     "nopt": "^2.2.0",
     "connect": "^2.19.4",
     "st": "^0.4.1",
-    "synth-api": "0.1.0"
+    "synth-api": "0.2.0"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
