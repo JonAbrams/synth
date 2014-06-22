@@ -23,7 +23,8 @@ angular.module('${appName}', ['ngRoute'])
 })
 .service('dataLoader', function ($location, $http) {
   return function () {
-    if (preloadedData) {
+    var modelName = $location.path().replace(/^\//, '');
+    if (preloadedData && preloadedData[modelName]) {
       var data = preloadedData;
       preloadedData = null;
       return data;
