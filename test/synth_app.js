@@ -157,14 +157,18 @@ describe('synth module', function () {
       .end(done);
     });
 
-    it('preloads html with request', function (done) {
+    it('preloads html with request (production)', function (done) {
+      process.env.NODE_ENV = 'production';
       request(app).get('/products')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>[^]*<\/html>/)
       .expect(/<script type="text\/ng-template" id="\/html\/products\/getIndex\.html">/)
       .expect(/<ul><li ng-repeat="product in products">\{\{ product.name }} - \{\{ product\.price \| currency }}\S*<\/li><\/ul>/)
-      .end(done);
+      .end(function () {
+        delete process.env.NODE_ENV;
+        done();
+      });
     });
 
     it('works without preloading html with request', function (done) {
