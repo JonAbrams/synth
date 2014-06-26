@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.2
+
+- Set the listening port to the PORT env variable if the --port command-line flag is not set. If neither are set then use the default port 3000.
+
 ## 0.5.1
 
 - [Added jade template error output.](https://github.com/JonAbrams/synth/issues/33)
