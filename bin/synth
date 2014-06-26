@@ -50,7 +50,8 @@ if (command == 'new' && args[1] && args[1][0] != '-') {
 
 if ( _(['server', 'prod']).contains(command) ) {
   var mode = 'development';
-  var port = 3000;
+  var port;
+
   if (command == 'prod' || process.env.NODE_ENV == 'production') {
     process.env.NODE_ENV = mode = 'production';
   }
@@ -58,8 +59,8 @@ if ( _(['server', 'prod']).contains(command) ) {
   portFlagIndex = args.indexOf('-p');
   if (portFlagIndex == -1) portFlagIndex = args.indexOf('--port');
   if ( portFlagIndex != -1) port = parseInt(args[portFlagIndex+1], 10);
-  process.env.PORT = process.env.PORT || port;
 
+  port = port || process.env.PORT || 3000;
   commands.startServer(mode, port);
   return;
 }
