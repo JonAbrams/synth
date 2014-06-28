@@ -1,0 +1,54 @@
+!!!
+html
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(description="Synth is a back-end web framework designed to make (Angular|Ember|Backbone)JS web apps easy to create and manage.")
+    title
+      | Synth - The back-end web framework designed to make
+      | (Angular|Ember|Backbone)JS web apps easy to create and manage.
+    link(rel="stylesheet", href="//cdn.jsdelivr.net/bootstrap/3.1/css/bootstrap.min.css")
+    link(rel="stylesheet", href="/bower_components/prismjs/prism.css")
+    link(rel="stylesheet", href="/css/main.css")
+  body(data-spy="scroll", data-target=".toc")
+    nav.navbar.navbar-default.navbar-static-top
+      .container
+        .navbar-header
+          button.navbar-toggle(
+            type='button',
+            data-toggle='collapse',
+            data-target='#synth-links'
+          )
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href="/") Synth
+
+        .collapse.navbar-collapse.navbar-right#synth-links
+          ul.nav.navbar-nav
+            li.features
+              a(href="/features") Features
+            li.docs
+              a(href="/docs") Docs
+            li.tutorial
+              a(href="/tutorial") Tutorial
+            li.examples
+              a(href="/examples") Examples
+            li.source
+              a(href="https://github.com/JonAbrams/synth") Source
+
+    .container
+      != yield
+
+    #footer
+      .container
+        p
+          | Synth was created with warm + fuzzy feelings by <a href="https://twitter.com/JonathanAbrams">Jon Abrams</a>
+
+
+    script(src="//cdn.jsdelivr.net/g/jquery@2.1,bootstrap@3.1")
+    script(src="/bower_components/prismjs/prism.js")
+    script(src="/js/main.js")
+    != partial('_analytics')

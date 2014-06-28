@@ -1,0 +1,20 @@
+mixin barspace
+  | &nbsp;|&nbsp;
+
+h2 Examples
+
+.row
+  .col-md-12.example.well
+    h4.title Blurbs
+    p.description
+      | A twitter-like web app where people can anonymously share short 140 character messages and then comment on them.
+    h5 Links
+    p.links
+      a(href="http://blurbs.synthjs.com/") View Demo
+      +barspace
+      a(href="https://github.com/JonAbrams/synth-example-blurbs") Source
+
+    h5 DB
+    p.db <a href="https://www.mongodb.org/">Mongodb</a> using <a href="https://github.com/gordonmleigh/promised-mongo">promised-mongo</a> node module
+    h5 Front-end
+    p.front-end <a href="http://angularjs.org/">AngularJS</a> (2.1.14) using ngRoute

@@ -1,0 +1,27 @@
+mixin barspace
+  | &nbsp;|&nbsp;
+
+section
+  .jumbotron
+    img.logo(src="/images/synth-logo.png")
+    p
+      | The back-end web framework designed to make
+      | (Angular|Ember|Backbone)JS web apps easy to create and manage.
+    p
+      a(href="/features") Features
+      +barspace
+      a(href="/docs") Docs
+        +barspace
+      a(href="/tutorial") Tutorial
+      +barspace
+      a(href="/examples") Examples
+      +barspace
+      a(href="https://github.com/JonAbrams/synth") Source Code
+    p.current-status.
+      <strong>Current Status (ver. #{synthVersion})</strong>: Not quite yet ready for use in
+      production. It's totally ready for you to play around with and
+      raise issues on github with though!
+
+.row
+  .col-md-6.col-md-offset-3.col-sm-offset-1
+    <iframe width="560" height="315" src="//www.youtube.com/embed/MSH9yB9y4ZA?start=192" frameborder="0" allowfullscreen></iframe>

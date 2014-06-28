@@ -1,0 +1,55 @@
+{
+  "index": {
+    "title": "Tutorial",
+    "sections": [
+      {
+        "id": "intro",
+        "name": "Intro"
+      },
+      {
+        "id": "setup",
+        "name": "Setup",
+        "parts": [
+          {
+            "id": "dependencies",
+            "name": "Dependencies"
+          },
+          {
+            "id": "install",
+            "name": "Install Synth"
+          },
+          {
+            "id": "create-app",
+            "name": "Create new app"
+          },
+          {
+            "id": "starting",
+            "name": "Starting the app"
+          },
+          {
+            "id": "populate-db",
+            "name": "Pre-popluate the DB"
+          }
+        ]
+      },
+      {
+        "id": "publish",
+        "name": "Add Tweeting",
+        "parts": [
+          {
+            "id": "create-post-method",
+            "name": "Add a POST method"
+          },
+          {
+            "id": "create-publish-method",
+            "name": "Add a publish method"
+          },
+          {
+            "id": "add-textarea-and-button",
+            "name": "Add a textarea"
+          }
+        ]
+      }
+    ]
+  }
+}

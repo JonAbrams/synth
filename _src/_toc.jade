@@ -1,0 +1,11 @@
+.toc
+  h2= title
+  ul.nav
+    for section in sections
+      li.section
+        a(href="##{section.id}") #{section.name}
+        if section.parts
+          ul.nav
+            for part in section.parts
+              li
+                a(href="##{part.id}") #{part.name}

@@ -1,0 +1,51 @@
+{
+  "index": {
+    "title": "Docs",
+    "sections": [
+      {
+        "id": "intro",
+        "name": "Intro"
+      },
+      {
+        "id": "frontend",
+        "name": "Front-End"
+      },
+      {
+        "id": "backend",
+        "name": "Back-End",
+        "parts": [
+          {
+            "id": "back-app-js",
+            "name": "back-app.js"
+          },
+          {
+            "id": "creating-api-endpoints",
+            "name": "Creating API endpoints"
+          }
+        ]
+      },
+      {
+        "id": "packages",
+        "name": "Third-party packages",
+        "parts": [
+          {
+            "id": "installing-packages",
+            "name": "Installing"
+          },
+          {
+            "id": "supported-assets",
+            "name": "Supported assets"
+          },
+          {
+            "id": "front-end-manifest",
+            "name": "Front-end Manifest file"
+          }
+        ]
+      },
+      {
+        "id": "synth-json",
+        "name": "synth.json"
+      }
+    ]
+  }
+}
