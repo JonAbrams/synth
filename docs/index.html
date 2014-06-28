@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta description="Synth is a back-end web framework designed to make (Angular|Ember|Backbone)JS web apps easy to create and manage."><title>Synth - The back-end web framework designed to make
-(Angular|Ember|Backbone)JS web apps easy to create and manage.</title><link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/3.1/css/bootstrap.min.css"><link rel="stylesheet" href="/bower_components/prismjs/prism.css"><link rel="stylesheet" href="/css/main.css"></head><body data-spy="scroll" data-target=".toc"><nav class="navbar navbar-default navbar-static-top"><div class="container"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#synth-links" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Synth</a></div><div id="synth-links" class="collapse navbar-collapse navbar-right"><ul class="nav navbar-nav"><li class="features"><a href="/features">Features</a></li><li class="docs"><a href="/docs">Docs</a></li><li class="tutorial"><a href="/tutorial">Tutorial</a></li><li class="examples"><a href="/examples">Examples</a></li><li class="source"><a href="https://github.com/JonAbrams/synth">Source</a></li></ul></div></div></nav><div class="container"><div class="row"><div class="col-md-3"><div class="toc"><h2>Docs</h2><ul class="nav"><li class="section"><a href="#intro">Intro</a></li><li class="section"><a href="#frontend">Front-End</a></li><li class="section"><a href="#backend">Back-End</a><ul class="nav"><li><a href="#back-app-js">back-app.js</a></li><li><a href="#creating-api-endpoints">Creating API endpoints</a></li></ul></li><li class="section"><a href="#packages">Third-party packages</a><ul class="nav"><li><a href="#installing-packages">Installing</a></li><li><a href="#supported-assets">Supported assets</a></li><li><a href="#front-end-manifest">Front-end Manifest file</a></li></ul></li><li class="section"><a href="#synth-json">synth.json</a></li></ul></div></div><div class="contents col-md-9"><p><div id="intro"></div></p>
+(Angular|Ember|Backbone)JS web apps easy to create and manage.</title><link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/3.1/css/bootstrap.min.css"><link rel="stylesheet" href="/bower_components/prismjs/prism.css"><link rel="stylesheet" href="/css/main.css"></head><body data-spy="scroll" data-target=".toc"><nav class="navbar navbar-default navbar-static-top"><div class="container"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#synth-links" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Synth</a></div><div id="synth-links" class="collapse navbar-collapse navbar-right"><ul class="nav navbar-nav"><li class="features"><a href="/features">Features</a></li><li class="docs"><a href="/docs">Docs</a></li><li class="tutorial"><a href="/tutorial">Tutorial</a></li><li class="examples"><a href="/examples">Examples</a></li><li class="source"><a href="https://github.com/JonAbrams/synth">Source</a></li></ul></div></div></nav><div class="container"><div class="row"><div class="col-md-3"><div class="toc"><h2>Docs</h2><ul class="nav"><li class="section"><a href="#intro">Intro</a></li><li class="section"><a href="#frontend">Front-End</a></li><li class="section"><a href="#backend">Back-End</a><ul class="nav"><li><a href="#back-app-js">back-app.js</a></li><li><a href="#creating-api-endpoints">Creating API endpoints</a></li></ul></li><li class="section"><a href="#packages">Third-party packages</a><ul class="nav"><li><a href="#installing-packages">Installing</a></li><li><a href="#supported-assets">Supported assets</a></li><li><a href="#front-end-manifest">Front-end Manifest file</a></li></ul></li><li class="section"><a href="#synth-json">synth.json</a></li><li class="section"><a href="#deploying">Deploying</a><ul class="nav"><li><a href="#heroku">Heroku</a></li></ul></li></ul></div></div><div class="contents col-md-9"><p><div id="intro"></div></p>
 <h1>Intro</h1>
 <p>One big source of confusion when writing web apps powered by Node.js is the fact that both the front-end code (i.e. runs in the browser) and the back-end (i.e. runs on the server) are JavaScript. It gets even more confusing when both have controllers, models, views, etc.</p>
 <p>Synth makes this easier by having any JavaScript, images, html, or other assets that are sent to the browser in the root folder <em>front</em> and code that runs on the server is in the <em>back</em> folder.</p>
@@ -121,6 +121,37 @@ synth install -b lodash  # Installs lodash for the back end (using npm)</code></
 <h1>synth.json</h1>
 <p>All of the web apps settings and meta-info are stored in <em>synth.json</em>. This includes the web app&#39;s name, version, and homepage.</p>
 <p>For <code>version</code>, it is recommended that you use the <a href="http://semver.org/">semver</a> format.</p>
+<p><div id="deploying"></div></p>
+<h1>Deploying</h1>
+<p>Synth&#39;s directory structure is a bit different from most Node web apps, especially in the 3 following ways:</p>
+<ul>
+<li>With Synth, the <code>node_modules</code> directory is under <code>back</code> and not at the project&#39;s root.</li>
+<li>Same goes for <code>package.json</code>.</li>
+<li>Synth apps are started using the <code>synth</code> binary command.</li>
+</ul>
+<p>Therefore, you may need to configure your hosting environment to support this.</p>
+<p><div id="heroku"></div></p>
+<h2>Heroku</h2>
+<p>To make it super easy to deploy Synth apps on Heroku, just use the <a href="https://github.com/JonAbrams/heroku-buildpack-synth">Heroku Buildpack for Synth</a>.</p>
+<h3>Features</h3>
+<ul>
+<li>Detects if your app is a Synth app by looking to see if you have a <code>synth.json</code> file in the root of your project.</li>
+<li>Does all the stuff that the <a href="https://github.com/heroku/heroku-buildpack-nodejs">Official Heroku Node.js Buildpack</a> does plus the following.</li>
+<li>Reads <code>package.json</code> from the <code>back/</code> directory.</li>
+<li>Installs <code>node_modules</code> in <code>back/</code>.</li>
+<li>Reads <code>bower.json</code> in <code>front/</code>.</li>
+<li>Installs <code>bower_components</code> in <code>front/</code>.</li>
+<li>Caches the <code>bower_components</code> directory across builds for fast deploys (just like it does for <code>node_modules</code>).</li>
+<li>Doesn&#39;t use either cache if <code>node_modules</code> or <code>bower_components</code> are checked into version control.</li>
+<li>Auto-generates a Procfile in the root of your app if you don&#39;t have one. Has one line: <code>web: synth prod</code> (launches Synth server in production mode)</li>
+</ul>
+<p>For more technical details, see the <a href="https://github.com/JonAbrams/heroku-buildpack-synth/blob/master/bin/compile">heavily-commented compile script</a>.</p>
+<h3>How to use it</h3>
+<pre><code># Create a new Heroku app that uses this buildpack
+heroku create --buildpack https://github.com/JonAbrams/heroku-buildpack-synth -a &lt;your_apps_name&gt;
+
+# Configure an existing Heroku app to use this buildpack
+heroku config:set BUILDPACK_URL=https://github.com/JonAbrams/heroku-buildpack-synth</code></pre>
 </div></div></div><div id="footer"><div class="container"><p>Synth was created with warm + fuzzy feelings by <a href="https://twitter.com/JonathanAbrams">Jon Abrams</a></p></div></div><script src="//cdn.jsdelivr.net/g/jquery@2.1,bootstrap@3.1"></script><script src="/bower_components/prismjs/prism.js"></script><script src="/js/main.js"></script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

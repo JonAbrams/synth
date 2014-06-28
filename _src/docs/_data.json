@@ -45,6 +45,16 @@
       {
         "id": "synth-json",
         "name": "synth.json"
+      },
+      {
+        "id": "deploying",
+        "name": "Deploying",
+        "parts": [
+          {
+            "id": "heroku",
+            "name": "Heroku"
+          }
+        ]
       }
     ]
   }
