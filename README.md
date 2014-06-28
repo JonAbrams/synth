@@ -41,4 +41,5 @@ While Synth is an opinionated framework that provides everything you need to mak
 ## Credit
 
 - This project was created by Jon Abrams ([Twitter](https://twitter.com/JonathanAbrams) | [GitHub](https://github.com/JonAbrams)).
-- Special thanks to Stephen Ausman (aka [stackd](https://github.com/stackd)) for handing over control of the 'synth' package on NPM.
+- Thanks to [Katie Lefevre](https://github.com/ktel1218) for the logo.
+- Thanks to Stephen Ausman (aka [stackd](https://github.com/stackd)) for handing over control of the 'synth' package on NPM.
