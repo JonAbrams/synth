@@ -9,5 +9,6 @@ You can preview your changes by running that folder using harp:
 
 ```
 npm install -g harp
-harp server _src // Server is now running on localhost:9000
+harp server _src
+# Server is now running on localhost:9000
 ```
