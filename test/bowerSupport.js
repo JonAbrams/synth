@@ -99,4 +99,54 @@ describe('bowerSupport', function () {
       );
     });
   });
+
+  describe('.removeFromManifestFiles', function () {
+    before(function () {
+      var rootDir = temp.mkdirSync('synth-bower-support-tests');
+      process.chdir(rootDir);
+      fs.mkdirSync('front');
+      process.chdir('front');
+      fs.mkdirSync('js');
+      fs.writeFileSync('js/jsFiles',
+        [
+          '../bower_components/jquery/jquery.js',
+          '../bower_components/bootstrap/dist/js/bootstrap.js',
+          '../bower_components/jquery-ui/jquery-ui.js',
+          ''
+        ].join('\n')
+      );
+      fs.mkdirSync('css');
+      fs.writeFileSync('css/cssFiles',
+        [
+          'existing.css',
+          '../bower_components/bootstrap/dist/css/bootstrap.css'
+        ].join('\n')
+      );
+      bowerSupport.removeFromManifestFiles(installed);
+      process.chdir(rootDir);
+    });
+
+    it('creates the manifest files', function () {
+      fs.existsSync('front/js/jsFiles').should.eql(true);
+      fs.existsSync('front/css/cssFiles').should.eql(true);
+    });
+
+    it('creates the right contents for jsFiles', function () {
+      fs.readFileSync('front/js/jsFiles', { encoding: 'utf8' })
+      .should.eql(
+        [
+          ''
+        ].join('\n')
+      );
+    });
+
+    it('creates the right contents for cssFiles', function () {
+      fs.readFileSync('front/css/cssFiles', { encoding: 'utf8' })
+      .should.eql(
+        [
+          'existing.css'
+        ].join('\n')
+      );
+    });
+  });
 });

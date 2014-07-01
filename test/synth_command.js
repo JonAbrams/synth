@@ -361,28 +361,36 @@ describe("synth command-line", function () {
   });
 
   describe('installing bower and npm packages', function () {
-    /* Since we can't stub out bower easily when invoking from the cli, call the function directly */
-    var commands = require('../lib/commands.js');
+    var commands;
+    var stub;
+    var bower;
+    var npm;
 
-    /* Stub out bower.commands */
-    var stub = require('./lib/stubber.js').stub;
-    var bower = require('bower');
-    var npm = require('npm');
-    bower.commands = {
-      install: stub(function () {
-        return {
-          on: function () {}
-        };
-      })
-    };
+    before(function (done){
+      /* Since we can't stub out bower easily when invoking from the cli, call the function directly */
+      commands = require('../lib/commands.js');
 
-    npm.load = stub(function (config, callback) {
-      callback();
+      /* Stub out bower.commands */
+      stub = require('./lib/stubber.js').stub;
+      bower = require('bower');
+      npm = require('npm');
+      bower.commands = {
+        install: stub(function () {
+          return {
+            on: function () {}
+          };
+        })
+      };
+
+      npm.load = stub(function (config, callback) {
+        callback();
+      });
+
+      npm.commands = {
+        install: stub()
+      };
+      done();
     });
-
-    npm.commands = {
-      install: stub()
-    };
 
     beforeEach(function (done) {
       exec(newAppCmd, function () {
@@ -423,6 +431,106 @@ describe("synth command-line", function () {
     it('calls npm install', function () {
       commands.install('install', ['-b']);
       npm.commands.install.called.should.eql([
+        [ [] ]
+      ]);
+    });
+  });
+
+  describe('uninstalling bower and npm packages', function () {
+    var commands;
+    var stub;
+    var bower;
+    var npm;
+
+    before(function(done){
+       /* Since we can't stub out bower easily when invoking from the cli, call the function directly */
+      commands = require('../lib/commands.js');
+
+      /* Stub out bower.commands */
+      stub = require('./lib/stubber.js').stub;
+      bower = require('bower');
+      npm = require('npm');
+      bower.commands = {
+        uninstall: stub(function () {
+          return {
+            on: function () {}
+          };
+        }),
+        info: stub(function(){
+          return {
+            on: function(name,callback){
+              callback({
+                latest:{
+                  "name": "angular",
+                  "version": "1.2.18",
+                  "main": "./angular.js",
+                  "dependencies": {},
+                  "homepage": "https://github.com/angular/bower-angular",
+                  "_release": "1.2.18",
+                  "_resolution": {
+                    "type": "version",
+                    "tag": "v1.2.18",
+                    "commit": "0ca814f33e56902d1500e4d5a6742d09f089b3af"
+                  },
+                  "_source": "git://github.com/angular/bower-angular.git",
+                  "_target": "1.2.18",
+                  "_originalSource": "angular"
+                }
+              });
+            }
+          };
+        })
+      };
+
+      npm.load = stub(function (config, callback) {
+        callback();
+      });
+
+      npm.commands = {
+        uninstall: stub()
+      };
+      done();
+    });
+
+    beforeEach(function (done) {
+      exec(newAppCmd, function () {
+        process.chdir(appName);
+        done();
+      });
+    });
+
+    afterEach(function () {
+      bower.commands.uninstall.called = [];
+      npm.commands.uninstall.called = [];
+      npm.load.called = [];
+    });
+
+    it('calls bower uninstall with a component', function () {
+      commands.uninstall('uninstall', ['-f', 'angular']);
+      bower.commands.uninstall.called.should.eql([
+        [ ['angular'], { save: true } ]
+      ]);
+    });
+
+    it('calls bower uninstall', function () {
+      commands.uninstall('uninstall', ['-f']);
+      bower.commands.uninstall.called.should.eql([
+        [ [], { save: true }]
+      ]);
+    });
+
+    it('calls npm uninstall module', function () {
+      commands.uninstall('uninstall', ['-b', 'lodash']);
+      npm.load.called.should.be.length(1);
+      npm.load.called[0][0].should.eql({ save: true });
+      npm.commands.uninstall.called.should.eql([
+        [ ['lodash'] ]
+      ]);
+    });
+
+    it('calls npm uninstall', function () {
+      commands.uninstall('uninstall', ['-b']);
+      npm.commands.uninstall.called.should.eql([
         [ [] ]
       ]);
     });
