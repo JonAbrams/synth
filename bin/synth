@@ -68,6 +68,9 @@ if ( _(['server', 'prod']).contains(command) ) {
 if ( _(['install', 'search', 'list']).contains(command) ) {
   commands.install(command, args.slice(1) );
   return;
+} else if ( _(['uninstall']).contains(command) ) {
+  commands.uninstall(command, args.slice(1) );
+  return;
 }
 
 commands.showHelp(args[1]);
