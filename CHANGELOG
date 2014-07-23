@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.3
+
+- Restore compatibility with Node v0.11.x. See [issue #53](https://github.com/JonAbrams/synth/issues/53)
+
 ## 0.5.2
 
 - Set the listening port to the PORT env variable if the --port command-line flag is not set. If neither are set then use the default port 3000.

@@ -1,6 +1,6 @@
 {
   "name": "synth",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "author": "Jon Abrams <jon@jonabrams.com>",
   "description": "The easiest web framework for synthesizing API-first web apps that also have web front-ends.",
   "dependencies": {
