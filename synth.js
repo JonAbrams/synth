@@ -124,6 +124,8 @@ exports = module.exports = function (options) {
     });
   });
 
+  app.handlers = handlers;
+
   return app;
 };
 

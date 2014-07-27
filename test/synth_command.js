@@ -26,10 +26,29 @@ describe("synth command-line", function () {
     process.chdir(rootDir);
   });
 
-  function synthCmd (args) {
+  var synthCmd = function (args) {
     args = args || '';
     return path.join(__dirname, '../bin/synth ') + args;
-  }
+  };
+
+  var createNewProject = function (done) {
+    var appName = 'test_app-' + _.random(10000);
+    var nodeModulesPath = path.join(__dirname, '../node_modules');
+    var synthPath = path.join(__dirname, '..');
+    exec(synthCmd('new ' + appName), function (err, stdout) {
+      process.chdir(appName);
+      // To start the server, it needs some modules, just use this package's
+      fs.symlinkSync(nodeModulesPath, 'node_modules', 'dir');
+      try {
+        // Add a symlink to this particular module if necessary
+        fs.symlinkSync(synthPath, path.join('node_modules/synth'), 'dir');
+      } catch (error) {
+        // EEXIST can be expected if this test has been run before
+        if (error.code != 'EEXIST') throw error;
+      }
+      if (done) done();
+    });
+  };
 
   var appName = 'test_app-' + _.random(10000);
   var newAppCmd = synthCmd('new ' + appName);
@@ -57,6 +76,7 @@ describe("synth command-line", function () {
             ' server   Start a local dev server. Must be executed from the app\'s root folder.',
             ' prod     Start a local production server. Will precomiple front-end assets before serving.',
             ' install  Install third-party packages (back-end or front-end) for use by your web app',
+            ' routes   Shows the various HTTP paths that the current Synth project listens to.',
             ' help     Shows you this text, or if you pass in another command, it tells you',
             '          more about it. e.g. `synth help new`',
             ''
@@ -136,6 +156,43 @@ describe("synth command-line", function () {
           ].join('\n'));
           done();
         });
+      });
+
+      it('shows routes help text', function (done) {
+        exec(synthCmd('help routes'), function (err, stdout) {
+          stdout.should.eql([
+            'synth version ' + pkg.version,
+            '',
+            'Usage: synth routes',
+            '',
+            'Description:',
+            '  The `synth routes` command displays the HTTP paths and method that',
+            '  the current Synth app listens for.',
+            '',
+            'Example:',
+            '  synth routes',
+            ''
+          ].join('\n'));
+          done();
+        });
+      });
+    });
+  });
+
+  describe('routes', function () {
+    beforeEach(createNewProject);
+
+    it('shows routes', function (done) {
+      delete process.env.NODE_ENV;
+      exec(synthCmd('routes'), function (err, stdout) {
+        throwif(err);
+        stdout.should.eql([
+          'Routes:',
+          '---------------',
+          'GET /api/tweets ./back/resources/tweets/getTweets.js#getIndex',
+          ''
+        ].join('\n'));
+        done();
       });
     });
   });
@@ -217,31 +274,12 @@ describe("synth command-line", function () {
     });
   });
 
-  var createNewProject = function (done) {
-    var appName = 'test_app-' + _.random(10000);
-    var nodeModulesPath = path.join(__dirname, '../node_modules');
-    var synthPath = path.join(__dirname, '..');
-    exec(synthCmd('new ' + appName), function (err, stdout) {
-      process.chdir(appName);
-      // To start the server, it needs some modules, just use this package's
-      fs.symlinkSync(nodeModulesPath, 'node_modules', 'dir');
-      try {
-        // Add a symlink to this particular module if necessary
-        fs.symlinkSync(synthPath, path.join('node_modules/synth'), 'dir');
-      } catch (error) {
-        // EEXIST can be expected if this test has been run before
-        if (error.code != 'EEXIST') throw error;
-      }
-      done();
-    });
-  };
-
   var spawnDevServer = function (args) {
     args = args || [];
     return spawn('synth', ['server'].concat(args), {
         cwd: process.cwd(),
         env: {
-          'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH']
+          'PATH': path.join(__dirname, '../bin') + ':' + process.env.PATH
         }
       });
   };
@@ -275,7 +313,7 @@ describe("synth command-line", function () {
       return spawn('synth', ['server'], {
           cwd: process.cwd(),
           env: {
-            'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH'],
+            'PATH': path.join(__dirname, '../bin') + ':' + process.env.PATH,
             'NODE_ENV': 'production'
           }
         });
@@ -285,7 +323,7 @@ describe("synth command-line", function () {
       return spawn('synth', ['prod'], {
           cwd: process.cwd(),
           env: {
-            'PATH': path.join(__dirname, '../bin') + ':' + process.env['PATH']
+            'PATH': path.join(__dirname, '../bin') + ':' + process.env.PATH
           }
         });
     };

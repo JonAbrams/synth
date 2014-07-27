@@ -24,6 +24,7 @@ var validCommands = {
   'uninstall': 'u',
   'server': 's',
   'prod': 'p',
+  'routes': 'r',
   'help': 'h'
 };
 
@@ -43,7 +44,7 @@ var command = (function () {
   return supposedCommand;
 })();
 
-if (command == 'new' && args[1] && args[1][0] != '-') {
+if (command === 'new' && args[1] && args[1][0] != '-') {
   commands.createNewApp(args[1]);
   return;
 }
@@ -70,6 +71,11 @@ if ( _(['install', 'search', 'list']).contains(command) ) {
   return;
 } else if ( _(['uninstall']).contains(command) ) {
   commands.uninstall(command, args.slice(1) );
+  return;
+}
+
+if (command === 'routes') {
+  commands.printRoutes();
   return;
 }
 
