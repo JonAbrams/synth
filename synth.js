@@ -20,7 +20,7 @@ var assets = require('./lib/assets.js');
 var app = express();
 
 var defaultCatchAll = function (req, res) {
-  res.send(404, { error: 'Resource not found'});
+  res.status(404).send({ error: 'Resource not found'});
 };
 
 /* the main synth init function */
