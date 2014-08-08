@@ -187,7 +187,7 @@ describe("synth command-line", function () {
       exec(synthCmd('routes'), function (err, stdout) {
         throwif(err);
         stdout.should.eql([
-          'Routes:',
+          'API Routes:',
           '---------------',
           'GET /api/tweets ./back/resources/tweets/getTweets.js#getIndex',
           ''
