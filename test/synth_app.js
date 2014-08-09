@@ -86,7 +86,7 @@ describe('synth module', function () {
         .expect(500)
         .expect({ error: 'Ouch!' })
         .end(function () {
-          errorLog.should.eql('Error thrown by GET /api/products/oops : {"error":"Ouch!"}');
+          errorLog.should.eql('Error thrown by GET /api/products/oops');
           done();
         });
       });

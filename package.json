@@ -24,7 +24,7 @@
     "nopt": "^2.2.0",
     "connect": "^2.19.4",
     "st": "^0.4.1",
-    "synth-api": "0.2.0"
+    "synth-api": "0.3.0"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
