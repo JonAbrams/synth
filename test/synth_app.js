@@ -1,7 +1,7 @@
 var cssHash = '973388f18ee6903be4c67fde2d916e92';
 var jsHash = 'ad65a088b5dc9472d8ede5d1f1029369';
 
-var request = require('supertest');
+var request = require('supertest-as-promised');
 var requireUncached = require('../lib/requireUncached.js');
 require('should');
 
@@ -25,8 +25,8 @@ describe('synth module', function () {
       .end(done);
     });
 
-    it('fetches the list of products', function (done) {
-      request(app).get('/api/products')
+    it('fetches the list of products', function () {
+      return request(app).get('/api/products')
       .expect(200)
       .expect('Content-Type', 'application/json; charset=utf-8')
       .expect({
@@ -37,16 +37,15 @@ describe('synth module', function () {
             price: 99.99
           }
         ]
-      })
-      .end(done);
+      });
     });
 
-    it('created a new variation', function (done) {
-      request(app).post('/api/products/52/variations')
+    it('created a new variation', function () {
+      return request(app).post('/api/products/52/variations')
       .send({ name: 'red' })
       .expect(200)
-      .end(function () {
-        request(app).get('/api/products/52/variations')
+      .then(function () {
+        return request(app).get('/api/products/52/variations')
         .expect(200)
         .expect('Content-Type', 'application/json; charset=utf-8')
         .expect([
@@ -54,18 +53,16 @@ describe('synth module', function () {
             name: 'red',
             productsId: '52'
           }
-        ])
-        .end(done);
+        ]);
       });
     });
 
-    it('creates a custom action handler', function (done) {
-      request(app).get('/api/products/specials')
+    it('creates a custom action handler', function () {
+      return request(app).get('/api/products/specials')
       .expect(200)
       .expect({
         specials: []
-      })
-      .end(done);
+      });
     });
 
     describe('API error handling', function () {
@@ -81,44 +78,40 @@ describe('synth module', function () {
         console.error = consoleError;
       });
 
-      it('handles a thrown error', function (done) {
-        request(app).get('/api/products/oops')
+      it('handles a thrown error', function () {
+        return request(app).get('/api/products/oops')
         .expect(500)
         .expect({ error: 'Ouch!' })
-        .end(function () {
+        .then(function () {
           errorLog.should.eql('Error thrown by GET /api/products/oops');
-          done();
         });
       });
 
-      it('handles a thrown error with custom code', function (done) {
-        request(app).put('/api/products/501oops')
+      it('handles a thrown error with custom code', function () {
+        return request(app).put('/api/products/501oops')
         .expect(501)
         .expect('Ouch!')
-        .end(function () {
+        .then(function () {
           errorLog.should.eql('Error thrown by PUT /api/products/501Oops : Ouch!');
-          done();
         });
       });
 
-      it('suppresses error in production', function (done) {
+      it('suppresses error in production', function () {
         process.env.NODE_ENV = 'production';
-        request(app).put('/api/products/501oops')
+        return request(app).put('/api/products/501oops')
         .expect(501)
         .expect('An error occurred')
-        .end(function () {
+        .then(function () {
           errorLog.should.eql('Error thrown by PUT /api/products/501Oops : Ouch!');
           delete process.env.NODE_ENV;
-          done();
         });
       });
 
-      it('times out if not resolved', function (done) {
-        request(app).get('/api/products/forever')
+      it('times out if not resolved', function () {
+        return request(app).get('/api/products/forever')
         .expect(500)
-        .end(function () {
+        .then(function () {
           errorLog.should.eql('Error thrown by GET /api/products/forever : API Request timed out');
-          done();
         });
       });
     });
@@ -137,42 +130,39 @@ describe('synth module', function () {
 
       app = synth({ apiTimeout: 100 });
     });
-    it('serves up the index.html', function (done) {
-      request(app).get('/')
+    it('serves up the index.html', function () {
+      return request(app).get('/')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>[^]*<\/html>/)
-      .expect(/<script src="\/js\/main\.js"><\/script>/)
-      .end(done);
+      .expect(/<script src="\/js\/main\.js"><\/script>/);
     });
 
-    it('preloads data with request', function (done) {
-      request(app).get('/products')
+    it('preloads data with request', function () {
+      return request(app).get('/products')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>[^]*<\/html>/)
       .expect(/<script>/)
       .expect(/var preloadedData = {"injection":"<script>alert\('hi'\)<\\\/script>","products":\[{"name":"Fancy Shoes","price":99\.99}]};/)
-      .expect(/<\/script>/)
-      .end(done);
+      .expect(/<\/script>/);
     });
 
-    it('preloads html with request (production)', function (done) {
+    it('preloads html with request (production)', function () {
       process.env.NODE_ENV = 'production';
-      request(app).get('/products')
+      return request(app).get('/products')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>[^]*<\/html>/)
       .expect(/<script type="text\/ng-template" id="\/html\/products\/getIndex\.html">/)
       .expect(/<ul><li ng-repeat="product in products">\{\{ product.name }} - \{\{ product\.price \| currency }}\S*<\/li><\/ul>/)
-      .end(function () {
+      .then(function () {
         delete process.env.NODE_ENV;
-        done();
       });
     });
 
-    it('works without preloading html with request', function (done) {
-      request(app).get('/products/5')
+    it('works without preloading html with request', function () {
+      return request(app).get('/products/5')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>[^]*<\/html>/)
@@ -180,69 +170,60 @@ describe('synth module', function () {
         if ( /<script type="text\/ng-template"/.test(res.text) ) {
           throw "Found preloaded HTML where there should not have been any";
         }
-      })
-      .end(done);
+      });
     });
 
-    it('allows for custom renderData', function (done) {
-      request(app).get('/products')
+    it('allows for custom renderData', function () {
+      return request(app).get('/products')
       .expect(200)
-      .expect(/var apiKey = "12345abcde";/)
-      .end(done);
+      .expect(/var apiKey = "12345abcde";/);
     });
 
 
-    it('serves up a png image', function (done) {
-      request(app).get('/images/synth.png')
+    it('serves up a png image', function () {
+      return request(app).get('/images/synth.png')
       .expect(200)
-      .expect('Content-Type', 'image/png')
-      .end(done);
+      .expect('Content-Type', 'image/png');
     });
 
-    it('reports 404 for missing asset', function (done) {
-      request(app).get('/images/not_synth.png')
-      .expect(404)
-      .end(done);
+    it('reports 404 for missing asset', function () {
+      return request(app).get('/images/not_synth.png')
+      .expect(404);
     });
 
-    it('serves up jade', function (done) {
-      request(app).get('/html/more.html')
+    it('serves up jade', function () {
+      return request(app).get('/html/more.html')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=UTF-8')
-      .expect('<h1>Welcome to Synth!</h1>')
-      .end(done);
+      .expect('<h1>Welcome to Synth!</h1>');
     });
 
-    it('serves up js', function (done) {
-      request(app).get('/js/main.js')
+    it('serves up js', function () {
+      return request(app).get('/js/main.js')
       .expect(200)
       .expect('Content-Type', 'application/javascript')
-      .expect(/function main \(\) \{/)
-      .end(done);
+      .expect(/function main \(\) \{/);
     });
 
-    it('serves up coffee-script', function (done) {
-      request(app).get('/js/more.js')
+    it('serves up coffee-script', function () {
+      return request(app).get('/js/more.js')
       .expect(200)
       .expect('Content-Type', 'application/javascript')
-      .expect('var hello;\n\nhello = function() {\n  return "hello";\n};\n')
-      .end(done);
+      .expect('var hello;\n\nhello = function() {\n  return "hello";\n};\n');
     });
 
-    it('serves up css', function (done) {
-      request(app).get('/css/main.css')
+    it('serves up css', function () {
+      return request(app).get('/css/main.css')
       .expect(200)
       .expect('Content-Type', 'text/css; charset=UTF-8')
-      .expect('.main {\n  display: block;\n}\n')
-      .end(done);
+      .expect('.main {\n  display: block;\n}\n');
     });
 
-    it('serves up scss', function (done) {
-      request(app).get('/css/more.css')
+    it('serves up scss', function () {
+      return request(app).get('/css/more.css')
       .expect(200)
       .expect('Content-Type', 'text/css; charset=UTF-8')
-      .expect('div img {background-color:red;}.outer .inner {display:none;}')
-      .end(done);
+      .expect('div img {background-color:red;}.outer .inner {display:none;}');
     });
 
     it('exposes jsFiles', function () {
@@ -253,13 +234,12 @@ describe('synth module', function () {
       synth.cssFiles.should.eql(['/css/main.css', '/css/more.css', '/css/another.css']);
     });
 
-    it('can add references to other assets on demand', function (done) {
+    it('can add references to other assets on demand', function () {
       synth.jsFiles.push('js/special.js');
       synth.cssFiles.push('css/special.css');
-      request(app).get('/')
+      return request(app).get('/')
       .expect(/<script src="js\/special\.js"><\/script>/)
-      .expect(/<link rel="stylesheet" href="css\/special\.css"/)
-      .end(done);
+      .expect(/<link rel="stylesheet" href="css\/special\.css"/);
     });
   });
 });
@@ -285,29 +265,26 @@ describe('production mode', function () {
     process.stdout.write = stdoutWrite;
   });
 
-  it('pre-compiles CSS and JS and adds a reference to it', function (done) {
-    request(app).get('/')
+  it('pre-compiles CSS and JS and adds a reference to it', function () {
+    return request(app).get('/')
     .expect(new RegExp('<script src="/js/main-' + jsHash + '.js"></script>'))
-    .expect(new RegExp('<link rel="stylesheet" href="/css/main-' + cssHash + '.css">'))
-    .end(done);
+    .expect(new RegExp('<link rel="stylesheet" href="/css/main-' + cssHash + '.css">'));
   });
 
-  it('serves up expected JS', function (done) {
-    request(app).get('/js/main-' + jsHash + '.js')
+  it('serves up expected JS', function () {
+    return request(app).get('/js/main-' + jsHash + '.js')
     .expect('Content-Type', 'application/javascript')
     .expect('Cache-Control', 'public, max-age=600')
-    .expect('function main(){return!0}(function(){var n;n=function(){return"hello"}}).call(this);')
-    .end(done);
+    .expect('function main(){return!0}(function(){var n;n=function(){return"hello"}}).call(this);');
   });
 
-  it('serves up expected CSS', function (done) {
-    request(app).get('/css/main-' + cssHash + '.css')
+  it('serves up expected CSS', function () {
+    return request(app).get('/css/main-' + cssHash + '.css')
     .expect('Content-Type', 'text/css')
     .expect('Cache-Control', 'public, max-age=600')
     .expect(
       '.main{display:block}div img{background-color:red}' +
       '.outer .inner{display:none}div{background-color:#00f;color:red}'
-    )
-    .end(done);
+    );
   });
 });
