@@ -12,8 +12,9 @@ describe('synth module', function () {
     app = synth({ apiTimeout: 100 });
   });
 
-  before(function () {
+  before(function (done) {
     process.chdir(__dirname + '/sample_project');
+    done();
   });
 
   describe('the api', function () {
