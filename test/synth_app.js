@@ -7,9 +7,10 @@ require('should');
 
 describe('synth module', function () {
   var synth, app;
-  beforeEach(function () {
+  beforeEach(function (done) {
     synth = requireUncached('../synth.js');
     app = synth({ apiTimeout: 100 });
+    done();
   });
 
   before(function (done) {
