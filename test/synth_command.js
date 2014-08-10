@@ -1,8 +1,7 @@
 require('should');
 var mkdirp = require('mkdirp'),
   path = require('path'),
-  Promise = require('bluebird'),
-  exec = Promise.promisify(require('child_process').exec),
+  exec = require('child_process').exec,
   spawn = require('child_process').spawn,
   os = require('os'),
   fs = require('fs'),
@@ -12,6 +11,10 @@ var mkdirp = require('mkdirp'),
   temp = require('temp'),     // Creates temporary directories
   touch = require('touch'),
   wrench = require('wrench'); // Recursive file operations
+
+function throwif(err) {
+  if (err) throw err;
+}
 
 /* Set the temp directories to self-delete on exit */
 temp.track();
@@ -28,11 +31,11 @@ describe("synth command-line", function () {
     return path.join(__dirname, '../bin/synth ') + args;
   };
 
-  var createNewProject = function () {
+  var createNewProject = function (done) {
     var appName = 'test_app-' + _.random(10000);
     var nodeModulesPath = path.join(__dirname, '../node_modules');
     var synthPath = path.join(__dirname, '..');
-    return exec(synthCmd('new ' + appName)).then(function (stdout) {
+    exec(synthCmd('new ' + appName), function (err, stdout) {
       process.chdir(appName);
       // To start the server, it needs some modules, just use this package's
       fs.symlinkSync(nodeModulesPath, 'node_modules', 'dir');
@@ -43,6 +46,7 @@ describe("synth command-line", function () {
         // EEXIST can be expected if this test has been run before
         if (error.code != 'EEXIST') throw error;
       }
+      if (done) done();
     });
   };
 
@@ -51,16 +55,17 @@ describe("synth command-line", function () {
 
   describe('help text', function () {
     describe('unrecognized command', function () {
-      it('says the command is unrecognized', function () {
-        return exec(synthCmd('huh')).spread(function (stdout) {
+      it('says the command is unrecognized', function (done) {
+        exec(synthCmd('huh'), function (err, stdout) {
           stdout.should.contain('Unrecognized command: huh');
+          done();
         });
       });
     });
 
     describe('basic help', function () {
-      it('shows the right text', function () {
-        return exec(synthCmd()).spread(function (stdout) {
+      it('shows the right text', function (done) {
+        exec(synthCmd(), function (err, stdout) {
           stdout.should.eql([
             'synth version ' + pkg.version,
             '',
@@ -76,11 +81,12 @@ describe("synth command-line", function () {
             '          more about it. e.g. `synth help new`',
             ''
           ].join('\n'));
+          done();
         });
       });
 
-      it('shows new help text', function () {
-        return exec(synthCmd('help new')).spread(function (stdout) {
+      it('shows new help text', function (done) {
+        exec(synthCmd('help new'), function (err, stdout) {
           stdout.should.eql([
             'synth version ' + pkg.version,
             '',
@@ -95,11 +101,12 @@ describe("synth command-line", function () {
             '  CoffeeScript, or to specify a particular front-end framework, like Angularjs or Ember',
             ''
           ].join('\n'));
+          done();
         });
       });
 
-      it('show server command help text', function () {
-        exec(synthCmd('help server')).spread(function (stdout) {
+      it('show server command help text', function (done) {
+        exec(synthCmd('help server'), function (err, stdout) {
           stdout.should.eql([
             'synth version ' + pkg.version,
             '',
@@ -117,11 +124,12 @@ describe("synth command-line", function () {
             'Alias: synth i [options]',
             ''
           ].join('\n'));
+          done();
         });
       });
 
-      it('shows install help text', function () {
-        return exec(synthCmd('help install')).spread(function (stdout) {
+      it('shows install help text', function (done) {
+        exec(synthCmd('help install'), function (err, stdout) {
           stdout.should.eql([
             'synth version ' + pkg.version,
             '',
@@ -146,11 +154,12 @@ describe("synth command-line", function () {
             '  synth install -b lodash',
             ''
           ].join('\n'));
+          done();
         });
       });
 
-      it('shows routes help text', function () {
-        return exec(synthCmd('help routes')).spread(function (stdout) {
+      it('shows routes help text', function (done) {
+        exec(synthCmd('help routes'), function (err, stdout) {
           stdout.should.eql([
             'synth version ' + pkg.version,
             '',
@@ -164,6 +173,7 @@ describe("synth command-line", function () {
             '  synth routes',
             ''
           ].join('\n'));
+          done();
         });
       });
     });
@@ -172,43 +182,52 @@ describe("synth command-line", function () {
   describe('routes', function () {
     beforeEach(createNewProject);
 
-    it('shows routes', function () {
+    it('shows routes', function (done) {
       delete process.env.NODE_ENV;
-      return exec(synthCmd('routes')).spread(function (stdout) {
+      exec(synthCmd('routes'), function (err, stdout) {
+        throwif(err);
         stdout.should.eql([
           'API Routes:',
           '---------------',
           'GET /api/tweets ./back/resources/tweets/getTweets.js#getIndex',
           ''
         ].join('\n'));
+        done();
       });
     });
   });
 
   describe('project generation', function () {
-    it('creates a directory', function () {
-      return exec(newAppCmd).spread(function (stdout) {
+    it('creates a directory', function (done) {
+      exec(newAppCmd, function (err, stdout) {
+        if (err) throw err;
         fs.readdirSync('.').should.contain(appName);
+        done();
       });
     });
 
-    it('shows the right messages in the console', function () {
-      return exec(newAppCmd).spread(function (stdout) {
+    it('shows the right messages in the console', function (done) {
+      exec(newAppCmd, function (err, stdout) {
+        throwif(err);
         stdout.should.eql('Successfully created a new synth app in ' + appName + '\n');
-        return exec(newAppCmd).spread(function (stdout) {
+        exec(newAppCmd, function (err, stdout) {
+          throwif(err);
           stdout.should.eql('Oops, that folder already exists. Try specifying a different name.\n');
+          done();
         });
       });
     });
 
-    it('displays error when back template specified', function () {
-      return exec(newAppCmd + ' -r non_template').catch(function (err) {
-        err.message.should.eql('Command failed: The template "non_template" could not be found.\n');
+    it('displays error when back template specified', function (done) {
+      exec(newAppCmd + ' -r non_template', function (err, stdout, stderr) {
+        stderr.should.eql('The template "non_template" could not be found.\n');
+        done();
       });
     });
 
-    it('populates the project with key files', function () {
-      return exec(newAppCmd).spread(function (stdout) {
+    it('populates the project with key files', function (done) {
+      exec(newAppCmd, function (err, stdout) {
+        throwif(err);
         wrench.readdirSyncRecursive(appName).sort().should.eql([
           '.gitignore',
           'back',
@@ -242,12 +261,15 @@ describe("synth command-line", function () {
           'front/misc/robots.txt',
           'synth.json'
         ]);
+        done();
       });
     });
 
-    it('renders templates', function () {
-      return exec(newAppCmd).spread(function (stdout) {
+    it('renders templates', function (done) {
+      exec(newAppCmd, function (err, stdout) {
+        throwif(err);
         fs.readFileSync( path.join(appName, 'synth.json'), { encoding: 'utf8' } ).should.contain('"name": "' + appName + '"');
+        done();
       });
     });
   });
@@ -382,7 +404,7 @@ describe("synth command-line", function () {
     var bower;
     var npm;
 
-    before(function (){
+    before(function (done){
       /* Since we can't stub out bower easily when invoking from the cli, call the function directly */
       commands = require('../lib/commands.js');
 
@@ -405,11 +427,13 @@ describe("synth command-line", function () {
       npm.commands = {
         install: stub()
       };
+      done();
     });
 
-    beforeEach(function () {
-      return exec(newAppCmd).then(function () {
+    beforeEach(function (done) {
+      exec(newAppCmd, function () {
         process.chdir(appName);
+        done();
       });
     });
 
@@ -456,7 +480,7 @@ describe("synth command-line", function () {
     var bower;
     var npm;
 
-    before(function(){
+    before(function(done){
        /* Since we can't stub out bower easily when invoking from the cli, call the function directly */
       commands = require('../lib/commands.js');
 
@@ -503,11 +527,13 @@ describe("synth command-line", function () {
       npm.commands = {
         uninstall: stub()
       };
+      done();
     });
 
-    beforeEach(function () {
-      return exec(newAppCmd).then(function () {
+    beforeEach(function (done) {
+      exec(newAppCmd, function () {
         process.chdir(appName);
+        done();
       });
     });
 
