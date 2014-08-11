@@ -7,24 +7,24 @@ require('should');
 
 describe('synth module', function () {
   var synth, app;
-  beforeEach(function (done) {
+
+  this.timeout(4000);
+
+  beforeEach(function () {
     synth = requireUncached('../synth.js');
     app = synth({ apiTimeout: 100 });
-    done();
   });
 
-  before(function (done) {
+  before(function () {
     process.chdir(__dirname + '/sample_project');
-    done();
   });
 
   describe('the api', function () {
-    it('returns 404 when no match is found', function (done) {
-      request(app).get('/api/thing-that-doesnt-exist')
+    it('returns 404 when no match is found', function () {
+      return request(app).get('/api/thing-that-doesnt-exist')
       .expect(404)
       .expect('Content-Type', 'application/json; charset=utf-8')
-      .expect({ error: 'Resource not found' })
-      .end(done);
+      .expect({ error: 'Resource not found' });
     });
 
     it('fetches the list of products', function () {

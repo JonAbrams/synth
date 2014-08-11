@@ -29,7 +29,7 @@
   "devDependencies": {
     "codeclimate-test-reporter": "0.0.3",
     "istanbul": "^0.2.10",
-    "mocha": "~1.14.0",
+    "mocha": "^1.21.4",
     "promised-mongo": "^0.11",
     "should": "~2.1.0",
     "supertest": "^0.13.0",
