@@ -27,14 +27,15 @@
     "synth-api": "0.3.0"
   },
   "devDependencies": {
+    "codeclimate-test-reporter": "0.0.3",
+    "istanbul": "^0.2.10",
     "mocha": "~1.14.0",
+    "promised-mongo": "^0.11",
     "should": "~2.1.0",
     "supertest": "^0.13.0",
+    "supertest-as-promised": "^1.0.0",
     "temp": "~0.8.0",
-    "touch": "0.0.2",
-    "promised-mongo": "^0.11",
-    "codeclimate-test-reporter": "0.0.3",
-    "istanbul": "^0.2.10"
+    "touch": "0.0.2"
   },
   "repository": "git://github.com/JonAbrams/synth",
   "scripts": {
