@@ -134,8 +134,6 @@ exports = module.exports = function (options) {
 exports.beforeInit = [
   function defaultSynthMiddleware () {
     app.use( connect.compress() );
-    app.use( connect.json() );
-    app.use( connect.urlencoded() );
   }
 ];
 
