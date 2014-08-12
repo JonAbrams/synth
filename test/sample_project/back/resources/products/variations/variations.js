@@ -1,9 +1,9 @@
 var variations = [];
 
-exports.post = function (req, res) {
+exports.post = function (params, res) {
   variations.push({
-    name: req.body.name,
-    productsId: req.params.productsId
+    name: params.name,
+    productsId: params.productsId
   });
   res.end();
 };
