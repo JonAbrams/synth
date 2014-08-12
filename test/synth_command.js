@@ -218,6 +218,8 @@ describe("synth command-line", function () {
           'back/resources',
           'back/resources/tweets',
           'back/resources/tweets/getTweets.js',
+          "back/services",
+          "back/services/db.js",
           'front',
           'front/bower.json',
           'front/css',
