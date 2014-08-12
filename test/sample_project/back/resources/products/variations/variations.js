@@ -1,6 +1,6 @@
 var variations = [];
 
-exports.post = function (req, res) {
+exports.post = function (req,res) {
   variations.push({
     name: req.body.name,
     productsId: req.params.productsId
@@ -8,6 +8,6 @@ exports.post = function (req, res) {
   res.end();
 };
 
-exports.getIndex = function (req, res) {
+exports.getIndex = function (res) {
   res.json(variations);
 };
