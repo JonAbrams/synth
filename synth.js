@@ -27,6 +27,7 @@ var defaultCatchAll = function (req, res) {
 exports = module.exports = function (options) {
   options = options || {};
   var defaultResourceDir = path.join(process.cwd(), 'back/resources');
+  var defaultServiceDir = path.join(process.cwd(), 'back/services');
   var viewDir = options.viewDir || path.join(process.cwd(), 'front');
   var viewEngine = options.viewEngine || 'jade';
   if (!!options.production) process.env.NODE_ENV = 'production';
@@ -39,6 +40,7 @@ exports = module.exports = function (options) {
   /* On startup, parse all the resource handling modules */
   var handlers = synthApi.generateHandlers({
     resourceDir: options.resourceDir || defaultResourceDir,
+    serviceDir: options.serviceDir || defaultServiceDir,
     app: options.app || app,
     timeout: options.apiTimeout || 5000,
     catchAll: options.catchAll || defaultCatchAll
@@ -132,8 +134,6 @@ exports = module.exports = function (options) {
 exports.beforeInit = [
   function defaultSynthMiddleware () {
     app.use( connect.compress() );
-    app.use( connect.json() );
-    app.use( connect.urlencoded() );
   }
 ];
 
