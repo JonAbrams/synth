@@ -107,11 +107,11 @@ The way that endpoints are added in synth, is by creating a public method inside
 Add the following code to a new file located at `my_app/back/resources/tweets/createTweets.js`:
 
 ```javascript
-exports.post = function (req, res) {
-  if (!req.body.content) throw 422;
+exports.post = function (db, params) {
+  if (!params.content) throw 422;
 
-  return req.db.collection('tweets').insert({
-    content: req.body.content.slice(0, 140),
+  return db.collection('tweets').insert({
+    content: params.content.slice(0, 140),
     created_at: new Date()
   });
 };
@@ -119,13 +119,13 @@ exports.post = function (req, res) {
 
 #### Explanation
 
-You now have a request handler available at `/api/tweets` that responds to **POST** requests. The function that responds to the request is invoked in the same way as an express-style request handler, including the _req_ (i.e. request) and _res_ (i.e. response) objects. In this case, if there's no _content_ field attached to the body of the request, then it sets the reponse code status to 422 and then returns.
+You now have a request handler available at `/api/tweets` that responds to **POST** requests. The function declaration `exports.post = function (db, params)` specifies that this request handler depends on the _db_ and _params_ services (both are part of the default template). Synth will automatically inject the dependencies when the request handler is invoked. In this case, any parameter attached to the body of the incoming request, will be available through the _params_ object, and the _db_ object will provide the database connection.
 
-If there is content being sent to the request, then it inserts a new document into the mongo DB. The function has access to the DB via _req.db_. If you take a look at `back/back-app.js` you'll see that there is a middleware declared that attaches the the object that represents the connection to the db to any new request object.
+If there's no _content_ field attached to the request, then it throws 422, which will sets the response code status to 422 and then return. On the other hand, if there is content being sent to the request, then it inserts a new document into the mongoDB.
 
-You may now be wondering: Why is the function is returning the call to the DB? Synth has built-in support for promises. This means that if the request is a success (i.e. status 200), you can either just return the data that you want returned as JSON, or a promise representing that data. In this app, _req.db_ is provided by a library called [promised-mongo](https://github.com/gordonmleigh/promised-mongo). It allows you to interact with mongo databases and returns a promise as a result. In this case, synth will wait for the promise to be resolved (i.e. for the data to be written to the DB), and then respond to the request with JSON that contains the new tweet.
+You may now be wondering: Why is the function is returning the call to the DB? Synth has built-in support for promises. This means that if the request is a success (i.e. status 200), you can either just return the data that you want returned as JSON, or a promise representing that data. In this app, _db_ is provided by a library called [promised-mongo](https://github.com/gordonmleigh/promised-mongo), as you can see in `back/services/db.js`, the declaration of the _db_ service. It allows you to interact with mongo databases and returns a promise as a result. In this case, synth will wait for the promise to be resolved (i.e. for the data to be written to the DB), and then respond to the request with JSON that contains the new tweet.
 
-Without synth's promise support feature, the request would need to look like this:
+Without synth's promise support feature and dependency injection, the request would need to look like this:
 
 ```javascript
 exports.post = function (req, res) {
