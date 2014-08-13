@@ -289,6 +289,17 @@ describe("synth command-line", function () {
     });
   });
 
+  describe('not loading server', function () {
+    before(function () {
+      process.chdir( path.join(__dirname, 'bad_project') );
+    });
+    it('prints proper error', function () {
+      return exec( synthCmd('server') ).catch(function (err) {
+        err.message.should.eql('Command failed: No synth app detected (missing synth.json).\n');
+      });
+    });
+  });
+
   describe('launching prod server', function () {
     var spawnProdServerEnv = function () {
       return spawn('synth', ['server'], {

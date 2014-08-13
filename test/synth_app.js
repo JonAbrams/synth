@@ -225,7 +225,7 @@ describe('synth module', function () {
       return request(app).get('/css/more.css')
       .expect(200)
       .expect('Content-Type', 'text/css; charset=UTF-8')
-      .expect('div img {background-color:red;}.outer .inner {display:none;}');
+      .expect('div img{background-color:red;}.outer .inner{display:none;}');
     });
 
     it('exposes jsFiles', function () {
