@@ -4,7 +4,8 @@
   "dependencies": {
     "synth": "^${ synthVersion }",
     "promised-mongo": "^0.11",
-    "bluebird": "^1.0.3"
+    "bluebird": "^1.0.3",
+    "body-parser": "^1.6.3"
   },
   "devDependencies": {
   }
