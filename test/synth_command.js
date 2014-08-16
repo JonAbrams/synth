@@ -289,13 +289,24 @@ describe("synth command-line", function () {
     });
   });
 
-  describe('not loading server', function () {
-    before(function () {
-      process.chdir( path.join(__dirname, 'bad_project') );
+  describe('missing modules', function () {
+    beforeEach(function () {
+      process.chdir( path.join(__dirname, 'missing-modules-project') );
     });
     it('prints proper error', function () {
       return exec( synthCmd('server') ).catch(function (err) {
-        err.message.should.eql('Command failed: No synth app detected (missing synth.json).\n');
+        err.message.should.eql('Command failed: A module failed to load. Maybe you should try running `synth install -b`\n');
+      });
+    });
+  });
+
+  describe('non-synth project', function () {
+    beforeEach(function () {
+      process.chdir( path.join(__dirname, 'not-synth-project') );
+    });
+    it('prints proper error', function () {
+      return exec( synthCmd('server') ).catch(function (err) {
+        err.message.should.eql('Command failed: Could not find synth.json. Is this directory a Synth project?\n');
       });
     });
   });

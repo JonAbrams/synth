@@ -204,7 +204,7 @@ describe('synth module', function () {
       return request(app).get('/html/sale.html')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=UTF-8')
-      .expect('<h1>Welcome to Synth!</h1>');
+      .expect('<h1>Welcome to Synth!</h1>\n');
     });
 
     it('serves up js', function () {
