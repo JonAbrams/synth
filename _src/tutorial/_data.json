@@ -49,6 +49,24 @@
             "name": "Add a textarea"
           }
         ]
+      },
+      {
+        "id": "enable-links-to-tweets",
+        "name": "Add Tweet Links",
+        "parts": [
+          {
+            "id": "create-get-method",
+            "name": "Creating the GET method"
+          },
+          {
+            "id": "create-tweet-controller",
+            "name": "Create Tweet Controller"
+          },
+          {
+            "id": "create-tweet-view",
+            "name": "Create Tweet View"
+          }
+        ]
       }
     ]
   }

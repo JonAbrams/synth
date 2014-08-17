@@ -198,6 +198,7 @@ The above jade code adds a textarea linked to the _newTweet_ angular model. It t
 
 That's it, you can now publish new tweets!
 
+<div id="enable-links-to-tweets"></div>
 # Enable links to particular tweets
 
 Seeing the list of tweets is nice but what happens if you find a really good one and want to share a link to it?
@@ -208,6 +209,7 @@ Adding such a feature is done in three steps:
 2. Creating a new _tweetController_ on the front-end (note how the tweet is singular, not plural).
 3. Adding a an html template for the new view.
 
+<div id="create-get-method"></div>
 ## Creating the _GET_ method
 
 If you open up `back/resources/tweets/getTweets.js` you'll see an existing API endpoint for getting a list of tweets.
@@ -233,6 +235,7 @@ The `params` service will then parse the URL and provide the id.
 
 Note that `db.ObjectId` is a method used for converting a string into a db specific type. This method is specific to the db used in this example, MongoDB.
 
+<div id="create-tweet-controller"></div>
 ## Create a new _tweetController_ and front-end route
 
 We'll first need to add a new URL route to your app's AngularJS routes.
@@ -276,7 +279,8 @@ Now you need to add the controller to your Angular app.
 
 This copies the values from the returned API into the scope, so they can then be rendered in the view, which we'll make next.
 
-## Make the _tweet_ view and add links
+<div id="create-tweet-view"></div>
+## Create the _tweet_ view and add links
 
 Create a new view html file:
 
