@@ -5,13 +5,16 @@ This guide will walk you through the steps necessary to add some extra functiona
 
 The default app created by synth is a very limited version of twitter. Out of the box it just displays a list of tweets.
 
-It's currently missing some basic functionality:
+This guide will walk you through:
 
-- There's no way to publish new tweets.
-- There's no way to link to a particular tweet.
-- All tweets are anonymous, how boring!
+1. Installing Synth
+2. Creating your first project.
 
-This guide will walk you through setting up synth, creating the project, and then show you how to add the above mentioned missing functionality.
+Then we'll add some missing functionality:
+
+- The ability to publish new tweets.
+- The ability to link to a particular tweet.
+- The ability to tweet non-anonymously.
 
 <div id="setup"></div>
 # Setup
@@ -67,7 +70,7 @@ To start the app, just run `synth server` or `synth s`.
 
 To start it in production mode (where all the assets are minified and concatenated) run `synth prod` or run `synth server` with the environment variables _NODE_ENV_ set to "production".
 
-You can specify the port that the server will listen to by setting the _PORT_ environment variable or by using the _-p_ flag, e.g. `-p 3001`. 3000 is the default port.
+You can specify the port that the server will listen to by setting the _PORT_ environment variable or by using the _-p_ flag, e.g. `synth s -p 3001`. 3000 is the default port.
 
 <div id="populate-db"></div>
 ## Pre-populate the DB
@@ -76,7 +79,7 @@ Once you point your browser to http://localhost:3000, you should hopefully see a
 
 Luckily, a little script is included in your project that will populate the DB with randomly generated hipster tweets.
 
-To generate these tweets run:
+To generate these tweets run the following command in a different terminal:
 
 ```bash
 node back/generateTweets.js
@@ -197,7 +200,112 @@ That's it, you can now publish new tweets!
 
 # Enable links to particular tweets
 
-Coming soon…
+Seeing the list of tweets is nice but what happens if you find a really good one and want to share a link to it?
+
+Adding such a feature is done in three steps:
+
+1. Creating a _get_ method on the back-end.
+2. Creating a new _tweetController_ on the front-end (note how the tweet is singular, not plural).
+3. Adding a an html template for the new view.
+
+## Creating the _GET_ method
+
+If you open up `back/resources/tweets/getTweets.js` you'll see an existing API endpoint for getting a list of tweets.
+
+To create a new API endpoint for getting a single tweet, declare a function attached to exports called `get`.
+
+```javascript
+exports.get = function (params, db) {
+  // Return a promise that resolves to the requested tweet
+  return db.collection('tweets').findOne({
+    _id: db.ObjectId(params.id)
+  });
+}
+```
+
+#### Explanation
+
+With a vanilla `get` request handler, an API endpoint will be created that will expect an ID.
+
+For example, the above will now listen for requests at `/api/tweets/:id`.
+
+The `params` service will then parse the URL and provide the id.
+
+Note that `db.ObjectId` is a method used for converting a string into a db specific type. This method is specific to the db used in this example, MongoDB.
+
+## Create a new _tweetController_ and front-end route
+
+We'll first need to add a new URL route to your app's AngularJS routes.
+
+In `front/js/front-app.js` add another `.when` call to `$routeProvider`:
+
+```javascript
+…
+$routeProvider
+.when('/tweets', {
+  templateUrl: '/html/tweets/getIndex.html',
+  controller: 'tweetsController',
+  resolve: {
+    data: dataLoaderRunner
+  }
+})
+.when('/tweets/:id', {
+  templateUrl: '/html/tweets/get.html',
+  controller: 'tweetController',
+  resolve: {
+    data: dataLoaderRunner
+  }
+})
+…
+```
+
+This is so you're AngularJS app knows to invoke the `tweetController` when the specified URL pattern is observed.
+
+Now you need to add the controller to your Angular app.
+
+`front/js/controllers/tweets.js`:
+
+```javascript
+.controller('tweetsController', function ($scope, data) {
+  $scope.tweets = data.tweets;
+})
+.controller('tweetController', function ($scope, data) {
+  angular.extend($scope, data);
+});
+```
+
+This copies the values from the returned API into the scope, so they can then be rendered in the view, which we'll make next.
+
+## Make the _tweet_ view and add links
+
+Create a new view html file:
+
+`front/html/tweets/get.html`
+
+```html
+<div class="tweet">
+  <div class="content">
+    {{ content }}
+  </div>
+  <div class="date">
+    {{ created_at | date:'medium' }}
+  </div>
+</div>
+```
+
+Then linkify the dates in the index view:
+
+`front/html/tweets/getIndex.jade`
+
+```javascript
+ul.tweet-timeline
+  li.tweet(ng-repeat="tweet in tweets")
+    .content {{ tweet.content}}
+    a(href="/tweets/{{ tweet._id }}")
+      .date {{ tweet.created_at | date:'medium' }}
+```
+
+That's it, now you have dedicated tweet pages!
 
 # Add user authentication
 
