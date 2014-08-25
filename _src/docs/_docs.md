@@ -142,6 +142,69 @@ exports.get = function (user, db, params) {
 };
 ```
 
+<div id="services"></div>
+## Services
+
+Services are a new feature introduced in Synth version 0.6 to make it easier to load dependencies before handling an API request. One likely dependency you might want to load is the currently logged in user, for example.
+
+### Creating a service
+
+To create a service for your Synth project, create a .js or .coffee file in `/back/services/`. Any function you publicly export from a file within that folder will be added to your project's list of available services.
+
+A service can return either a value or a promise. If a promise is returned, Synth will wait for it to be resolved.
+
+For example, to create a service that provides a connection to the DB:
+
+`/back/services/db.js`
+
+```javascript
+var connection = require('promised-mongo')('localhost');
+// Creates a services called 'db'
+exports.db = function () {
+  return connection;
+};
+```
+
+#### Requesting a service
+
+Any API request handler can request a dependency by specifying it as a parameter. Usually in JavaScript, the name of the parameter isn't significant, but Synth will actually read the names of the parameters for each API endpoint and try to look up a service of that name.
+
+Services can depend on other services as well.
+
+There are 3 built-in services that you can optionally use:
+
+- req - The standard NodeJS/Express request object.
+- res - The standard NodeJS/Express response object.
+<!-- - config - The Synth configuration for the requested API endpoint. -->
+
+For example:
+
+`/back/services/user.js`
+
+```javascript
+// user depends on users and params
+// first db is executed
+// users is the run with the results of db injected as a parameter
+// finally, user is executed with users and params injected in
+exports.user = function (users, params) {
+  // returns a promise to the requested user object
+  return users.findOne({
+    username: params.username,
+    password: params.password
+  });
+};
+
+exports.users = function (db) {
+  return db.collection('users');
+};
+
+exports.params = function (req) {
+  return _.merge(req.params, req.query);
+};
+```
+
+**Note**: You can create an infinite loop (and crash your server) if you have one service depend on another that depends on the first service. This will result in a stack overflow, so watch out for that.
+
 <div id="packages"></div>
 # Third-party packages
 

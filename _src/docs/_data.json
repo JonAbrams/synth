@@ -21,6 +21,10 @@
           {
             "id": "creating-api-endpoints",
             "name": "Creating API endpoints"
+          },
+          {
+            "id": "services",
+            "name": "Services"
           }
         ]
       },
