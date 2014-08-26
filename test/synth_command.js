@@ -447,14 +447,14 @@ describe("synth command-line", function () {
     it('calls bower install with a component', function () {
       commands.install('install', ['-f', 'angular']);
       bower.commands.install.called.should.eql([
-        [ ['angular'], { save: true } ]
+        [ ['angular'], { save: true, forceLatest: true } ]
       ]);
     });
 
     it('calls bower install', function () {
       commands.install('install', ['-f']);
       bower.commands.install.called.should.eql([
-        [ [], { save: true }]
+        [ [], { save: true, forceLatest: true }]
       ]);
     });
 
