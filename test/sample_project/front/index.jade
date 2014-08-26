@@ -15,6 +15,8 @@ html
   body
     h1 Test Page
 
+    = appName + " (" + appVersion + ")"
+
     if preloadHTML
       script(type="text/ng-template" id="#{preloadHTMLPath}")
         != preloadHTML

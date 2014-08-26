@@ -133,7 +133,13 @@ exports = module.exports = function (options) {
 
 exports.beforeInit = [
   function defaultSynthMiddleware () {
+    var synthJson = require( path.join(process.cwd(), 'synth.json') );
     app.use( connect.compress() );
+    app.use(function (req, res, next) {
+      req.appName = synthJson.name;
+      req.appVersion = synthJson.version;
+      next();
+    });
   }
 ];
 
