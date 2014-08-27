@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 0.6.0
+
+- Added services + dependency injection. Useful for user-authentication and more!
+- Added `synth routes` command, useful to see which API routes synth will auto-generate.
+- Synth now no longer tries to parse functions preceded by an '_' character. Applies to both services and API request handlers.
+- Show bower output while installing front-end packages. Thanks []
+- ng-annotate used now instead of ng-min. Thanks [mikaelhm](https://github.com/mikaelhm)
+- Added support for EJS out of the box. Thanks KoutarouYabe.
+- Watches CoffeeScript files. Thanks KoutarouYabe.
+- Forces latest version of package when conflict occurs while installing packages with bower.
+- Special thanks to [mikaelhm](https://github.com/mikaelhm) for helping develop the idea behind services, and for updating the default project template + tests.
+
 ## 0.5.3
 
 - Restore compatibility with Node v0.11.x. See [issue #53](https://github.com/JonAbrams/synth/issues/53)
