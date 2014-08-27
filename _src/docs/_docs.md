@@ -110,11 +110,7 @@ exports.get = function (db, params) {
 };
 ```
 
-#### Ignoring Functions
-
-If you need to declare a public function in a .js or .coffee file in your resources directory, but you don't want it to be parsed by _Synth_, just put an underscore in front.
-
-For example: `exports._unParsed = function () { … }`
+**Note:** If you need to declare a public function in a .js or .coffee file in your resources directory, but you don't want it to be parsed by _Synth_, just put an underscore in front. e.g. `exports._helper = function () { … }`
 
 #### Throwing errors
 
@@ -164,6 +160,8 @@ exports.db = function () {
   return connection;
 };
 ```
+
+**Note:** If you need to declare a public function in a .js or .coffee file in your services directory, but you don't want it to be parsed by _Synth_, just put an underscore in front. e.g. `exports._helper = function () { … }`
 
 #### Requesting a service
 
