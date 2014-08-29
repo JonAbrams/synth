@@ -1,4 +1,5 @@
 var synthApi = require('synth-api'),
+    http = require('http'),
     express = require('express'),
     _ = require('lodash'),
     path = require('path'),
@@ -45,6 +46,9 @@ exports = module.exports = function (options) {
     timeout: options.apiTimeout || 5000,
     catchAll: options.catchAll || defaultCatchAll
   }).handlers;
+
+  /* Create http server */
+  app.server = http.createServer(app);
 
   /* Handle front-end requests for assets */
   assets.init();
