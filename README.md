@@ -12,3 +12,5 @@ npm install -g harp
 harp server _src
 # Server is now running on localhost:9000
 ```
+
+Once your happy with your changes, you can send a pull request to this branch. Once it's accepted, I'll compile the changes and publish them live.
