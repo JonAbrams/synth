@@ -37,7 +37,7 @@ While Synth is an opinionated framework that provides everything you need to mak
 
 ## Sample App
 
-Blurbs (Live Demo)[http://blurbs.synthjs.com] - (Source)[https://github.com/JonAbrams/synth-example-blurbs]
+Blurbs [Live Demo](http://blurbs.synthjs.com) - [Source](https://github.com/JonAbrams/synth-example-blurbs)
 
 ## License
 
