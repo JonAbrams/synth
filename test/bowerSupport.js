@@ -89,6 +89,7 @@ describe('bowerSupport', function () {
       );
     });
 
+
     it('creates the right contents for cssFiles', function () {
       fs.readFileSync('front/css/cssFiles', { encoding: 'utf8' })
       .should.eql(
@@ -130,6 +131,8 @@ describe('bowerSupport', function () {
       fs.existsSync('front/js/jsFiles').should.eql(true);
       fs.existsSync('front/css/cssFiles').should.eql(true);
     });
+
+
 
     it('creates the right contents for jsFiles', function () {
       fs.readFileSync('front/js/jsFiles', { encoding: 'utf8' })
