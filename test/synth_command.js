@@ -266,6 +266,7 @@ describe("synth command-line", function () {
       });
     });
 
+
     it('renders templates', function (done) {
       exec(newAppCmd, function (err, stdout) {
         throwif(err);
