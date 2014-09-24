@@ -239,6 +239,7 @@ describe("synth command-line", function () {
           'back/resources/tweets/getTweets.js',
           'front',
           'front/bower.json',
+          'front/.bowerrc',
           'front/css',
           'front/css/cssFiles',
           'front/css/main.scss',
