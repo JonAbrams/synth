@@ -202,7 +202,7 @@ describe("synth command-line", function () {
     });
 
     it('displays error when back template specified', function () {
-      return exec(newAppCmd + ' -r non_template').catch(function (err) {
+      return exec(newAppCmd + ' -t non_template').catch(function (err) {
         err.message.should.eql('Command failed: The template "non_template" could not be found.\n');
       });
     });
@@ -210,19 +210,19 @@ describe("synth command-line", function () {
     it('populates the project with key files', function () {
       return exec(newAppCmd).spread(function (stdout) {
         wrench.readdirSyncRecursive(appName).sort().should.eql([
+          '.bowerrc',
           '.gitignore',
           'back',
           'back/back-app.js',
           'back/generateTweets.js',
-          'back/package.json',
           'back/resources',
           'back/resources/tweets',
           'back/resources/tweets/getTweets.js',
           'back/services',
           'back/services/db.js',
           'back/services/params.js',
+          'bower.json',
           'front',
-          'front/bower.json',
           'front/css',
           'front/css/cssFiles',
           'front/css/main.scss',
@@ -243,14 +243,14 @@ describe("synth command-line", function () {
           'front/misc',
           'front/misc/readme.md',
           'front/misc/robots.txt',
-          'synth.json'
+          'package.json'
         ]);
       });
     });
 
     it('renders templates', function () {
       return exec(newAppCmd).spread(function (stdout) {
-        fs.readFileSync( path.join(appName, 'synth.json'), { encoding: 'utf8' } ).should.contain('"name": "' + appName + '"');
+        fs.readFileSync( path.join(appName, 'package.json'), { encoding: 'utf8' } ).should.contain('"name": "' + appName + '"');
       });
     });
   });
@@ -306,7 +306,7 @@ describe("synth command-line", function () {
     });
     it('prints proper error', function () {
       return exec( synthCmd('server') ).catch(function (err) {
-        err.message.should.eql('Command failed: Could not find synth.json. Is this directory a Synth project?\n');
+        err.message.should.eql('Command failed: Could not find `./node_modules/synth` in this project. Is this directory a Synth project?\n');
       });
     });
   });

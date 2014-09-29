@@ -1,8 +1,8 @@
 {
-  "name": "${ appName }",
+  "name": "testApp",
   "version": "0.0.1",
   "dependencies": {
-    "synth": "^${ synthVersion }",
+    "synth": "~0.7.0",
     "promised-mongo": "^0.11",
     "bluebird": "^1.0.3",
     "body-parser": "^1.6.3",

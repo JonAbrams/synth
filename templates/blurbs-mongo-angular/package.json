@@ -1,0 +1,13 @@
+{
+  "name": "${ appName }",
+  "version": "0.0.1",
+  "dependencies": {
+    "synth": "~${ synthVersion }",
+    "promised-mongo": "^0.11",
+    "bluebird": "^1.0.3",
+    "body-parser": "^1.6.3",
+    "lodash": "^2.4.0"
+  },
+  "devDependencies": {
+  }
+}

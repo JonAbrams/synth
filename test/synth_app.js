@@ -138,7 +138,7 @@ describe('synth module', function () {
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>[^]*<\/html>/)
       .expect(/<script src="\/js\/main\.js"><\/script>/)
-      .expect(/My App \(0\.0\.1\)/)
+      .expect(/testApp \(0\.0\.1\)/)
     });
 
     it('preloads data with request', function () {
