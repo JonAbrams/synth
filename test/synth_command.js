@@ -292,6 +292,8 @@ describe("synth command-line", function () {
   describe('missing modules', function () {
     beforeEach(function () {
       process.chdir( path.join(__dirname, 'missing-modules-project') );
+      fs.mkdirSync('node_modules');
+      fs.mkdirSync('node_modules/synth');
     });
     it('prints proper error', function () {
       return exec( synthCmd('server') ).catch(function (err) {
