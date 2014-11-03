@@ -8,7 +8,7 @@ html
 
     // Preloaded Data
     script.
-      var preloadedData = !{data};
+      var apiPrefetchData = !{apiPrefetchData};
       var apiKey = "#{anAPIKey}";
     for jsFile in jsFiles
       script(src=jsFile)
@@ -16,7 +16,3 @@ html
     h1 Test Page
 
     = appName + " (" + appVersion + ")"
-
-    if preloadHTML
-      script(type="text/ng-template" id="#{preloadHTMLPath}")
-        != preloadHTML
