@@ -19,7 +19,3 @@ html(ng-app="${ appName }")
     h1= appName
 
     div(ng-view)
-
-    if preloadHTML
-      script(type="text/ng-template", id="#{preloadHTMLPath}")
-        != preloadHTML
