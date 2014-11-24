@@ -20,7 +20,7 @@ var validCommands = {
   'new': 'n',
   'install': 'i',
   'list': 'l',
-  'search': 's',
+  'search': 'se',
   'uninstall': 'u',
   'server': 's',
   'prod': 'p',

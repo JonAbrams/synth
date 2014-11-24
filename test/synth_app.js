@@ -147,33 +147,25 @@ describe('synth module', function () {
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>[^]*<\/html>/)
       .expect(/<script>/)
-      .expect(/var preloadedData = {"injection":"<script>alert\('hi'\)<\\\/script>","products":\[{"name":"Fancy Shoes","price":99\.99}]};/)
+      .expect(/var apiPrefetchData = {\s*"\/api\/products":"{\\"injection\\":\\"<script>alert\('hi'\)<\\\\\/script>\\",\\"products\\":\[{\\"name\\":\\"Fancy Shoes\\",\\"price\\":99\.99}]}",/)
       .expect(/<\/script>/);
     });
 
-    it('preloads html with request (production)', function () {
-      process.env.NODE_ENV = 'production';
+    it('preloads html with request', function () {
       return request(app).get('/products')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(/<html>[^]*<\/html>/)
-      .expect(/<script type="text\/ng-template" id="\/html\/products\/getIndex\.html">/)
-      .expect(/<ul><li ng-repeat="product in products">\{\{ product.name }} - \{\{ product\.price \| currency }}\S*<\/li><\/ul>/)
-      .then(function () {
-        delete process.env.NODE_ENV;
-      });
+      .expect(/"\/html\/products\/getIndex\.html":/)
+      .expect(/<ul>/)
+      .expect(/<li ng-repeat=\\"product in products\\">/);
     });
 
     it('works without preloading html with request', function () {
       return request(app).get('/products/5')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
-      .expect(/<html>[^]*<\/html>/)
-      .expect(function (res) {
-        if ( /<script type="text\/ng-template"/.test(res.text) ) {
-          throw "Found preloaded HTML where there should not have been any";
-        }
-      });
+      .expect(/<html>[^]*<\/html>/);
     });
 
     it('allows for custom renderData', function () {

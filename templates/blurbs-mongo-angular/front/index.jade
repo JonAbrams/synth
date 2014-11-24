@@ -11,7 +11,9 @@ html(ng-app="${ appName }")
 
     // Preloaded Data
     script.
-      var preloadedData = !{data};
+      var apiPath = '/api' + location.pathname;
+      var apiPrefetchData = {};
+      apiPrefetchData[apiPath] = !{data};
     for jsFile in jsFiles
       script(src=jsFile)
   body

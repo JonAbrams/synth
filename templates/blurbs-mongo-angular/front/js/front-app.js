@@ -23,14 +23,8 @@ angular.module('${appName}', ['ngRoute'])
 })
 .service('dataLoader', function ($location, $http) {
   return function () {
-    if (preloadedData) {
-      var data = preloadedData;
-      preloadedData = null;
-      return data;
-    } else {
-      return $http.get( '/api' + $location.path() ).then(function (res) {
-        return res.data;
-      });
-    }
+    return $http.get( '/api' + $location.path() ).then(function (res) {
+      return res.data;
+    });
   };
 });
