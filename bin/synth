@@ -10,7 +10,8 @@ var mkdirp = require('mkdirp'),
     path = require('path'),
     _ = require('lodash'),
     npm = require('npm'),
-    bower = require('bower');
+    bower = require('bower'),
+    spawn = require('child_process').spawn;
 
 /* Local modules */
 var commands = require('../lib/commands.js');
@@ -50,19 +51,19 @@ if (command === 'new' && args[1] && args[1][0] != '-') {
 }
 
 if ( _(['server', 'prod']).contains(command) ) {
-  var mode = 'development';
-  var port;
 
   if (command == 'prod' || process.env.NODE_ENV == 'production') {
-    process.env.NODE_ENV = mode = 'production';
+    process.env.NODE_ENV = 'production';
   }
 
   portFlagIndex = args.indexOf('-p');
   if (portFlagIndex == -1) portFlagIndex = args.indexOf('--port');
   if ( portFlagIndex != -1) port = parseInt(args[portFlagIndex+1], 10);
 
-  port = port || process.env.PORT || 3000;
-  commands.startServer(mode, port);
+  var gulpInst = spawn('./node_modules/.bin/gulp', ['server']);
+  gulpInst.stdout.on('data', function (data) {
+    process.stdout.write(data.toString('utf8'));
+  });
   return;
 }
 
