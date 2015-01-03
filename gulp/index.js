@@ -12,15 +12,29 @@ var minifyCSS = require('gulp-minify-css');
 var rev = require('gulp-rev');
 var vfs = require('vinyl-fs');
 var through = require('through2');
+var fs = require('fs');
+var path = require('path');
 
-var jsFiles = [];
-var cssFiles = [];
+var synth = require('../synth');
+
+var jsFiles = synth.jsFiles = [];
+var cssFiles = synth.cssFiles = [];
+
+var destFolder = 'front/dist';
 
 module.exports = exports = function (gulp) {
-  function addTo(arr) {
+  function addTo (arr) {
     return through.obj(function (chunk, enc, done) {
       arr.push(chunk.relative);
-      done();
+      done(null, chunk);
+    });
+  }
+
+  function writePathToFile (path) {
+    return through.obj(function (chunk, enc, done) {
+      fs.appendFile(path, chunk.relative + "\n", function (err) {
+        done(err, chunk);
+      });
     });
   }
 
@@ -31,8 +45,6 @@ module.exports = exports = function (gulp) {
     gulp.watch([jsGlob, coffeeGlob], ['js']);
     gulp.watch([cssGlob, lessGlob, scssGlob, sassGlob], ['css']);
     gulp.watch('front/misc/**/*', ['misc-ln']);
-    console.log("jsFiles: ", jsFiles);
-    console.log("cssFiles: ", cssFiles);
   });
   gulp.task('synth-prod', ['prod-assets'], function () {
     console.log("jsFiles: ", jsFiles);
@@ -45,30 +57,32 @@ module.exports = exports = function (gulp) {
   var bowerFilter = '!front/bower_components/**/*';
 
   function srcJsFiles () {
-    var jsFiles = gulp.src([jsGlob, bowerFilter]);
-    var coffeeFiles = gulp.src([coffeeGlob, bowerFilter])
+    var srcJsFiles = gulp.src([jsGlob, bowerFilter]);
+    var srcCoffeeFiles = gulp.src([coffeeGlob, bowerFilter])
     .pipe(coffee({ bare: true }).on('error', gutil.log));
-    return merge(jsFiles, coffeeFiles)
+    return merge(srcJsFiles, srcCoffeeFiles)
     .pipe(ngAnnotate());
   }
 
   gulp.task('prod-js', ['cleanJS'], function () {
-    jsFiles = [];
+    jsFiles.length = 0;
 
     return srcJsFiles()
       .pipe(uglify())
       .pipe(concat('main.js'))
       .pipe(rev())
-      .pipe(gulp.dest('./public'))
-      .pipe(addTo(jsFiles));
+      .pipe(gulp.dest(destFolder))
+      .pipe(addTo(jsFiles))
+      .pipe(writePathToFile(path.join(destFolder, 'jsFiles')));
   });
 
   gulp.task('js', ['cleanJS'], function () {
-    jsFiles = [];
+    jsFiles.length = 0;
 
     return srcJsFiles()
-      .pipe(gulp.dest('./public'))
-      .pipe(addTo(jsFiles));
+      .pipe(gulp.dest(destFolder))
+      .pipe(addTo(jsFiles))
+      .pipe(writePathToFile(path.join(destFolder, 'jsFiles')));
   });
 
   /* Prepare CSS assets */
@@ -87,39 +101,45 @@ module.exports = exports = function (gulp) {
     return merge(cssFiles, lessFiles, sassFiles);
   }
   gulp.task('prod-css', ['cleanCSS'], function () {
-    cssFiles = [];
+    cssFiles.length = 0;
 
     return srcCssFiles()
       .pipe(minifyCSS())
       .pipe(concat('main.css'))
       .pipe(rev())
-      .pipe(gulp.dest('./public'))
-      .pipe(addTo(cssFiles));
+      .pipe(gulp.dest(destFolder))
+      .pipe(addTo(cssFiles))
+      .pipe(writePathToFile(path.join(destFolder, 'cssFiles')));
   });
   gulp.task('css', ['cleanCSS'], function () {
-    cssFiles = [];
+    cssFiles.length = 0;
 
     return srcCssFiles()
-      .pipe(gulp.dest('./public'))
-      .pipe(addTo(cssFiles));
+      .pipe(gulp.dest(destFolder))
+      .pipe(addTo(cssFiles))
+      .pipe(writePathToFile(path.join(destFolder, 'cssFiles')));
   });
 
   /* Clean assets */
   gulp.task('cleanJS', function (done) {
-    return del(['public/**/*.js'], done);
+    return del(['front/dist/**/*.js', 'front/dist/jsFiles'], done);
   });
 
   gulp.task('cleanCSS', function (done) {
-    return del(['public/**/*.css'], done);
+    return del(['front/dist/**/*.css', 'front/dist/cssFiles'], done);
   });
 
   /* Create symlinks to misc folder */
   gulp.task('misc-ln', function () {
     return gulp.src('front/misc/**/*')
-    .pipe(vfs.symlink('public'));
+    .pipe(vfs.symlink(destFolder));
   });
 
   return exports;
 };
 
 exports.startServer = require('../lib/startServer');
+
+exports.jsFiles = jsFiles;
+
+exports.cssFiles = cssFiles;

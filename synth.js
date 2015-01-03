@@ -16,7 +16,6 @@ var md5sum = function (str) {
 };
 
 var frontend = require('./lib/frontendRenderer.js');
-var assets = require('./lib/assets.js');
 
 var app = express();
 
@@ -50,73 +49,18 @@ exports = module.exports = function (options) {
   /* Create http server */
   app.server = http.createServer(app);
 
-  /* Handle front-end requests for assets */
-  assets.init();
-
-  /* Make files in the front/misc folder available from the root path */
+  /* Make files in the dist folder available from the root path */
   app.use(
     st({
       url: '/',
-      path: path.join(process.cwd(), 'front/misc'),
+      path: path.join(process.cwd(), 'front/dist'),
       passthrough: true,
       index: false
     })
   );
-
-  /* Make files in the front/images folder available from /images */
-  app.use(
-    st({
-      url: '/images',
-      path: path.join(process.cwd(), 'front/images'),
-      passthrough: true,
-      index: false
-    })
-  );
-
-  if (production) {
-    /* Put pre-compiled assets into a folder in the system's /tmp area */
-    var assetsDir = path.join(os.tmpdir(), 'synth-assets');
-    mkdirp.sync(assetsDir);
-    process.stdout.write('Precompiling JS and CSS files... ');
-
-    /* Generate JS file */
-    var jsHash = md5sum( assets.jsPrecompiled() );
-    var jsFilename = 'main-' + jsHash + '.js';
-    var localJsPath = path.join(assetsDir, jsFilename);
-    fs.writeFileSync(
-      localJsPath,
-      assets.jsPrecompiled()
-    );
-    var jsPath = '/js/' + jsFilename;
-    exports.jsFiles.length = 0;
-    exports.jsFiles.push(jsPath);
-
-    /* Generate CSS file */
-    var cssHash = md5sum( assets.cssPrecompiled() );
-    var cssFilename = 'main-' + cssHash + '.css';
-    var localCssPath = path.join(assetsDir, cssFilename);
-    fs.writeFileSync(
-      localCssPath,
-      assets.cssPrecompiled()
-    );
-    var cssPath = '/css/' + cssFilename;
-    exports.cssFiles.length = 0;
-    exports.cssFiles.push(cssPath);
-
-    /* Make the files available */
-    app.use(st({ path: assetsDir, url: '/js', index: false }));
-    app.use(st({ path: assetsDir, url: '/css', index: false }));
-    console.log('Done');
-  } else {
-    /* Dev mode */
-    app.use( '/js', harp.mount( path.join(process.cwd(), 'front/js') ) );
-    app.use( '/css', harp.mount( path.join(process.cwd(), 'front/css') ) );
-  }
-  app.use( '/html', harp.mount( path.join(process.cwd(), 'front/html') ) );
-  app.use( '/bower_components', harp.mount( path.join(process.cwd(), 'front/bower_components') ) );
 
   /* Render the main index */
-  app.set( "views", viewDir );
+  app.set('views', viewDir );
   app.set('view engine', viewEngine);
   if (!production) app.locals.pretty = true;
   app.get('/', frontend.index);
@@ -152,7 +96,3 @@ exports.app = app;
 
 // Expose the command-line commands programmatically
 exports.commands = require('./lib/commands.js');
-
-exports.jsFiles = assets.jsFiles;
-
-exports.cssFiles = assets.cssFiles;

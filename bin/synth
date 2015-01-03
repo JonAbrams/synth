@@ -61,8 +61,10 @@ if ( _(['server', 'prod']).contains(command) ) {
   if ( portFlagIndex != -1) port = parseInt(args[portFlagIndex+1], 10);
 
   var gulpInst = spawn('./node_modules/.bin/gulp', ['server']);
-  gulpInst.stdout.on('data', function (data) {
-    process.stdout.write(data.toString('utf8'));
+  ['stdout', 'stderr'].forEach(function (stream) {
+    gulpInst[stream].on('data', function (data) {
+      process[stream].write(data.toString('utf8'));
+    });
   });
   return;
 }

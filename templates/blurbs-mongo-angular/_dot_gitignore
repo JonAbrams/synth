@@ -1,3 +1,4 @@
 .DS_Store
 back/node_modules
 front/bower_components
+front/dist
