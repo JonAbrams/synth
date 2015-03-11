@@ -4,7 +4,7 @@ The first back-end framework specially designed for single-page web applications
 
 ## Current status
 
-**Version 0.6.0 (latest)**:
+**Version 0.6.1 (latest)**:
 
 **Note:** Despite being fully functional, **_synth_ is still in beta**. It hasn't been fully tested in production and since it's in active development, implementation and interface details are likely to change.
 

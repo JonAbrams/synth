@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.1
+
+- Lock lodash dependency to 2.x. Turns out lodash 3.x has breaking changes.
+
 ## 0.6.0
 
 - Added services + dependency injection. Useful for user-authentication and more!
