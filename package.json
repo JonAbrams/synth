@@ -23,7 +23,7 @@
     "gulp-uglify": "^1.0.2",
     "gulp-util": "^3.0.1",
     "jade": "^1.0.0",
-    "lodash": ">=2.4.0",
+    "lodash": "^2.4.1",
     "merge-stream": "^0.1.6",
     "mkdirp": "^0.5",
     "nopt": "^2.2.0",
