@@ -52,9 +52,9 @@ exports = module.exports = function (options) {
   /* Make files in the dist folder available from the root path */
   app.use(
     st({
-      url: '/',
       path: path.join(process.cwd(), 'front/dist'),
       passthrough: true,
+      cache: production,
       index: false
     })
   );
