@@ -34,7 +34,7 @@
     "optimist": "^0.6.0",
     "st": "^0.4.1",
     "synth-api": "0.3.0",
-    "vinyl-fs": "^0.3.13",
+    "vinyl-fs": "^1.0.0",
     "vinyl-transform": "^1.0.0",
     "wrench": "^1.5.8"
   },

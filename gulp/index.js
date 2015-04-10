@@ -32,17 +32,16 @@ var gulpBrowserify = function (options) {
 };
 
 module.exports = exports = function (gulp) {
-  gulp.task('assets', ['js', 'css']);
-  gulp.task('prod-assets', ['prod-js', 'prod-css']);
+  gulp.task('assets', ['js', 'css', 'html']);
 
   gulp.task('synth-server', ['assets', 'misc-ln'], function () {
-    gulp.watch('front/js/**/*', ['js']);
-    gulp.watch('front/css/**/*', ['css']);
+    gulp.watch(['front/**/*.js', '!front/dist/**/*'], ['js']);
+    gulp.watch(['front/**/*.css','!front/dist/**/*'], ['css']);
+    gulp.watch(['front/**/*.html', '!front/dist/**/*'] ['html']);
     gulp.watch('front/misc/**/*', ['misc-ln']);
   });
-  gulp.task('synth-prod', ['prod-assets'], function () {});
 
-  gulp.task('js', ['cleanJS'], function () {
+  gulp.task('js', function () {
     return gulp.src('front/js/index.js')
       .pipe(gulpBrowserify({ debug: true }))
       .on('error', gutil.log)
@@ -54,7 +53,7 @@ module.exports = exports = function (gulp) {
       .pipe(gulp.dest(destFolder));
   });
 
-  gulp.task('css', ['cleanCSS'], function () {
+  gulp.task('css', function () {
     var cssFile = gulp.src('front/css/index.css')
       .pipe(sourcemaps.init());
     var lessFile = gulp.src('front/css/index.less')
@@ -84,7 +83,7 @@ module.exports = exports = function (gulp) {
   /* Create symlinks to misc folder */
   gulp.task('misc-ln', function () {
     return gulp.src('front/misc/**/*')
-    .pipe(vfs.symlink(destFolder));
+      .pipe(vfs.symlink(destFolder));
   });
 
   gulp.task('jade', function () {
@@ -93,8 +92,10 @@ module.exports = exports = function (gulp) {
 
   gulp.task('html', ['jade'], function () {
     var jadeFiles = gulp.src('front/**/*.jade').pipe(jade());
+    var htmlFiles = gulp.src('front/**/*.html');
 
-    return gulp.src('front/**/*.html').pipe(gulp.dest(destFolder));
+    return merge(htmlFiles, jadeFiles)
+      .pipe(gulp.dest(destFolder));
   });
 
   return exports;
