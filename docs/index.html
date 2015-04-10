@@ -1,11 +1,9 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta description="Synth is a back-end web framework designed to make (Angular|Ember|Backbone)JS web apps easy to create and manage."><title>Synth - The back-end web framework designed to make
 (Angular|Ember|Backbone)JS web apps easy to create and manage.</title><link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/3.1/css/bootstrap.min.css"><link rel="stylesheet" href="/bower_components/prismjs/prism.css"><link rel="stylesheet" href="/css/main.css"><link rel="icon" type="image/png" href="/favicon.png"></head><body data-spy="scroll" data-target=".toc"><nav class="navbar navbar-default navbar-static-top"><div class="container"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#synth-links" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Synth</a></div><div id="synth-links" class="collapse navbar-collapse navbar-right"><ul class="nav navbar-nav"><li class="docs"><a href="/docs">Docs</a></li><li class="tutorial"><a href="/tutorial">Tutorial</a></li><li class="examples"><a href="/examples">Examples</a></li><li class="source"><a href="https://github.com/JonAbrams/synth">Source</a></li></ul></div></div></nav><div class="container"><div class="row"><div class="col-md-3"><div class="toc"><h2>Docs</h2><ul class="nav"><li class="section"><a href="#intro">Intro</a></li><li class="section"><a href="#frontend">Front-End</a></li><li class="section"><a href="#backend">Back-End</a><ul class="nav"><li><a href="#back-app-js">back-app.js</a></li><li><a href="#creating-api-endpoints">Creating API endpoints</a></li><li><a href="#services">Services</a></li></ul></li><li class="section"><a href="#packages">Third-party packages</a><ul class="nav"><li><a href="#installing-packages">Installing</a></li><li><a href="#supported-assets">Supported assets</a></li><li><a href="#front-end-manifest">Front-end Manifest file</a></li></ul></li><li class="section"><a href="#synth-json">synth.json</a></li><li class="section"><a href="#deploying">Deploying</a><ul class="nav"><li><a href="#heroku">Heroku</a></li></ul></li></ul></div></div><div class="contents col-md-9"><p><div id="intro"></div></p>
-<h1>Intro</h1>
-<p>One big source of confusion when writing web apps powered by Node.js is the fact that both the front-end code (i.e. runs in the browser) and the back-end (i.e. runs on the server) are JavaScript. It gets even more confusing when both have controllers, models, views, and all their files exist in the same project.</p>
+<h1>Intro</h1><p>One big source of confusion when writing web apps powered by Node.js is the fact that both the front-end code (i.e. runs in the browser) and the back-end (i.e. runs on the server) are JavaScript. It gets even more confusing when both have controllers, models, views, and all their files exist in the same project.</p>
 <p>Synth makes this easier by having any JavaScript, images, html, or other assets that are sent to the browser in the <em>front</em> folder and code that runs on the server is in the <em>back</em> folder.</p>
 <p><div id="frontend"></div></p>
-<h1>Front-end</h1>
-<p>All front-end code goes into your app&#39;s <em>front/</em> folder. Inside the <em>front</em> folder there are some key files and folders you should take note of:</p>
+<h1>Front-end</h1><p>All front-end code goes into your app&#39;s <em>front/</em> folder. Inside the <em>front</em> folder there are some key files and folders you should take note of:</p>
 <ul>
 <li><code>index.jade</code> - The main html file that is rendered server side. Think of it as the bridge that joins the back-end and the front-end. It is rendered by the back-end and then sent to the browser whenever a page is requested. It tells the browser which JavaScript and CSS files should be requested. It specifies how preloaded data is exposed (more on that later) as well as the preloaded HTML view.</li>
 <li><code>bower.json</code> - Tracks which third-party packages are needed from <a href="http://bower.io">bower</a> for the app to work. You shouldn&#39;t need to edit this file directly since running <code>synth install -f &lt;package_name&gt;</code> will automatically add that package to the list of your app&#39;s front-end dependencies.</li>
@@ -17,11 +15,9 @@
 <li><code>bower_components/</code> - Contains third-party packages installed by bower. The default <em>.gitignore</em> file for synth projects filters this out since running <em>synth install -f</em> rebuilds this folder.</li>
 </ul>
 <p><div id="backend"></div></p>
-<h1>Back-End</h1>
-<p>All back-end code goes into your app&#39;s <em>back/</em> folder.</p>
+<h1>Back-End</h1><p>All back-end code goes into your app&#39;s <em>back/</em> folder.</p>
 <p><div id="back-app-js"></div></p>
-<h2>back-app.js</h2>
-<p>This is the script that is run when starting up the server. It&#39;s for declaring any desired middleware, loading the main synth module, and adding custom Express request handlers to the Express app generated by Synth.</p>
+<h2>back-app.js</h2><p>This is the script that is run when starting up the server. It&#39;s for declaring any desired middleware, loading the main synth module, and adding custom Express request handlers to the Express app generated by Synth.</p>
 <p>Here&#39;s an example:</p>
 <pre><code class="language-javascript">// Include modules
 var synth = require(&quot;synth&quot;);
@@ -39,17 +35,17 @@ module.exports = synth();
 // Create an additional request handler
 app.get(&quot;/admin&quot;, function (req, res) {
   res.render(&#39;../front/html/admin&#39;);
-});</code></pre>
+});
+</code></pre>
 <p><div id="creating-api-endpoints"></div></p>
-<h2>Creating API Resources + Endpoints</h2>
-<p><em>Synth</em> scans the <code>resources</code> folder for .js (or .coffee) files. An API is generated based on the names of the folders that they&#39;re in.</p>
+<h2>Creating API Resources + Endpoints</h2><p><em>Synth</em> scans the <code>resources</code> folder for .js (or .coffee) files. An API is generated based on the names of the folders that they&#39;re in.</p>
 <p><strong>Note:</strong> The names of the js/coffee files themselves are not parsed by <em>synth</em>, so name them how you see fit. One way is to name them using <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a>, such as <em>create.js</em>, <em>update.js</em>, <em>read.js</em>, and <em>delete.js</em>.</p>
 <p>For example, to create a <em>memoes</em> resource, create a folder of that same name:</p>
 <pre><code>| my_app
   | back
     | resources
-      | memoes</code></pre>
-<p>You can then declare a request handler for a specific HTTP method in any file that is in the resources directory by assigning a function to <code>exports.&lt;method&gt;&lt;optional: ActionName&gt;</code>.</p>
+      | memoes
+</code></pre><p>You can then declare a request handler for a specific HTTP method in any file that is in the resources directory by assigning a function to <code>exports.&lt;method&gt;&lt;optional: ActionName&gt;</code>.</p>
 <p>Possible function names:</p>
 <ul>
 <li><code>exports.get</code>: Creates a <em>get</em> method that will expect a resources ID passed in via the URL. e.g. <code>/api/memoes/124</code></li>
@@ -60,16 +56,13 @@ app.get(&quot;/admin&quot;, function (req, res) {
 <li><code>exports.getAnythingElse</code>: Create custom actions for a resource by using one of the four methods followed by a custom name. e.g. <code>exports.postPublish</code> responds to <code>POST /api/memoes/publish?id=124</code>.</li>
 </ul>
 <p><strong>Note</strong>: By default, custom actions won&#39;t expect an ID. If you need to pass that info, use a query parameter. e.g. <code>/api/memoes/publish?id=124</code>.</p>
-<h4>Promises</h4>
-<p><em>Synth</em> has been designed to expect promises to be returned by request handlers.</p>
+<h4>Promises</h4><p><em>Synth</em> has been designed to expect promises to be returned by request handlers.</p>
 <p>If one of your request handlers returns a promise, or an object that can be JSONified, <em>Synth</em> will respond to the browser using the result of that promise.</p>
 <p>By returning promises (instead of using Express&#39; <code>res</code> object), it enables <em>Synth</em> to preload data when opening subviews.</p>
-<h4>Specifying Services</h4>
-<p>Each API endpoint handler can specify services that it requires to fulfill its duty.</p>
+<h4>Specifying Services</h4><p>Each API endpoint handler can specify services that it requires to fulfill its duty.</p>
 <p>For example, every new <em>Synth</em> project comes with a <code>params</code> service. This service parses the various sources of parameters that a request provides, such as the URL path, query parameters, and the JSON body.</p>
 <p>If an API request handler specifies a <code>params</code> parameter, then that service will be resolved an passed in before invoking the handler.</p>
-<h4>API endpoint example</h4>
-<p>Here&#39;s an example <em>GET</em> request handler for the memoes resource that lists all the created memoes:</p>
+<h4>API endpoint example</h4><p>Here&#39;s an example <em>GET</em> request handler for the memoes resource that lists all the created memoes:</p>
 <pre><code class="language-javascript">exports.get = function (db, params) {
   return db.collection(&#39;memoes&#39;).findOne({
     id: params.id
@@ -78,10 +71,10 @@ app.get(&quot;/admin&quot;, function (req, res) {
     delete data.secret; // Remove the &quot;secret&quot; field from the object before sending it to the user
     return data;
   });
-};</code></pre>
+};
+</code></pre>
 <p><strong>Note:</strong> If you need to declare a public function in a .js or .coffee file in your resources directory, but you don&#39;t want it to be parsed by <em>Synth</em>, just put an underscore in front. e.g. <code>exports._helper = function () { … }</code></p>
-<h4>Throwing errors</h4>
-<p>If for some reason you cannot complete the API request, you can throw an error and Synth will output it using console.error(). If you&#39;re running your app in dev mode, the error will be sent to the client too. In production mode a generic message &quot;an error has occurred&quot; will be sent to the client.</p>
+<h4>Throwing errors</h4><p>If for some reason you cannot complete the API request, you can throw an error and Synth will output it using console.error(). If you&#39;re running your app in dev mode, the error will be sent to the client too. In production mode a generic message &quot;an error has occurred&quot; will be sent to the client.</p>
 <p>You can throw errors a few ways:</p>
 <ul>
 <li><code>Number</code>: If you just throw a number, the server will respond with that HTTP response status code, but no message will be recorded.</li>
@@ -99,12 +92,11 @@ app.get(&quot;/admin&quot;, function (req, res) {
   }
 
   return db.find(…).toArray();
-};</code></pre>
+};
+</code></pre>
 <p><div id="services"></div></p>
-<h2>Services</h2>
-<p>Services are a new feature introduced in Synth version 0.6 to make it easier to load dependencies before handling an API request. One likely dependency you might want to load is the currently logged in user, for example.</p>
-<h3>Creating a service</h3>
-<p>To create a service for your Synth project, create a .js or .coffee file in <code>/back/services/</code>. Any function you publicly export from a file within that folder will be added to your project&#39;s list of available services.</p>
+<h2>Services</h2><p>Services are a new feature introduced in Synth version 0.6 to make it easier to load dependencies before handling an API request. One likely dependency you might want to load is the currently logged in user, for example.</p>
+<h3>Creating a service</h3><p>To create a service for your Synth project, create a .js or .coffee file in <code>/back/services/</code>. Any function you publicly export from a file within that folder will be added to your project&#39;s list of available services.</p>
 <p>A service can return either a value or a promise. If a promise is returned, Synth will wait for it to be resolved.</p>
 <p>For example, to create a service that provides a connection to the DB:</p>
 <p><code>/back/services/db.js</code></p>
@@ -112,16 +104,15 @@ app.get(&quot;/admin&quot;, function (req, res) {
 // Creates a services called &#39;db&#39;
 exports.db = function () {
   return connection;
-};</code></pre>
+};
+</code></pre>
 <p><strong>Note:</strong> If you need to declare a public function in a .js or .coffee file in your services directory, but you don&#39;t want it to be parsed by <em>Synth</em>, just put an underscore in front. e.g. <code>exports._helper = function () { … }</code></p>
-<h4>Requesting a service</h4>
-<p>Any API request handler can request a dependency by specifying it as a parameter. Usually in JavaScript, the name of the parameter isn&#39;t significant, but Synth will actually read the names of the parameters for each API endpoint and try to look up a service of that name.</p>
+<h4>Requesting a service</h4><p>Any API request handler can request a dependency by specifying it as a parameter. Usually in JavaScript, the name of the parameter isn&#39;t significant, but Synth will actually read the names of the parameters for each API endpoint and try to look up a service of that name.</p>
 <p>Services can depend on other services as well.</p>
 <p>There are 3 built-in services that you can optionally use:</p>
 <ul>
 <li>req - The standard NodeJS/Express request object.</li>
 <li>res - The standard NodeJS/Express response object.<!-- - config - The Synth configuration for the requested API endpoint. -->
-
 </li>
 </ul>
 <p>For example:</p>
@@ -144,54 +135,49 @@ exports.users = function (db) {
 
 exports.params = function (req) {
   return _.merge(req.params, req.query);
-};</code></pre>
+};
+</code></pre>
 <p><strong>Note</strong>: You can create an infinite loop (and crash your server) if you have one service depend on another that depends on the first service. This will result in a stack overflow, so watch out for that.</p>
 <p><div id="packages"></div></p>
-<h1>Third-party packages</h1>
-<p>Synth makes use of existing package managers to add third-party code to both your back-end and front-end. <a href="https://npmjs.org/">NPM</a> is used for back-end packages, and <a href="https://bower.io/">Bower</a> is used for front-end packages.</p>
+<h1>Third-party packages</h1><p>Synth makes use of existing package managers to add third-party code to both your back-end and front-end. <a href="https://npmjs.org/">NPM</a> is used for back-end packages, and <a href="https://bower.io/">Bower</a> is used for front-end packages.</p>
 <p>Synth provides a single unified interface to both, invoked from the root of your project.</p>
 <p><div id="installing-packages"></div></p>
-<h2>Installing packages</h2>
-<p>To install either a back-end or a front-end package, just use <em>synth</em>&#39;s install command:</p>
-<pre><code class="language-bash">synth install -f jquery</code></pre>
+<h2>Installing packages</h2><p>To install either a back-end or a front-end package, just use <em>synth</em>&#39;s install command:</p>
+<pre><code class="language-bash">synth install -f jquery
+</code></pre>
 <p>You can specify that a package is meant for  the front or back-ends using the -b or -f flags:</p>
 <pre><code class="language-bash">synth install -f lodash  # Installs lodash for the front end (using bower)
-synth install -b lodash  # Installs lodash for the back end (using npm)</code></pre>
+synth install -b lodash  # Installs lodash for the back end (using npm)
+</code></pre>
 <p><div id="supported-assets"></div></p>
-<h2>Supported assets</h2>
-<p><em>Synth</em> supports JavaScript/CoffeeScript, CSS/SASS/Stylus, and HTML/Jade/EJS. <em>Synth</em> will also precompile, minify and concatenate your JS and CSS assets when set to run in production mode (with built-in support for <a href="https://github.com/olov/ng-annotate">ng-annotate</a> to keep your angular dependencies automatically working after minification).</p>
+<h2>Supported assets</h2><p><em>Synth</em> supports JavaScript/CoffeeScript, CSS/SASS/Stylus, and HTML/Jade/EJS. <em>Synth</em> will also precompile, minify and concatenate your JS and CSS assets when set to run in production mode (with built-in support for <a href="https://github.com/olov/ng-annotate">ng-annotate</a> to keep your angular dependencies automatically working after minification).</p>
 <p><div id="front-end-manifest"></div></p>
-<h2>Front-end <em>Manifest</em> files</h2>
-<p>Your project should contain manifest files for your front-end assets, one for CSS and the other JavaScript. You can find the CSS manifest in <code>front/css/cssFiles</code>, and the JavaScript one in <code>front/js/jsFiles</code>. Each contains the list of css/js files (separated by new-lines) that should be loaded by the client.</p>
+<h2>Front-end <em>Manifest</em> files</h2><p>Your project should contain manifest files for your front-end assets, one for CSS and the other JavaScript. You can find the CSS manifest in <code>front/css/cssFiles</code>, and the JavaScript one in <code>front/js/jsFiles</code>. Each contains the list of css/js files (separated by new-lines) that should be loaded by the client.</p>
 <p>Each asset file is loaded in the order that they&#39;re listed in the given manifest. This is important if any asset depends on another. For example, make sure that the jquery library is listed before any jQuery plugins that depend on it.</p>
 <p>Most front-end packages contain many extra files that shouldn&#39;t be served up to web browsers. <em>Synth</em> reads the <em>bower.json</em> that comes with most packages to look for the package&#39;s <em>main</em> file. It will then place a reference to that file in the Manifest.</p>
 <p>If there are extra files that need to be loaded from a package, or a bower package didn&#39;t list its main file, just add a reference to the front-end <em>Manifest</em> file. For example, a reference to jquery&#39;s main file would look like <code>../bower_components/jquery/jquery.js</code></p>
 <p>When you serve up your app in dev mode, each front-end asset is loaded serparately, and unminified, to help with debugging. This also means that as you change the asset file, you don&#39;t need to recompile or restart the server.</p>
 <p>When you serve up your app in production mode, all the assets are minified and concattenated into two files (one for css, one for javascript). This helps reduce server load and improve client-side performance. It sucks for development though since you need to restart the server if you make any changes.</p>
-<h2>More about third-party packages</h2>
-<p>Back-end packages are installed in <code>back/node_modules</code> and front-end packages are installed in <code>front/bower_components</code>.</p>
+<h2>More about third-party packages</h2><p>Back-end packages are installed in <code>back/node_modules</code> and front-end packages are installed in <code>front/bower_components</code>.</p>
 <p><em>Synth</em> records which packages are installed in two files: <code>back/packages.json</code> (for back-end packages) and <code>front/bower.json</code> (for front-end packages). To make sure that you have installed all the packages specified in a <em>synth</em> app, just run <code>synth install -b</code> and <code>synth install -f</code> from the app&#39;s root folder.</p>
 <p><div id="synth-json"></div></p>
-<h1>synth.json</h1>
-<p>All of the web apps settings and meta-info are stored in <em>synth.json</em>. This includes the web app&#39;s name, version, and homepage.</p>
+<h1>synth.json</h1><p>All of the web apps settings and meta-info are stored in <em>synth.json</em>. This includes the web app&#39;s name, version, and homepage.</p>
 <p>For <code>version</code>, it is recommended that you use the <a href="http://semver.org/">semver</a> format.</p>
 <p><div id="deploying"></div></p>
-<h1>Deploying</h1>
-<p>Synth&#39;s directory structure is a bit different from most Node web apps, especially in the 3 following ways:</p>
+<h1>Deploying</h1><p>Synth&#39;s directory structure is a bit different from most Node web apps, especially in the 3 following ways:</p>
 <ul>
 <li>With Synth, the <code>node_modules</code> directory is under <code>back</code> and not at the project&#39;s root.</li>
 <li>Same goes for <code>package.json</code>.</li>
 <li>Synth apps are started using <code>synth server</code> on the command line.</li>
 </ul>
 <p><div id="heroku"></div></p>
-<h2>Heroku</h2>
-<p>To make it super easy to deploy Synth apps on Heroku (and compatible platforms), use the <a href="https://github.com/JonAbrams/heroku-buildpack-synth">Heroku Buildpack for Synth</a>.</p>
+<h2>Heroku</h2><p>To make it super easy to deploy Synth apps on Heroku (and compatible platforms), use the <a href="https://github.com/JonAbrams/heroku-buildpack-synth">Heroku Buildpack for Synth</a>.</p>
 <pre><code># Create a new Heroku app that uses this buildpack
 heroku create --buildpack https://github.com/JonAbrams/heroku-buildpack-synth -a &lt;your_apps_name&gt;
 
 # Configure an existing Heroku app to use this buildpack
-heroku config:set BUILDPACK_URL=https://github.com/JonAbrams/heroku-buildpack-synth</code></pre>
-</div></div></div><div id="footer"><div class="container"><!-- Begin MailChimp Signup Form -->
+heroku config:set BUILDPACK_URL=https://github.com/JonAbrams/heroku-buildpack-synth
+</code></pre></div></div></div><div id="footer"><div class="container"><!-- Begin MailChimp Signup Form -->
 <div id="mc_embed_signup">
 <form action="//synthjs.us8.list-manage.com/subscribe/post?u=f8e920cca194c0c921f464fdc&amp;id=5c05f681a4" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
 
