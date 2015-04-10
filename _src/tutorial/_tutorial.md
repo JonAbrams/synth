@@ -1,3 +1,10 @@
+<div class="language-toggle">
+  语言 / Languages
+  <ul>
+    <li><a href="/tutorial/cn">简体中文</a></li>
+    <li><a href="/tutorial">English</a></li>
+  </ul>
+</div>
 <div id="intro"></div>
 # Intro
 
