@@ -100,3 +100,64 @@ p.current-status {
 #mc_embed_signup {
   margin: 20px;
 }
+
+// Language toggle
+.language-toggle{
+  position: relative;
+  float: right;
+  display: inline-block;
+  padding-left: 20px;
+  padding-right: 30px;
+  line-height: 35px;
+  height: 35px;
+  color: #333;
+  background-color: #fafafa;
+  border: 1px solid #dedede;
+  cursor: pointer;
+  &:hover{
+    background-color: #fff;
+    ul{
+      display: block;
+    }
+  }
+  &:after{
+    content: '';
+    position: absolute;
+    top: 13px;
+    right: 8px;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-top-color: #999;
+  }
+  ul{
+    list-style-type: none;
+    position: absolute;
+    display: none;
+    top: 100%;
+    right: -1px;
+    width: 100%;
+    padding: 0;
+    text-align: center;
+    background-color: #fdfdfd;
+    border: 1px solid #dedede;
+    box-sizing: content-box;
+    li:hover{
+      background-color: #fafafa;
+      a{
+        color: #666;
+      }
+    }
+    li{
+      border-top: 1px solid #dedede;
+      &:first-child{
+        border-top: 0;
+      }
+      a{
+        display: block;
+        color: #999;
+        text-decoration: none;
+      }
+    }
+  }
+}

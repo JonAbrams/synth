@@ -1,0 +1,73 @@
+{
+  "index": {
+    "title": "教程",
+    "sections": [
+      {
+        "id": "intro",
+        "name": "简介"
+      },
+      {
+        "id": "setup",
+        "name": "创建",
+        "parts": [
+          {
+            "id": "dependencies",
+            "name": "依赖关系"
+          },
+          {
+            "id": "install",
+            "name": "安装 Synth"
+          },
+          {
+            "id": "create-app",
+            "name": "创建一个新的应用"
+          },
+          {
+            "id": "starting",
+            "name": "运行这个应用"
+          },
+          {
+            "id": "populate-db",
+            "name": "预配置数据库"
+          }
+        ]
+      },
+      {
+        "id": "publish",
+        "name": "为“tweet”添加功能",
+        "parts": [
+          {
+            "id": "create-post-method",
+            "name": "创建接收 post 请求的方法"
+          },
+          {
+            "id": "create-publish-method",
+            "name": "在 tweetsController 中创建一个发布方法"
+          },
+          {
+            "id": "add-textarea-and-button",
+            "name": "添加 textarea 和 button 表单控件"
+          }
+        ]
+      },
+      {
+        "id": "enable-links-to-tweets",
+        "name": "为每条推文创建单独的链接",
+        "parts": [
+          {
+            "id": "create-get-method",
+            "name": "创建接收 GET 请求的方法"
+          },
+          {
+            "id": "create-tweet-controller",
+            "name": "创建一个新的 tweetController 控制器"
+          },
+          {
+            "id": "create-tweet-view",
+            "name": "创建 tweet 视图并且添加超链接"
+          }
+        ]
+      }
+    ]
+  }
+}
