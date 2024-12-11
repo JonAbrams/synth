@@ -24,7 +24,7 @@ _Synth_ is an API-first web app framework (built on NodeJS) that provides the fo
 
 ## Documentation + Tutorial
 
-For complete up-to-date documentation, tutorials, and example apps, check out [synthjs.com](http://www.synthjs.com).
+For complete up-to-date documentation, tutorials, and example apps, check out ~~synthjs.com~~.
 
 ## Components
 
@@ -37,7 +37,7 @@ While Synth is an opinionated framework that provides everything you need to mak
 
 ## Sample App
 
-Blurbs ~~[Live Demo](http://blurbs.synthjs.com)~~ - [Source](https://github.com/JonAbrams/synth-example-blurbs)
+Blurbs ~~Live Demo~~ - [Source](https://github.com/JonAbrams/synth-example-blurbs)
 
 ## License
 
