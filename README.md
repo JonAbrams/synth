@@ -37,7 +37,7 @@ While Synth is an opinionated framework that provides everything you need to mak
 
 ## Sample App
 
-Blurbs [Live Demo](http://blurbs.synthjs.com) - [Source](https://github.com/JonAbrams/synth-example-blurbs)
+Blurbs ~~[Live Demo](http://blurbs.synthjs.com)~~ - [Source](https://github.com/JonAbrams/synth-example-blurbs)
 
 ## License
 
@@ -45,6 +45,6 @@ Blurbs [Live Demo](http://blurbs.synthjs.com) - [Source](https://github.com/JonA
 
 ## Credit
 
-- This project was created by Jon Abrams ([Twitter](https://twitter.com/JonathanAbrams) | [GitHub](https://github.com/JonAbrams)).
+- This project was created by Jon Abrams (~~Twitter~~ | [Blue Sky](https://bsky.app/profile/jonabrams.com) | [GitHub](https://github.com/JonAbrams)).
 - Thanks to [Katie Lefevre](https://github.com/ktel1218) for the logo.
 - Thanks to Stephen Ausman (aka [stackd](https://github.com/stackd)) for handing over control of the 'synth' package on NPM.
